@@ -2,8 +2,6 @@
 
 Speedcubing stuff.
 
-## Data model
-
 ## Methods covered
 
 - **CFOP** — the focus for the initial pass.
@@ -29,7 +27,7 @@ A flat HTML reference for the dataset with per-case detail pages and a cookie-ba
 ```sh
 uv run python tools/build_site/build.py
 python3 -m http.server 8080 -d site
-# open http://localhost:8080
+open http://localhost:8080
 ```
 
 `site/` is generated and not committed.
