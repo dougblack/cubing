@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>{% block title %}cubing{% endblock %}</title>
+  <link rel="stylesheet" href="{{ asset_prefix }}assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <a href="{{ asset_prefix }}index.html" class="brand">cubing</a>
+    <nav>
+      <a href="{{ asset_prefix }}cfop/pll/index.html">PLL</a>
+      <a href="{{ asset_prefix }}cfop/oll/index.html">OLL</a>
+      <a href="{{ asset_prefix }}cfop/2loll/index.html">2-Look OLL</a>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <span>{{ total_cases }} cases, {{ total_algs }} algorithms · data from algdb.net, jperm.net, speedcubedb.com</span>
+  </footer>
+
+  <script src="{{ asset_prefix }}assets/app.js"></script>
+</body>
+</html>

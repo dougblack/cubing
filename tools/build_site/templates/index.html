@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}cubing{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1>Cubing algorithm reference</h1>
+  <p>A flat, browsable index of CFOP algorithms with pre-rendered cube state diagrams. Click any case to see all known variants, sorted by community popularity. Track your progress with the per-case learning flag.</p>
+</section>
+
+<section class="method-grid">
+  {% for stage in stages %}
+  <a class="method-card" href="{{ stage.href }}">
+    <h2>{{ stage.short_name }}</h2>
+    <p class="method-subtitle">{{ stage.full_name }}</p>
+    <p class="method-meta">{{ stage.case_count }} cases · {{ stage.alg_count }} algorithms</p>
+    <p class="method-desc">{{ stage.description }}</p>
+  </a>
+  {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ stage.full_name }} — cubing{% endblock %}
+
+{% block content %}
+<section class="stage-header">
+  <h1>{{ stage.full_name }}</h1>
+  <p>{{ stage.description }}</p>
+  <p class="stage-meta">{{ stage.case_count }} cases · click a card to see all algorithms</p>
+</section>
+
+<section class="case-grid">
+  {% for case in cases %}
+  <div class="case-card" data-case-id="{{ case.id }}">
+    <button class="state-flag" aria-label="Cycle learning state for {{ case.name }}"></button>
+    <a class="case-card-body" href="{{ case.href }}">
+      <img class="case-diagram" src="{{ case.diagram_href }}" alt="{{ case.name }} diagram" loading="lazy">
+      <div class="case-meta">
+        <span class="case-name">{{ case.name }}</span>
+        {% if case.group %}<span class="case-group">{{ case.group_label }}</span>{% endif %}
+      </div>
+      <code class="case-primary-alg">{{ case.primary_alg }}</code>
+    </a>
+  </div>
+  {% endfor %}
+</section>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}{{ case.name }} — {{ stage.full_name }} — cubing{% endblock %}
+
+{% block content %}
+<section class="case-detail" data-case-id="{{ case.id }}">
+  <nav class="breadcrumbs">
+    <a href="{{ asset_prefix }}index.html">cubing</a>
+    <span>/</span>
+    <a href="{{ asset_prefix }}cfop/{{ stage.stage }}/index.html">{{ stage.short_name }}</a>
+    <span>/</span>
+    <span>{{ case.name }}</span>
+  </nav>
+
+  <div class="case-detail-head">
+    <img class="case-detail-diagram" src="{{ case.diagram_href }}" alt="{{ case.name }} diagram">
+    <div class="case-detail-info">
+      <h1>{{ case.name }}</h1>
+      {% if case.aliases %}<p class="case-aliases">also known as: {{ case.aliases|join(', ') }}</p>{% endif %}
+      <dl class="case-stats">
+        {% if case.group_label %}<dt>Group</dt><dd>{{ case.group_label }}</dd>{% endif %}
+        {% if case.probability_text %}<dt>Probability</dt><dd>{{ case.probability_text }}</dd>{% endif %}
+        <dt>Algorithms</dt><dd>{{ case.alg_count }}</dd>
+        {% if case.tags %}<dt>Tags</dt><dd>{{ case.tags|join(', ') }}</dd>{% endif %}
+      </dl>
+      <div class="case-state-control">
+        <button class="state-flag state-flag-large" aria-label="Cycle learning state"></button>
+        <span class="state-label"></span>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="alg-list-header">Algorithms <span class="alg-list-meta">ranked by community popularity</span></h2>
+  <ol class="alg-list">
+    {% for alg in case.algorithms %}
+    <li class="alg-item">
+      <div class="alg-row">
+        <span class="alg-rank">#{{ loop.index }}</span>
+        <code class="alg-moves">{{ alg.moves }}</code>
+        <div class="alg-flags">
+          {% if alg.popularity == "primary" %}<span class="flag flag-primary" title="algdb top pick">primary</span>{% endif %}
+          {% if alg.jperm_recommended %}<span class="flag flag-jperm" title="J Perm's recommended alg">jperm</span>{% endif %}
+          {% if alg.scdb_standard %}<span class="flag flag-scdb" title="SpeedCubeDB's standard alg">scdb-std</span>{% endif %}
+          {% if alg.community_votes is not none %}<span class="flag flag-votes" title="SpeedCubeDB community votes">{{ alg.community_votes }} votes</span>{% endif %}
+          {% if alg.length_htm %}<span class="flag flag-stm">{{ alg.length_htm }} htm</span>{% endif %}
+        </div>
+      </div>
+      {% if alg.notes %}<p class="alg-notes">{{ alg.notes }}</p>{% endif %}
+    </li>
+    {% endfor %}
+  </ol>
+</section>
+{% endblock %}

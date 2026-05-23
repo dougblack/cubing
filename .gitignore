@@ -11,3 +11,4 @@ dist/
 build/
 .claude/
 tools/render/preview/
+site/
