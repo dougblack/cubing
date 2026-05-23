@@ -5,18 +5,21 @@
 <section class="stage-header">
   <h1>{{ stage.full_name }}</h1>
   <p>{{ stage.description }}</p>
-  <p class="stage-meta">{{ stage.case_count }} cases · click a card to see all algorithms</p>
+  <p class="stage-meta">
+    {{ stage.case_count }} cases · click a card to see all algorithms ·
+    <span data-learned-summary="{{ stage.stage }}">0 / {{ stage.case_count }} learned</span>
+  </p>
 </section>
 
 <section class="case-grid">
   {% for case in cases %}
-  <div class="case-card" data-case-id="{{ case.id }}">
+  <div class="case-card" data-case-id="{{ case.id }}" data-alg-moves='{{ case.alg_moves|tojson }}'>
     <button class="state-flag" aria-label="Cycle learning state for {{ case.name }}"></button>
     <a class="case-card-body" href="{{ case.href }}">
       <img class="case-diagram" src="{{ case.diagram_href }}" alt="{{ case.name }} diagram" loading="lazy">
       <div class="case-meta">
         <span class="case-name">{{ case.name }}</span>
-        {% if case.group %}<span class="case-group">{{ case.group_label }}</span>{% endif %}
+        {% if case.probability_text %}<span class="case-probability" title="Probability of occurrence">{{ case.probability_text }}</span>{% endif %}
       </div>
       <code class="case-primary-alg">{{ case.primary_alg }}</code>
     </a>

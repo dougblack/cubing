@@ -13,6 +13,7 @@
     <h2>{{ stage.short_name }}</h2>
     <p class="method-subtitle">{{ stage.full_name }}</p>
     <p class="method-meta">{{ stage.case_count }} cases · {{ stage.alg_count }} algorithms</p>
+    <p class="method-learned" data-learned-summary="{{ stage.slug }}">0 / {{ stage.case_count }} learned</p>
     <p class="method-desc">{{ stage.description }}</p>
   </a>
   {% endfor %}

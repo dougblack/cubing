@@ -24,6 +24,7 @@
     <span>{{ total_cases }} cases, {{ total_algs }} algorithms · data from algdb.net, jperm.net, speedcubedb.com</span>
   </footer>
 
+  <script>window.STAGE_CASE_IDS = {{ stage_case_ids_json|safe }};</script>
   <script src="{{ asset_prefix }}assets/app.js"></script>
 </body>
 </html>

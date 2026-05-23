@@ -32,8 +32,9 @@
   <h2 class="alg-list-header">Algorithms <span class="alg-list-meta">ranked by community popularity</span></h2>
   <ol class="alg-list">
     {% for alg in case.algorithms %}
-    <li class="alg-item">
+    <li class="alg-item" data-alg-index="{{ loop.index0 }}">
       <div class="alg-row">
+        <button class="alg-pref-toggle" aria-label="Set as preferred algorithm" title="Set as preferred">★</button>
         <span class="alg-rank">#{{ loop.index }}</span>
         <code class="alg-moves">{{ alg.moves }}</code>
         <div class="alg-flags">

@@ -86,16 +86,25 @@ const BG = "#FFFFFF";
 
 const U_COLOR: StickerColor = "Y";
 
-interface CellSpec {
-  /** Top-left x, y of the cell in SVG units. */
+/** A U-face cell (axis-aligned rounded rectangle). */
+interface RectCell {
+  kind: "rect";
   x: number;
   y: number;
-  /** Cell width, height. */
   w: number;
   h: number;
-  /** The sticker color from the state. */
   color: StickerColor;
 }
+
+/** A side-band cell (arbitrary quadrilateral, used for the isometric trapezoidal
+ *  shape that suggests the sides receding away from the viewer). */
+interface PolyCell {
+  kind: "poly";
+  points: ReadonlyArray<readonly [number, number]>;
+  color: StickerColor;
+}
+
+type CellSpec = RectCell | PolyCell;
 
 /** Sticker accessor: state[face*9 + slot]. */
 function s(state: State, face: keyof typeof FACE_INDEX, slot: number): StickerColor {
@@ -104,12 +113,25 @@ function s(state: State, face: keyof typeof FACE_INDEX, slot: number): StickerCo
 
 /** Compute the 25 cells of the last-layer diagram. Returns cells in render order.
  *  Outer ring stickers (12) are smaller bands; inner U stickers (9) are full cells.
- *  Corner cells of the 5×5 grid are skipped (empty). */
+ *  Corner cells of the 5×5 grid are skipped (empty).
+ *
+ *  Side bands are rendered as trapezoids whose outer edge is shorter than the
+ *  inner edge — a subtle isometric/perspective cue that the side stickers are
+ *  receding away from the viewer. Dividers slant linearly between inner and
+ *  outer endpoints so cells tile cleanly. */
 function buildCells(state: State, unit: number): CellSpec[] {
   const u = unit;
   const sideThickness = u * 0.22; // outer band thickness
   const gap = u * 0.04; // visual gap between outer band and U face
   const startU = sideThickness + gap; // x/y where the central U 3×3 starts
+  const tilt = sideThickness * 0.5; // how far the outer edge is inset on each side
+
+  // Divider positions along the outer edge of a 3-cell band. The inner edge
+  // dividers sit at startU, startU+u, startU+2u, startU+3u. The outer edge
+  // dividers interpolate linearly from (startU + tilt) to (startU + 3u - tilt),
+  // so adjacent cells share their dividing line and the band tiles cleanly.
+  const outerDiv = (k: number): number =>
+    startU + tilt + (k * (3 * u - 2 * tilt)) / 3;
 
   const cells: CellSpec[] = [];
 
@@ -117,6 +139,7 @@ function buildCells(state: State, unit: number): CellSpec[] {
   for (let r = 0; r < 3; r++) {
     for (let c = 0; c < 3; c++) {
       cells.push({
+        kind: "rect",
         x: startU + c * u,
         y: startU + r * u,
         w: u,
@@ -126,51 +149,78 @@ function buildCells(state: State, unit: number): CellSpec[] {
     }
   }
 
-  // Top band = top row of B, but mirrored: we look at U from above, so B's top
-  // row appears at the top of the diagram in *visual* left-to-right order
-  // matching B's bottom row when looking AT B from behind.
-  // The standard convention: top of diagram = B[2], B[1], B[0] (left to right).
-  // i.e. the sticker on B that touches U's top edge.
+  // Top band = top row of B, mirrored. Standard convention: top of diagram
+  // reads B[2], B[1], B[0] left-to-right. Trapezoid: inner edge at
+  // y=sideThickness (touching U), outer edge at y=0 (inset by tilt).
   for (let c = 0; c < 3; c++) {
+    const innerL = startU + c * u;
+    const innerR = startU + (c + 1) * u;
+    const outerL = outerDiv(c);
+    const outerR = outerDiv(c + 1);
     cells.push({
-      x: startU + c * u,
-      y: 0,
-      w: u,
-      h: sideThickness,
+      kind: "poly",
+      points: [
+        [outerL, 0],
+        [outerR, 0],
+        [innerR, sideThickness],
+        [innerL, sideThickness],
+      ],
       color: s(state, "B", 2 - c),
     });
   }
-  // Bottom band = top row of F: F[0], F[1], F[2] (left to right).
+  // Bottom band = top row of F: F[0], F[1], F[2] left-to-right.
+  const bottomInnerY = startU + 3 * u + gap;
+  const bottomOuterY = bottomInnerY + sideThickness;
   for (let c = 0; c < 3; c++) {
+    const innerL = startU + c * u;
+    const innerR = startU + (c + 1) * u;
+    const outerL = outerDiv(c);
+    const outerR = outerDiv(c + 1);
     cells.push({
-      x: startU + c * u,
-      y: startU + 3 * u + gap,
-      w: u,
-      h: sideThickness,
+      kind: "poly",
+      points: [
+        [innerL, bottomInnerY],
+        [innerR, bottomInnerY],
+        [outerR, bottomOuterY],
+        [outerL, bottomOuterY],
+      ],
       color: s(state, "F", c),
     });
   }
-  // Left band = top row of L stickers, ordered back-to-front (matching the
-  // diagram's B-at-top, F-at-bottom layout). L viewed from outside: L[0] is
-  // top-left = UBL's L-sticker (back), L[2] = UFL's L-sticker (front).
+  // Left band = top row of L stickers, back-to-front (L[0]…L[2]).
   for (let r = 0; r < 3; r++) {
+    const innerT = startU + r * u;
+    const innerB = startU + (r + 1) * u;
+    const outerT = outerDiv(r);
+    const outerB = outerDiv(r + 1);
     cells.push({
-      x: 0,
-      y: startU + r * u,
-      w: sideThickness,
-      h: u,
+      kind: "poly",
+      points: [
+        [0, outerT],
+        [sideThickness, innerT],
+        [sideThickness, innerB],
+        [0, outerB],
+      ],
       color: s(state, "L", r),
     });
   }
-  // Right band = top row of R stickers, ordered back-to-front. R viewed from
-  // outside: R[0] = UFR's R-sticker (front), R[2] = UBR's R-sticker (back).
-  // So top of diagram (back) = R[2], bottom (front) = R[0].
+  // Right band = top row of R stickers, with top of diagram (back) = R[2]
+  // and bottom (front) = R[0].
+  const rightInnerX = startU + 3 * u + gap;
+  const rightOuterX = rightInnerX + sideThickness;
   for (let r = 0; r < 3; r++) {
+    const innerT = startU + r * u;
+    const innerB = startU + (r + 1) * u;
+    const outerT = outerDiv(r);
+    const outerB = outerDiv(r + 1);
     cells.push({
-      x: startU + 3 * u + gap,
-      y: startU + r * u,
-      w: sideThickness,
-      h: u,
+      kind: "poly",
+      points: [
+        [rightInnerX, innerT],
+        [rightOuterX, outerT],
+        [rightOuterX, outerB],
+        [rightInnerX, innerB],
+      ],
       color: s(state, "R", 2 - r),
     });
   }
@@ -230,8 +280,12 @@ export function renderLastLayerSVG(state: State, mode: ColorMode): string {
   const rects = cells
     .map((c) => {
       const fill = colorForMode(c.color, mode);
-      const rx = unit * 0.08;
-      return `<rect x="${c.x.toFixed(2)}" y="${c.y.toFixed(2)}" width="${c.w.toFixed(2)}" height="${c.h.toFixed(2)}" rx="${rx.toFixed(2)}" fill="${fill}" stroke="${STROKE}" stroke-width="1.5"/>`;
+      if (c.kind === "rect") {
+        const rx = unit * 0.08;
+        return `<rect x="${c.x.toFixed(2)}" y="${c.y.toFixed(2)}" width="${c.w.toFixed(2)}" height="${c.h.toFixed(2)}" rx="${rx.toFixed(2)}" fill="${fill}" stroke="${STROKE}" stroke-width="1.5"/>`;
+      }
+      const pts = c.points.map(([x, y]) => `${x.toFixed(2)},${y.toFixed(2)}`).join(" ");
+      return `<polygon points="${pts}" fill="${fill}" stroke="${STROKE}" stroke-width="1.5" stroke-linejoin="round"/>`;
     })
     .join("\n  ");
 
@@ -249,7 +303,7 @@ export function renderLastLayerSVG(state: State, mode: ColorMode): string {
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#111111"/>
     </marker>
   </defs>`;
-      const inset = unit * 0.28; // pull endpoints toward the line center
+      const inset = unit * 0.12; // pull endpoints toward the line center
       const lines: string[] = [];
       for (const [from, to] of arrows) {
         const a = uSlotCenter(from, unit, startU);
@@ -264,7 +318,7 @@ export function renderLastLayerSVG(state: State, mode: ColorMode): string {
         const x2 = (b.x - ux * inset).toFixed(2);
         const y2 = (b.y - uy * inset).toFixed(2);
         lines.push(
-          `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#111111" stroke-width="1.6" marker-end="url(#ah)"/>`,
+          `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#111111" stroke-width="1.8" marker-end="url(#ah)"/>`,
         );
       }
       arrowsBlock = "\n  " + lines.join("\n  ");

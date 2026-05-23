@@ -137,11 +137,22 @@ main { padding: 32px; max-width: 1200px; margin: 0 auto; }
 }
 .case-name { font-weight: 600; font-size: 14px; }
 .case-group { font-size: 11px; color: var(--text-muted); }
+.case-probability {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
 .case-primary-alg {
   display: block;
   font-size: 11px;
   color: var(--text-muted);
   word-break: break-word;
+}
+.case-primary-alg.is-preferred { color: var(--text); }
+.case-primary-alg.is-preferred::before {
+  content: "★ ";
+  color: var(--learning);
+  margin-right: 2px;
 }
 
 /* --- learning state flag --- */
@@ -171,9 +182,20 @@ main { padding: 32px; max-width: 1200px; margin: 0 auto; }
   border-color: var(--learned);
 }
 
-/* Subtle hint of state on the whole card */
-.case-card[data-state="learning"] { border-left: 3px solid var(--learning); }
-.case-card[data-state="learned"] { border-left: 3px solid var(--learned); }
+/* De-emphasize learned cards: dim the body, desaturate the diagram. The
+ * state-flag stays at full opacity so it remains clickable to un-mark. */
+.case-card[data-state="learned"] .case-card-body { opacity: 0.55; }
+.case-card[data-state="learned"] .case-diagram { filter: grayscale(0.85); }
+.case-card[data-state="learned"]:hover .case-card-body { opacity: 0.85; }
+.case-card[data-state="learned"]:hover .case-diagram { filter: grayscale(0.4); }
+
+/* Learned summary text on homepage cards and stage header */
+.method-learned {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin: 0 0 12px;
+  font-variant-numeric: tabular-nums;
+}
 
 /* --- case detail page --- */
 .breadcrumbs {
@@ -252,6 +274,21 @@ main { padding: 32px; max-width: 1200px; margin: 0 auto; }
   gap: 12px;
   flex-wrap: wrap;
 }
+.alg-pref-toggle {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--unlearned);
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 0.12s ease;
+}
+.alg-pref-toggle:hover { color: var(--text-muted); }
+.alg-item[data-preferred="true"] .alg-pref-toggle { color: var(--learning); }
+.alg-item[data-preferred="true"] { background: rgba(217, 169, 58, 0.06); }
 .alg-rank {
   display: inline-block;
   min-width: 32px;

@@ -199,9 +199,17 @@ def main() -> None:
     total_cases = sum(len(d["cases"]) for d in all_stage_data.values())
     total_algs = sum(len(c["algorithms"]) for d in all_stage_data.values() for c in d["cases"])
 
+    # Map stage slug -> list of case IDs, serialized into the page so JS can
+    # compute per-stage learned counts even on pages (like the homepage) that
+    # don't render individual case cards.
+    stage_case_ids_json = json.dumps(
+        {s.stage: [c["id"] for c in all_stage_data[s.stage]["cases"]] for s in STAGES}
+    )
+
     base_ctx: dict[str, Any] = {
         "total_cases": total_cases,
         "total_algs": total_algs,
+        "stage_case_ids_json": stage_case_ids_json,
     }
 
     # --- homepage ---
@@ -210,6 +218,7 @@ def main() -> None:
         data = all_stage_data[s.stage]
         home_stages.append(
             {
+                "slug": s.stage,
                 "short_name": s.short_name,
                 "full_name": s.full_name,
                 "description": s.description,
@@ -240,13 +249,16 @@ def main() -> None:
         # Stage index page (depth=2 from site root: cfop/<stage>/index.html).
         stage_cases = []
         for c in cases_sorted:
-            primary_alg = c["algorithms"][0]["moves"] if c["algorithms"] else ""
+            alg_moves = [a["moves"] for a in c["algorithms"]]
+            primary_alg = alg_moves[0] if alg_moves else ""
             stage_cases.append(
                 {
                     "id": c["id"],
                     "name": c["name"],
                     "group_label": display_group(c),
+                    "probability_text": probability_text(c, s.stage),
                     "primary_alg": primary_alg,
+                    "alg_moves": alg_moves,
                     "href": to_relative(case_href(s, c["id"]), depth=2),
                     "diagram_href": to_relative(diagram_href(s, c["id"]), depth=2),
                 }
