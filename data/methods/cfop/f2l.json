@@ -15,82 +15,84 @@
       "algorithms": [
         {
           "moves": "R' F R F'",
-          "length_htm": 4,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 44,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "U2 R U2 R'",
-          "length_htm": 4,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "M' U R U' r'",
-          "length_htm": 5,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "y2 U L U' L'",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "y' r' U' R U M'",
-          "length_htm": 5,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 14,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "y F' L F L'",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "y U2 R2 F R F' R",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "U F' L' U' L F",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
         },
         {
           "moves": "y U F R U' R' F'",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/1"
           ]
@@ -105,145 +107,148 @@
       "algorithms": [
         {
           "moves": "y U' L' U L",
-          "length_htm": 4,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 11,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "F R' F' R",
-          "length_htm": 4,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 59,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y' U' R' U R",
-          "length_htm": 4,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 26,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "r U R' U' M",
-          "length_htm": 5,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "d' L' U L",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U' F U F'",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y U2 L' U2 L",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y L F' L' F",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U r' D' r U' r' D r",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y U' F R U R' F'",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y2 l U L' U' M'",
-          "length_htm": 5,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U' r U' r' U r U r'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "y r U' r' F",
-          "length_htm": 4,
           "popularity": "alternative",
           "popularity_rank": 13,
+          "length_htm": 4,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U2 l R U' R' U l'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 14,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U2 R2 B' R' B R'",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 15,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
         },
         {
           "moves": "U' F R' F' R2 U' R'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 16,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/2"
           ]
@@ -258,55 +263,58 @@
       "algorithms": [
         {
           "moves": "y L' U' L",
-          "length_htm": 3,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 10,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
         },
         {
           "moves": "F' U' F",
-          "length_htm": 3,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 48,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
         },
         {
           "moves": "y' R' U' R",
-          "length_htm": 3,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 27,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
         },
         {
           "moves": "U M R U' R' U M'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
         },
         {
           "moves": "U R U2 R' U' F' U F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
         },
         {
           "moves": "y' R' U R U R' U R",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/3"
           ]
@@ -321,28 +329,31 @@
       "algorithms": [
         {
           "moves": "R U R'",
-          "length_htm": 3,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 57,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/4"
           ]
         },
         {
           "moves": "y2 L U L'",
-          "length_htm": 3,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 3,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/4"
           ]
         },
         {
           "moves": "y F U F'",
-          "length_htm": 3,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 4,
+          "length_htm": 3,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/4"
           ]
@@ -357,55 +368,59 @@
       "algorithms": [
         {
           "moves": "U' R U R' U2 R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 67,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
         },
         {
           "moves": "U' R U R' U' R U2 R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
         },
         {
           "moves": "F2 L' U' L U F2",
-          "length_htm": 6,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 15,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
         },
         {
           "moves": "U' R U R' U R' F R F'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 5,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
         },
         {
           "moves": "y' U r' U R U' R' U' r",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
         },
         {
           "moves": "R' D' R U R' D R U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/5"
           ]
@@ -420,82 +435,85 @@
       "algorithms": [
         {
           "moves": "d R' U' R U2 R' U R",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 14,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "y U L' U' L U2 L' U L",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "U' r U' R' U R U r'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 44,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "U F' U' F U2 F' U F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "d R' U' R U R' U2 R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "y F2 R U R' U' F2",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "R U' R' U R U' R' U F' U' F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "d R' U' R U' l U' R' U x",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
         },
         {
           "moves": "U' L F' l' U R U r'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/6"
           ]
@@ -510,46 +528,50 @@
       "algorithms": [
         {
           "moves": "U' R U2 R' U2 R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/7"
           ]
         },
         {
           "moves": "U' R U2 R' U' R U2 R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 37,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/7"
           ]
         },
         {
           "moves": "U' R U2 R' U R' F R F'",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 5,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/7"
           ]
         },
         {
           "moves": "M' U' M U2 r U' r'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 29,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/7"
           ]
         },
         {
           "moves": "y' r U2 R2 U' R2 U' r'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/7"
           ]
@@ -564,91 +586,94 @@
       "algorithms": [
         {
           "moves": "d R' U2 R U2 R' U R",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "r' U2 R2 U R2\u2019 U r",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "y U L' U2 L U2 L' U L",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "U F' U2 F U2 F' U F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "R2 U2 F R2 F' U2 R2",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "d R' U2 R U R' U2 R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "community_votes": 33,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "B' R' U' R2 U R' B",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "d R' U2 R U' l U' R' U x",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "R' U2 R r U R' U' r' U2 R",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
         },
         {
           "moves": "U R' U2 R U2 R' U R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "community_votes": 1,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/8"
           ]
@@ -663,73 +688,77 @@
       "algorithms": [
         {
           "moves": "U' R U' R' U F' U' F",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 36,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "U' R U' R' d R' U' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "F R U R' U' F' R U' R'",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 14,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "y' U R' U' R U' R' U' R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "d R' U' R U' R' U' R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 8,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "y F2 U R U' R' F2",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "y U2 L' U L U L' U' L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
         },
         {
           "moves": "U R U R' U2 F' U F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/9"
           ]
@@ -744,82 +773,85 @@
       "algorithms": [
         {
           "moves": "U' R U R' U R U R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 38,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "U y' R' U R U' y R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "U2 R U' R' U' R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 14,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "R' U R2 U R'",
-          "length_htm": 5,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "d R' U R d' R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "y U L' U L U' F U F'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "U F' U F U' R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "U F R' F' R U2 R U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
         },
         {
           "moves": "y' f R' U R U' R2 f'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/10"
           ]
@@ -834,100 +866,103 @@
       "algorithms": [
         {
           "moves": "U' R U2 R' U F' U' F",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 40,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "U' R U2 R' d R' U' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "y' R U2 R2 U' R2 U' R'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 38,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "y L' U L U' L' U L U2 L' U L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "F R' F' R U' R U' R' U R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "y F R U R' U' R U R' U' R U2 R' F'",
-          "length_htm": 13,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 13,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "R U' R' U R U' R2 F R F' R U' R'",
-          "length_htm": 13,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 13,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "U' R U R' U' R U R' F R' F' R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "y L U2 L2 U' L2 U' L'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "y2 L U2 L2 U' L2 U' L'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
         },
         {
           "moves": "R U R' U R' F R F' U R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/11"
           ]
@@ -942,82 +977,86 @@
       "algorithms": [
         {
           "moves": "R U' R' U R U' R' U2 R U' R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 33,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "R' U2 R2 U R2 U R",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 25,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "U F' U2 F U' R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "U R U' R' U' R U R' U' R U R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 5,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "d R' U2 R d' R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "R2 U2 R' U' R U' R' U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "U2 R U2 R' U' R U R' U' R U' R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "R U2 R' U2 R U2 R' U' R U2 R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
         },
         {
           "moves": "R' D' R U2 R' D R2 U R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "community_votes": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/12"
           ]
@@ -1032,55 +1071,57 @@
       "algorithms": [
         {
           "moves": "y' U R' U R U' R' U' R",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 41,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
         },
         {
           "moves": "d R' U R U' R' U' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 12,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
         },
         {
           "moves": "y U L' U L U' L' U' L",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
         },
         {
           "moves": "M' U' R U R' U' R U2 r'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
         },
         {
           "moves": "U R U' R' U R U' R' U' F' U F",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
         },
         {
           "moves": "y L' U L U' L' U2 L U2 L' U L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/13"
           ]
@@ -1095,28 +1136,29 @@
       "algorithms": [
         {
           "moves": "U' R U' R' U R U R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 45,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/14"
           ]
         },
         {
           "moves": "y L' U2 L U2 F U2 F' U F U' F'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/14"
           ]
         },
         {
           "moves": "R U' R' U R U2 R' U2 R U' R'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/14"
           ]
@@ -1131,109 +1173,113 @@
       "algorithms": [
         {
           "moves": "R U R' U2 R U' R' U R U' R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 31,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "M U r U' r' U' M'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 33,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "y L' U L U2 y' R U R'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "F' U F U2 R U R'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 20,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "R' D' R U' R' D R U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 35,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "R U2 R' U R U R' U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "U R' F R F' U R U R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "l U r U' r' U' l'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "y' R' U R U2 y R U R'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "R B L U' L' B' R'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "U' R' U2 R' U R' U' R U2 R",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
         },
         {
           "moves": "R' U R U' R U2 R' U2 R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/15"
           ]
@@ -1248,127 +1294,131 @@
       "algorithms": [
         {
           "moves": "R U' R' U2 F' U' F",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 35,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "R U' R' U2 y L' U' L",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "R U' R' U d R' U' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "U F U R U' R' F' R U R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 4,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "R2 B' R' B R' U2 R U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "U M' U R U' r' U' R U R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "community_votes": 6,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "y F U' R U' R' U2 F'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "U F R U R' U' F' U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "y L' U2 L U' L' U' L U' L' U L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "R U' R2 D' r U' r' D R2 U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "y U' r U' r' F U' L' U' L",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "U F R' F' R2 U' R' U2 R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "L' U' L U2 L' U L U' L' U L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 13,
+          "community_votes": 4,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
         },
         {
           "moves": "y' R D R' U R D' R' U' R' U R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 14,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/16"
           ]
@@ -1383,28 +1433,30 @@
       "algorithms": [
         {
           "moves": "R U2 R' U' R U R'",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 37,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/17"
           ]
         },
         {
           "moves": "y L F' L' F L' U L U' L' U L",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 0,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/17"
           ]
         },
         {
           "moves": "U' R U' R' U2 R U2 R2 F R F'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/17"
           ]
@@ -1419,46 +1471,49 @@
       "algorithms": [
         {
           "moves": "y' R' U2 R U R' U' R",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 27,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/18"
           ]
         },
         {
           "moves": "y L' U2 L U L' U' L",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 13,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/18"
           ]
         },
         {
           "moves": "R' F R F' R U' R' U R U' R'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/18"
           ]
         },
         {
           "moves": "R U R' U' R U R' U' F R' F' R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/18"
           ]
         },
         {
           "moves": "U R U' R2 F R F' U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/18"
           ]
@@ -1473,55 +1528,59 @@
       "algorithms": [
         {
           "moves": "U R U2 R' U R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 36,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
         },
         {
           "moves": "U R U2 R2 F R F'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 3,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
         },
         {
           "moves": "R U' R' U R U' R' U R U R'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 2,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
         },
         {
           "moves": "U R U2 R' U R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 36,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
         },
         {
           "moves": "y U F U2 F2 L F L'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
         },
         {
           "moves": "y U F U2 F2 L F L'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/19"
           ]
@@ -1536,64 +1595,67 @@
       "algorithms": [
         {
           "moves": "y' U' R' U2 R U' R' U R",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 30,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "y U' L' U2 L U' L' U L",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "U' R U' R2 F R F' R U' R'",
-          "length_htm": 10,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 20,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "U' R U R' U r U' r' U2 r U r'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "d' L' U2 L U' L' U L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "y L' U L U' L' U L U' L' U' L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
         },
         {
           "moves": "y' R' U R U' R' U R U' R' U' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/20"
           ]
@@ -1608,55 +1670,58 @@
       "algorithms": [
         {
           "moves": "U2 R U R' U R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 27,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
         },
         {
           "moves": "R U' R' U2 R U R'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 15,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
         },
         {
           "moves": "y F R U2 R' F'",
-          "length_htm": 5,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
         },
         {
           "moves": "y' r' U r U2 r' U' r",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
         },
         {
           "moves": "R B U2 B' R'",
-          "length_htm": 5,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 5,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
         },
         {
           "moves": "U2 R U R2 F R F'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/21"
           ]
@@ -1671,91 +1736,95 @@
       "algorithms": [
         {
           "moves": "F' L' U2 L F",
-          "length_htm": 5,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 21,
+          "length_htm": 5,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "y' U2 R' U' R U' R' U R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 17,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "r U' r' U2 r U r'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 27,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "y U2 L' U' L U' L' U L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "y' R' U R U2 R' U' R",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "y' U2 l' U R' U' R2 x'",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "y L' U L U2 L' U' L",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "d U R' U' R U' R' U R",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "U' R U2 R2 F R F' R U' R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
         },
         {
           "moves": "U F' U F R U R' U' R U R' U' R U R'",
-          "length_htm": 15,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 15,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/22"
           ]
@@ -1770,109 +1839,112 @@
       "algorithms": [
         {
           "moves": "R U R' U2 R U R' U' R U R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 17,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "U R U' R' U' R U' R' U R U' R'",
-          "length_htm": 12,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 31,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "U2 R2 U2 R' U' R U' R2",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "y F' U' L' U L F L' U L",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "F R' F' R U R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "U R U' R' U' R U' R2 F R F'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "R' U' F' U F R U F R' F' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "U2 R U R' U' R U' R' U2 R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "U y' R' U' R U' y R U' R' U y' R' U R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "F U R U' R' F' U' F' U' F",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "R U' R' U' R U R' U2 R U R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
         },
         {
           "moves": "R' U' R U' R' U2 R2 U2 R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/23"
           ]
@@ -1887,127 +1959,131 @@
       "algorithms": [
         {
           "moves": "F U R U' R' F' R U' R'",
-          "length_htm": 9,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 37,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y U' L' U L U L' U L U' L' U L",
-          "length_htm": 12,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 3,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "U' R U R2 F R F' R U' R'",
-          "length_htm": 10,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 6,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y' R' U' R U2 R' U' R U R' U' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "R U R' U R U R' U2 F' U F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "r U R' U R U r' U' r U r'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "U' R U R' U R U' R' U y' R' U R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y U2 L2 U2 L U L' U L2",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y' R' U R U R' U' R U2 R' U' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y' U' R' U R U R' U R U' R' U R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "U' R B' R B R2 U R U' R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y U' L' U L U L' U L2 F' L' F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "y U' F' L F L' U' L' U' L",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 13,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
         },
         {
           "moves": "U' R B' R B R F R F'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 14,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/24"
           ]
@@ -2022,109 +2098,113 @@
       "algorithms": [
         {
           "moves": "R' F' R U R U' R' F",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 13,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "U' R' F R F' R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 29,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "y U' L' U L y' U R U' R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "R' U' R' U' R' U R U R",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "U' F' R U R' U' R' F R",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 11,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "U' F' U F U R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "community_votes": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "R U' R' U' R U' R' U R U R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "R U R U R U R' U' R' U' R2",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "B' R2 U' R' U R2 B",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "U' F' U F R' F R F'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "U' R U R' U2 R U' R' U2 R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
         },
         {
           "moves": "l' U' l U l F' l' F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/25"
           ]
@@ -2139,109 +2219,112 @@
       "algorithms": [
         {
           "moves": "U R U' R' U' F' U F",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U R U' R' F R' F' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 24,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "y r U r' U' r' F r F'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U R U' R' d' L' U L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U R U R' U' y L' U' L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "y' R U R U R U' R' U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U R U' R' U' y L' U L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "y U F r' F' r U r U' r'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "R' U' R F' R' U R F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U R U' M' U R' U' M",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "l' F' R U R' U' R' F R l",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
         },
         {
           "moves": "U' R U2 R' U2 y L' U' L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/26"
           ]
@@ -2256,37 +2339,38 @@
       "algorithms": [
         {
           "moves": "R U' R' U R U' R'",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 32,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/27"
           ]
         },
         {
           "moves": "R U' R2 F R F'",
-          "length_htm": 6,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/27"
           ]
         },
         {
           "moves": "y L' U' L U2 F U' F'",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/27"
           ]
         },
         {
           "moves": "y' R' U' R U y U R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/27"
           ]
@@ -2301,73 +2385,76 @@
       "algorithms": [
         {
           "moves": "y L' U L U' L' U L",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 12,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "R U R' U' F R' F' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 22,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "y' R' U R U' R' U R",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 4,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "R U R' U2 F' U F",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "F' U F2 R' F' R",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "R U R' U2 F' U F",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "R U' R' U' R' F R F' R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
         },
         {
           "moves": "y L' U L2 F' L' F",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/28"
           ]
@@ -2382,64 +2469,68 @@
       "algorithms": [
         {
           "moves": "R' F R F' R' F R F'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "y L' U' L U L' U' L",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 16,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "y' R' U' R U R' U' R",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 15,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "R' F R F' U R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 22,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "M' U R U' r' U R U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "U2 R U' R' y' R' U' R",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
         },
         {
           "moves": "x R' U R U' R' U R U' x'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/29"
           ]
@@ -2454,28 +2545,29 @@
       "algorithms": [
         {
           "moves": "R U R' U' R U R'",
-          "length_htm": 7,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 34,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/30"
           ]
         },
         {
           "moves": "F R' F' R F R' F' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/30"
           ]
         },
         {
           "moves": "y U' L' U' L U2 F U2 F' U F U' F'",
-          "length_htm": 12,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/30"
           ]
@@ -2490,91 +2582,93 @@
       "algorithms": [
         {
           "moves": "U' R' F R F' R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 28,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' y L' U2 L",
-          "length_htm": 6,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' U2 F R' F' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "l F' R U' R' U l'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' y' R' U2 R",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' y U L' U L",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' d R' U R",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "R U' R' U y' R' U R",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "community_votes": 6,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "U' R' F R F' U' R' F R F'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
         },
         {
           "moves": "F2 r U r' F R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/31"
           ]
@@ -2589,109 +2683,113 @@
       "algorithms": [
         {
           "moves": "R U R' U' R U R' U' R U R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 24,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U R U' R' U R U' R' U R U' R'",
-          "length_htm": 12,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 35,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "R2 U R2 U R2 U2 R2",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 21,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U R U R' U' R U2 R' U R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "R' F R F' R' F R F' R' F R F'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "y L' U' L U L' U' L U L' U' L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U' R U R' U' R U R' U R U' R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U R' F R F' d R' U' R",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "F R' F' R F R' F' R F R' F' R",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U R U' R' U R U' R2 F R F'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U' R U R' U' R U R2 F R F'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
         },
         {
           "moves": "U' F R' F' R U' R U R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "community_votes": 9,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/32"
           ]
@@ -2706,64 +2804,68 @@
       "algorithms": [
         {
           "moves": "U' R U' R' U2 R U' R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 29,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "U' R U' R' U R' F R F'",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "y R' D R U' R' D' R",
-          "length_htm": 7,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 3,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "R U R' U' R U' R' U R U' R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "U D' L' U' L D",
-          "length_htm": 6,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 6,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "U' R U' R' U' R U2 R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "community_votes": 2,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
         },
         {
           "moves": "R U R' U' F' U F R U' R' U F' U F",
-          "length_htm": 14,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 14,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/33"
           ]
@@ -2778,82 +2880,86 @@
       "algorithms": [
         {
           "moves": "U R U R' U2 R U R'",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 27,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "U' R U2 R' U R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 20,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "y U L' U L U2 L' U L",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "y' U R' U R U2 R' U R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "U' R' D' R U R' D R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "U F' U F U' F R' F' R",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "U R' D' R U' R' D R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "community_votes": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "L D' L' U L D L'",
-          "length_htm": 7,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 7,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
         },
         {
           "moves": "F' U' F U R U R' U2 F' U F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/34"
           ]
@@ -2868,55 +2974,58 @@
       "algorithms": [
         {
           "moves": "U' R U R' U F' U' F",
-          "length_htm": 8,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 24,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
         },
         {
           "moves": "U2 R U R' F R' F' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
         },
         {
           "moves": "U' R U R' d R' U' R",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 17,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
         },
         {
           "moves": "U M' U R U' r' R U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
         },
         {
           "moves": "U2 R U' R' U' y' R' U' R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
         },
         {
           "moves": "U' l U' R U l' U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/35"
           ]
@@ -2931,82 +3040,85 @@
       "algorithms": [
         {
           "moves": "U2 R' F R F' U2 R U R'",
-          "length_htm": 9,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 12,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "U F' U' F U' R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 23,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "y U L' U' L y' U' R U R'",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "U2 F' U' F U R U' R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "d R' U' R d' R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "R2 u R U R' U' u' R' U R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "community_votes": 3,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "U2 F' U' F R' F R F'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "R2 D r' U r D' R' U R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
         },
         {
           "moves": "d R' F R' F' R U' R",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/36"
           ]
@@ -3021,154 +3133,157 @@
       "algorithms": [
         {
           "moves": "R2 U2 F R2 F' U2 R' U R'",
-          "length_htm": 9,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 37,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U' R' d R' U2 R U2 R' U R",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U2 R' U R U2 R' U F' U' F",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 8,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R' F R F' R U' R' U R U' R' U2 R U' R'",
-          "length_htm": 15,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 13,
+          "length_htm": 15,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U R' U2 R U2 R' U F' U' F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R r U R' U' r' U2 R U R U' R2",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "r U' r' R U R' U r U' r' R U R'",
-          "length_htm": 13,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 13,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U' R' y U L' U2 L U2 L' U L",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U' R' B' R' U' R2 U R' B",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R' F R F' R' U2 R2 U R2 U R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "F2 U2 R' F2 R U2 F U' F",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 11,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "L' B' R2 B' R2 B2 L R U R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 12,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "F' U F' U2 R' F2 R U2 F2",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 13,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U R' U' R U2 R' U y' R' U' R U' R' U R",
-          "length_htm": 15,
           "popularity": "alternative",
           "popularity_rank": 14,
+          "length_htm": 15,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "R U R' U2 R U2 R' d R' U' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 15,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "F' U' F U2 F' U2 F U' R U R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 16,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
         },
         {
           "moves": "y L' U L d' L U2 L' U2 L U' L'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 17,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/37"
           ]
@@ -3183,37 +3298,40 @@
       "algorithms": [
         {
           "moves": "R U R' U' R U2 R' U' R U R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 12,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/38"
           ]
         },
         {
           "moves": "R U' R' U' R U R' U2 R U' R'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 21,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/38"
           ]
         },
         {
           "moves": "R2 U2 R' U' R U' R' U2 R'",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 7,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/38"
           ]
         },
         {
           "moves": "F R' F' R2 U2 R' U' R U R'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/38"
           ]
@@ -3228,55 +3346,59 @@
       "algorithms": [
         {
           "moves": "R U R' U2 R U' R' U R U R'",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
         },
         {
           "moves": "R U' R' U R U2 R' U R U' R'",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 28,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
         },
         {
           "moves": "R U2 R U R' U R U2 R2",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 6,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
         },
         {
           "moves": "R U2 R' U R U' R' U R U R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "community_votes": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
         },
         {
           "moves": "F R' F' R U' R U' R' U R U R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
         },
         {
           "moves": "R F U R U' R' F' U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/39"
           ]
@@ -3291,73 +3413,76 @@
       "algorithms": [
         {
           "moves": "R U' R' F R U R' U' F' R U' R'",
-          "length_htm": 12,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 10,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "r U' r' U2 r U r' R U R'",
-          "length_htm": 10,
           "popularity": "common",
           "popularity_rank": 2,
+          "community_votes": 23,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "R U' R' U' R U' R' U F' U' F",
-          "length_htm": 11,
           "popularity": "common",
           "popularity_rank": 3,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "R F U R U' R' F' U' R'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "F' L' U2 L F R U R'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 15,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "y L' U' L U L' U L U2 y' R U R'",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "R U' R' U' R U' R' d R' U' R",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
         },
         {
           "moves": "F2 L' U' L U F U' F",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/40"
           ]
@@ -3372,91 +3497,94 @@
       "algorithms": [
         {
           "moves": "R U R' U' R U' R' U2 y' R' U' R",
-          "length_htm": 11,
           "popularity": "primary",
-          "popularity_source": "algdb.net votes",
           "popularity_rank": 1,
+          "popularity_source": "algdb.net votes",
+          "community_votes": 5,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U F R U R' U' F' R'",
-          "length_htm": 9,
           "popularity": "common",
           "popularity_rank": 2,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U' R' F' L' U2 L F",
-          "length_htm": 8,
           "popularity": "common",
           "popularity_rank": 3,
+          "community_votes": 9,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U' M' U' r' U2 r U r'",
-          "length_htm": 9,
           "popularity": "alternative",
           "popularity_rank": 4,
+          "length_htm": 9,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U' R' r U' r' U2 r U r'",
-          "length_htm": 10,
           "popularity": "alternative",
           "popularity_rank": 5,
+          "community_votes": 24,
+          "length_htm": 10,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "y F2 R U R' U' F' U F'",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 6,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U2 R' U2 R U' R' U2 F' U' F",
-          "length_htm": 11,
           "popularity": "alternative",
           "popularity_rank": 7,
+          "length_htm": 11,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U R' F R' F' R2 U' R' U2 R U' R'",
-          "length_htm": 13,
           "popularity": "alternative",
           "popularity_rank": 8,
+          "length_htm": 13,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "R U R' F U R U' R' F' R U R'",
-          "length_htm": 12,
           "popularity": "alternative",
           "popularity_rank": 9,
+          "length_htm": 12,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]
         },
         {
           "moves": "y F R U2 R' F' L' U' L",
-          "length_htm": 8,
           "popularity": "alternative",
           "popularity_rank": 10,
+          "length_htm": 8,
           "source_urls": [
             "https://algdb.net/puzzle/333/f2l/41"
           ]

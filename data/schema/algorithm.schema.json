@@ -82,6 +82,15 @@
           "description": "Freeform tags (e.g. '2loll', 'beginner', 'one-handed').",
           "items": { "type": "string" }
         },
+        "jperm_group": {
+          "type": "string",
+          "description": "Group label from jperm.net (e.g. 'Fish Shape', 'Adjacent Corner Swap'). Sourced via tools/scrape/parse_jperm.py."
+        },
+        "probability_weight": {
+          "type": "number",
+          "description": "Relative weight indicating how often this case appears in a real scramble, expressed as integer weight units (e.g. 1, 2, 4 for PLL). Sourced from jperm.net.",
+          "minimum": 0
+        },
         "setup": {
           "type": "string",
           "description": "Scramble (WCA notation) that produces this case from a solved cube. Applying any of the algorithms to the resulting state should solve it back."
@@ -177,6 +186,19 @@
         "notes": {
           "type": "string",
           "description": "Prose notes: fingertricks, regrips, when to prefer this variant."
+        },
+        "community_votes": {
+          "type": "integer",
+          "description": "Vote count from speedcubedb.com. Higher = more endorsed by the community. Sourced via tools/scrape/parse_speedcubedb.py.",
+          "minimum": 0
+        },
+        "jperm_recommended": {
+          "type": "boolean",
+          "description": "True if this algorithm is jperm.net's top-listed pick for the case."
+        },
+        "scdb_standard": {
+          "type": "boolean",
+          "description": "True if this algorithm matches speedcubedb.com's 'Standard Alg' designation for the case."
         }
       }
     },

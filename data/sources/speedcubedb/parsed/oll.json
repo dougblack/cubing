@@ -1,0 +1,2054 @@
+[
+  {
+    "case_name": "OLL 1",
+    "subgroup": "Dot Case",
+    "setup": "F R' F' R U2' F R' F' R2' U2' R'",
+    "standard_alg": "(R U2 R') (R' F R F') U2 (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "R U2 R2 F R F' U2 R' F R F'",
+        "votes": 144,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R U' R2 D' r U' r' D R2 U R'",
+        "votes": 34,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U D r)"
+      },
+      {
+        "moves": "f R U R' U' R f' U' r' U' R U M'",
+        "votes": 12,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "5GEN (R U r f M)"
+      },
+      {
+        "moves": "L' U2 L2 F' L' F U2 L F' L' F",
+        "votes": 5,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 2",
+    "subgroup": "Dot Case",
+    "setup": "f U R U' R' f' F U R U' R' F'",
+    "standard_alg": "F (R U R' U') F' f (R U R' U') f'",
+    "alternatives": [
+      {
+        "moves": "y' R U' R2 D' r U r' D R2 U R'",
+        "votes": 83,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U D r)"
+      },
+      {
+        "moves": "F R U R' U' S R U R' U' f'",
+        "votes": 63,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "F R U R' U' F' f R U R' U' f'",
+        "votes": 38,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F f)"
+      },
+      {
+        "moves": "y r U r' U2 R U2 R' U2 r U' r'",
+        "votes": 36,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 3",
+    "subgroup": "Dot Case",
+    "setup": "F U R U' R' F' U f U R U' R' f' y",
+    "standard_alg": "y' f (R U R' U') f' (U') F (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "y' f R U R' U' f' U' F R U R' U' F'",
+        "votes": 43,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "4GEN (R U F f)"
+      },
+      {
+        "moves": "y R' F2 R2 U2 R' F R U2 R2 F2 R",
+        "votes": 35,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r' R2 U R' U r U2 r' U M'",
+        "votes": 28,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "M R U R' U r U2 r' U M'",
+        "votes": 19,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U r M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 4",
+    "subgroup": "Dot Case",
+    "setup": "F U R U' R' F' U' f U R U' R' f' y",
+    "standard_alg": "y' f (R U R' U') f' (U) F (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "y' R' F2 R2 U2 R' F' R U2 R2 F2 R",
+        "votes": 41,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y' f R U R' U' f' U F R U R' U' F'",
+        "votes": 26,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "4GEN (R U F f)"
+      },
+      {
+        "moves": "R' F R F' U' S R' U' R U R S'",
+        "votes": 15,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "y F U R U' R' F' U' F R U R' U' F'",
+        "votes": 14,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 5",
+    "subgroup": "Square Shapes",
+    "setup": "r' U' R U' R' U2' r",
+    "standard_alg": "r' U2 (R U R' U) r",
+    "alternatives": [
+      {
+        "moves": "r' U2 R U R' U r",
+        "votes": 76,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y2 l' U2 L U L' U l",
+        "votes": 35,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (U L l)"
+      },
+      {
+        "moves": "y2 R' F2 r U r' F R",
+        "votes": 22,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y2 R' F2 L F L' F R",
+        "votes": 2,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 6",
+    "subgroup": "Square Shapes",
+    "setup": "r U R' U R U2' r'",
+    "standard_alg": "r U2 (R' U' R U') r'",
+    "alternatives": [
+      {
+        "moves": "r U2 R' U' R U' r'",
+        "votes": 84,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "F U' R2 D R' U' R D' R2 U F'",
+        "votes": 3,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F D)"
+      },
+      {
+        "moves": "y2 l U2 L' U' L U' l'",
+        "votes": 3,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (U L l)"
+      },
+      {
+        "moves": "y' x' D R2 U' R' U R' D' x",
+        "votes": 3,
+        "movecount_etm": 9,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 7",
+    "subgroup": "Lightning Shapes",
+    "setup": "r U2' R' U' R U' r'",
+    "standard_alg": "r (U R' U R) U2 r'",
+    "alternatives": [
+      {
+        "moves": "r U R' U R U2 r'",
+        "votes": 74,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "S' R U R' U R U2 R' U S",
+        "votes": 8,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "L' U2 L U2 L F' L' F",
+        "votes": 6,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "y2 l U L' U L U2 l'",
+        "votes": 4,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (U L l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 8",
+    "subgroup": "Lightning Shapes",
+    "setup": "r' U2' R U R' U r y2'",
+    "standard_alg": "y2 r' (U' R U' R') U2 r",
+    "alternatives": [
+      {
+        "moves": "y2 r' U' R U' R' U2 r",
+        "votes": 49,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "l' U' L U' L' U2 l",
+        "votes": 46,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (U L l)"
+      },
+      {
+        "moves": "R U2 R' U2 R' F R F'",
+        "votes": 26,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R' F' r U' r' F2 R",
+        "votes": 22,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "4GEN (R U F r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 9",
+    "subgroup": "Fish Shapes",
+    "setup": "F U R U' R2' F' R U R U' R' y'",
+    "standard_alg": "y (R U R' U') (R' F R) (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "y R U R' U' R' F R2 U R' U' F'",
+        "votes": 85,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R U2 R' U' S' R U' R' S",
+        "votes": 22,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "y2 F' U' F r U' r' U r U r'",
+        "votes": 7,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U F r)"
+      },
+      {
+        "moves": "y' L' U' L U' L F' L' F L' U2 L",
+        "votes": 7,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 10",
+    "subgroup": "Fish Shapes",
+    "setup": "R U2' R' F R' F' R U' R U' R'",
+    "standard_alg": "(R U R' U) (R' F R F') (R U2 R')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R' F R F' R U2 R'",
+        "votes": 57,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y F U F' R' F R U' R' F' R",
+        "votes": 16,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y M' R' U2 R U R' U R U M",
+        "votes": 8,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U M)"
+      },
+      {
+        "moves": "y2 L' U' L U L F' L2 U' L U F",
+        "votes": 6,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 11",
+    "subgroup": "Lightning Shapes",
+    "setup": "M U' R U2' R' U' R U' R2' r",
+    "standard_alg": "M (R U R' U R U2 R') U M'",
+    "alternatives": [
+      {
+        "moves": "r' R2 U R' U R U2 R' U M'",
+        "votes": 45,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "y2 r U R' U R' F R F' R U2 r'",
+        "votes": 37,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "S R U R' U R U2 R' U2 S'",
+        "votes": 29,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "M R U R' U R U2 R' U M'",
+        "votes": 29,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 12",
+    "subgroup": "Lightning Shapes",
+    "setup": "F U R U' R' F' U' F U R U' R' F'",
+    "standard_alg": "y' M' (R' U' R U' R' U2 R) U' M",
+    "alternatives": [
+      {
+        "moves": "y' M' R' U' R U' R' U2 R U' M",
+        "votes": 37,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U M)"
+      },
+      {
+        "moves": "F R U R' U' F' U F R U R' U' F'",
+        "votes": 27,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y' S R' U' R U' R' U2 R U2 S'",
+        "votes": 18,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "y M L' U' L U' L' U2 L U' M'",
+        "votes": 10,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 13",
+    "subgroup": "Knight Move Shapes",
+    "setup": "F' U' F r U' r' U r U r'",
+    "standard_alg": "(r U' r') U' (r U r') (F' U F)",
+    "alternatives": [
+      {
+        "moves": "F U R U2 R' U' R U R' F'",
+        "votes": 42,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F U R U' R2 F' R U R U' R'",
+        "votes": 42,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r U' r' U' r U r' F' U F",
+        "votes": 28,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U F r)"
+      },
+      {
+        "moves": "r U' r' U' r U r' y L' U L",
+        "votes": 5,
+        "movecount_etm": 11,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 14",
+    "subgroup": "Knight Move Shapes",
+    "setup": "F U F' R' F R U' R' F' R",
+    "standard_alg": "R' F (R U R') F' R (F U' F')",
+    "alternatives": [
+      {
+        "moves": "R' F R U R' F' R F U' F'",
+        "votes": 55,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r U R' U' r' F R2 U R' U' F'",
+        "votes": 28,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "l' U l U l' U' l F U' F'",
+        "votes": 9,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U F l)"
+      },
+      {
+        "moves": "F' U' L' U L2 F L' U' L' U L",
+        "votes": 6,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 15",
+    "subgroup": "Knight Move Shapes",
+    "setup": "r' U' r U' R' U R r' U r",
+    "standard_alg": "(r' U' r) (R' U' R U) (r' U r)",
+    "alternatives": [
+      {
+        "moves": "r' U' r R' U' R U r' U r",
+        "votes": 39,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y2 l' U' l L' U' L U l' U l",
+        "votes": 35,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L l)"
+      },
+      {
+        "moves": "r' U' M' U' R U r' U r",
+        "votes": 14,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "y2 R' F' R L' U' L U R' F R",
+        "votes": 12,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 16",
+    "subgroup": "Knight Move Shapes",
+    "setup": "r U r' U R U' R' r U' r'",
+    "standard_alg": "(r U r') (R U R' U') (r U' r')",
+    "alternatives": [
+      {
+        "moves": "r U r' R U R' U' r U' r'",
+        "votes": 74,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "r U M U R' U' r U' r'",
+        "votes": 11,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "y2 R' F R U R' U' F' R U' R' U2 R",
+        "votes": 7,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 l U l' L U L' U' l U' l'",
+        "votes": 4,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 17",
+    "subgroup": "Dot Case",
+    "setup": "F R' F' R U2' F R' F' R U' R U' R'",
+    "standard_alg": "(R U R' U) (R' F R F') U2 (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R' F R F' U2 R' F R F'",
+        "votes": 58,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 F R' F' R U S' R U' R' S",
+        "votes": 50,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "y2 F R' F' R2 r' U R U' R' U' M'",
+        "votes": 12,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "5GEN (R U F r M)"
+      },
+      {
+        "moves": "y' F' r U r' U' S r' F r S'",
+        "votes": 8,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (U F r S)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 18",
+    "subgroup": "Dot Case",
+    "setup": "r' U2' R U R' U r2' U2' R' U' R U' r'",
+    "standard_alg": "y (R U2 R') (R' F R F') U2 M' (U R U' r')",
+    "alternatives": [
+      {
+        "moves": "y R U2 R2 F R F' U2 M' U R U' r'",
+        "votes": 40,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "5GEN (R U F r M)"
+      },
+      {
+        "moves": "r U R' U R U2 r2 U' R U' R' U2 r",
+        "votes": 23,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y F S' R U' R' S R U2 R' U' F'",
+        "votes": 23,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "R D r' U' r D' R' U' R2 F R F' R",
+        "votes": 10,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "5GEN (R U F D r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 19",
+    "subgroup": "Dot Case",
+    "setup": "F R' F' R M U R U' R' U' M'",
+    "standard_alg": "M U (R U R' U') M' (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "y S' R U R' S U' R' F R F'",
+        "votes": 48,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "M U R U R' U' M' R' F R F'",
+        "votes": 36,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F M)"
+      },
+      {
+        "moves": "R' U2 F R U R' U' F2 U2 F R",
+        "votes": 14,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r' R U R U R' U' r R2 F R F'",
+        "votes": 8,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 20",
+    "subgroup": "Dot Case",
+    "setup": "r U R' U' M2' U R U' R' U' M'",
+    "standard_alg": "(r U R' U') M2 (U R U' R') U' M'",
+    "alternatives": [
+      {
+        "moves": "r U R' U' M2 U R U' R' U' M'",
+        "votes": 55,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "M' U2 M U2 M' U M U2 M' U2 M",
+        "votes": 41,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "S' R U R' S U' M' U R U' r'",
+        "votes": 28,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "5GEN (R U r M S)"
+      },
+      {
+        "moves": "S R' U' R U R U R U' R' S'",
+        "votes": 22,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U S)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 21",
+    "subgroup": "OCLL",
+    "setup": "R U R' U R U' R' U R U2' R' y'",
+    "standard_alg": "(R U R' U) (R U' R' U) (R U2 R')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R U' R' U R U2 R'",
+        "votes": 77,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y R U2 R' U' R U R' U' R U' R'",
+        "votes": 48,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y F R U R' U' R U R' U' R U R' U' F'",
+        "votes": 33,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R' U' R U' R' U R U' R' U2 R",
+        "votes": 13,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 22",
+    "subgroup": "OCLL",
+    "setup": "R' U2' R2' U R2' U R2' U2' R'",
+    "standard_alg": "R U2 (R2' U') (R2 U') (R2' U') U' R",
+    "alternatives": [
+      {
+        "moves": "R U2 R2 U' R2 U' R2 U2 R",
+        "votes": 97,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "R' U2 R2 U R2 U R2 U2 R'",
+        "votes": 18,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "f R U R' U' S' R U R' U' F'",
+        "votes": 16,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "f R U R' U' f' F R U R' U' F'",
+        "votes": 4,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F f)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 23",
+    "subgroup": "OCLL",
+    "setup": "R U2' R D R' U2' R D' R2'",
+    "standard_alg": "R2 D (R' U2 R) D' (R' U2 R')",
+    "alternatives": [
+      {
+        "moves": "R2 D R' U2 R D' R' U2 R'",
+        "votes": 103,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y2 R2 D' R U2 R' D R U2 R",
+        "votes": 39,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R U R' U R U2 R2 U' R U' R' U2 R",
+        "votes": 13,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y R U R' U' R U' R' U2 R U' R' U2 R U R'",
+        "votes": 5,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "2GEN (R U)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 24",
+    "subgroup": "OCLL",
+    "setup": "F R' F' r U R U' r'",
+    "standard_alg": "(r U R' U') (r' F R F')",
+    "alternatives": [
+      {
+        "moves": "r U R' U' r' F R F'",
+        "votes": 116,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y2 R' F' r U R U' r' F",
+        "votes": 14,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y' x' R U R' D R U' R' D' x",
+        "votes": 12,
+        "movecount_etm": 10,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y R U R D R' U' R D' R2",
+        "votes": 11,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 25",
+    "subgroup": "OCLL",
+    "setup": "R' F' r U R U' r' F y'",
+    "standard_alg": "y (F' r U R') (U' r' F R)",
+    "alternatives": [
+      {
+        "moves": "R U2 R D R' U2 R D' R2",
+        "votes": 95,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y F' r U R' U' r' F R",
+        "votes": 75,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "F R' F' r U R U' r'",
+        "votes": 62,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "x R' U R D' R' U' R D x'",
+        "votes": 13,
+        "movecount_etm": 10,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 26",
+    "subgroup": "OCLL",
+    "setup": "R U R' U R U2' R' y'",
+    "standard_alg": "y R U2 (R' U' R U') R'",
+    "alternatives": [
+      {
+        "moves": "y R U2 R' U' R U' R'",
+        "votes": 82,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "R' U' R U' R' U2 R",
+        "votes": 42,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y2 L' U' L U' L' U2 L",
+        "votes": 23,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U L)"
+      },
+      {
+        "moves": "y2 L' U R U' L U R'",
+        "votes": 4,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U L)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 27",
+    "subgroup": "OCLL",
+    "setup": "R U2' R' U' R U' R'",
+    "standard_alg": "(R U R' U) (R U2 R')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R U2 R'",
+        "votes": 107,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y' R' U2 R U R' U R",
+        "votes": 15,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y L' U2 L U L' U L",
+        "votes": 8,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U L)"
+      },
+      {
+        "moves": "y2 L U L' U L U2 L'",
+        "votes": 7,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U L)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 28",
+    "subgroup": "All Corners Oriented",
+    "setup": "R U R' U' M' U R U' r'",
+    "standard_alg": "(r U R' U') M (U R U' R')",
+    "alternatives": [
+      {
+        "moves": "r U R' U' M U R U' R'",
+        "votes": 112,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "R' F R S R' F' R S'",
+        "votes": 25,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R F S)"
+      },
+      {
+        "moves": "r U R' U' r' R U R U' R'",
+        "votes": 25,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y2 M' U M U2 M' U M",
+        "votes": 17,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 29",
+    "subgroup": "Awkward Shapes",
+    "setup": "M F R' F' R U R U' R' U' M'",
+    "standard_alg": "y (R U R') U' (R U' R') (F' U' F) (R U R')",
+    "alternatives": [
+      {
+        "moves": "r2 D' r U r' D r2 U' r' U' r",
+        "votes": 55,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U D r)"
+      },
+      {
+        "moves": "y R U R' U' R U' R' F' U' F R U R'",
+        "votes": 39,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y S' R U R' U' R' F R F' U S",
+        "votes": 25,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "M U R U R' U' R' F R F' M'",
+        "votes": 19,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 30",
+    "subgroup": "Awkward Shapes",
+    "setup": "F U R U2' R' U R U2' R' U' F' y2'",
+    "standard_alg": "y2 F U (R U2 R') U' (R U2 R') U' F'",
+    "alternatives": [
+      {
+        "moves": "y' r' D' r U' r' D r2 U' r' U r U r'",
+        "votes": 46,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (U D r)"
+      },
+      {
+        "moves": "y2 F U R U2 R' U' R U2 R' U' F'",
+        "votes": 42,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 F R' F R2 U' R' U' R U R' F2",
+        "votes": 29,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y S' R' U' R f R' U R U' F'",
+        "votes": 14,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "5GEN (R U F f S)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 31",
+    "subgroup": "P Shapes",
+    "setup": "R' F R U R' U' F' U R",
+    "standard_alg": "(R' U' F) (U R U' R') F' R",
+    "alternatives": [
+      {
+        "moves": "R' U' F U R U' R' F' R",
+        "votes": 76,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 S' L' U' L U L F' L' f",
+        "votes": 13,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (U L F f S)"
+      },
+      {
+        "moves": "y S R U R' U' f' U' F",
+        "votes": 12,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "y' F R' F' R U R U R' U' R U' R'",
+        "votes": 7,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 32",
+    "subgroup": "P Shapes",
+    "setup": "f R' F' R U R U' R' S'",
+    "standard_alg": "S (R U R' U') (R' F R f')",
+    "alternatives": [
+      {
+        "moves": "S R U R' U' R' F R f'",
+        "votes": 73,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "y2 L U F' U' L' U L F L'",
+        "votes": 20,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "R U B' U' R' U R B R'",
+        "votes": 14,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U B)"
+      },
+      {
+        "moves": "y' R' F R F' U' r U' r' U r U r'",
+        "votes": 6,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 33",
+    "subgroup": "T Shapes",
+    "setup": "F R' F' R U R U' R'",
+    "standard_alg": "(R U R' U') (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "R U R' U' R' F R F'",
+        "votes": 115,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 L' U' L U L F' L' F",
+        "votes": 5,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "y2 r' F' r U r U' r' F",
+        "votes": 3,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (U F r)"
+      },
+      {
+        "moves": "R U R' F' U' F R U' R'",
+        "votes": 1,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 34",
+    "subgroup": "C Shapes",
+    "setup": "F U R' U' R' F' R U R2' U' R' y2'",
+    "standard_alg": "y2 R U R2 U' R' F (R U R U') F'",
+    "alternatives": [
+      {
+        "moves": "y f R f' U' r' U' R U M'",
+        "votes": 79,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (R U r f M)"
+      },
+      {
+        "moves": "y2 R U R2 U' R' F R U R U' F'",
+        "votes": 53,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F R U R' U' R' F' r U R U' r'",
+        "votes": 26,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y2 R U R' U' B' R' F R F' B",
+        "votes": 16,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F B)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 35",
+    "subgroup": "Fish Shapes",
+    "setup": "R U2' R' F R' F' R2' U2' R'",
+    "standard_alg": "(R U2 R') (R' F R F') (R U2 R')",
+    "alternatives": [
+      {
+        "moves": "R U2 R2 F R F' R U2 R'",
+        "votes": 55,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "f R U R' U' f' R U R' U R U2 R'",
+        "votes": 6,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "R U2 R' d' R' F R U' R' F' R",
+        "votes": 3,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F d)"
+      },
+      {
+        "moves": "y L' U2 L2 F' L' F L' U2 L",
+        "votes": 2,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 36",
+    "subgroup": "W Shapes",
+    "setup": "F' L F L' U' L' U' L U L' U L y2'",
+    "standard_alg": "y2 (L' U' L U') (L' U L U) (L F' L' F)",
+    "alternatives": [
+      {
+        "moves": "y R U R2 F' U' F U R2 U2 R'",
+        "votes": 57,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 L' U' L U' L' U L U L F' L' F",
+        "votes": 51,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "y2 R U R' F' R U R' U' R' F R U' R' F R F'",
+        "votes": 31,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 R' F' U' F2 U R U' R' F' R",
+        "votes": 16,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 37",
+    "subgroup": "Fish Shapes",
+    "setup": "F R U' R' U R U R' F'",
+    "standard_alg": "F R (U' R' U') (R U R') F'",
+    "alternatives": [
+      {
+        "moves": "F R' F' R U R U' R'",
+        "votes": 77,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F R U' R' U' R U R' F'",
+        "votes": 71,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y F' r U r' U' r' F r",
+        "votes": 8,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (U F r)"
+      },
+      {
+        "moves": "y2 r2 D' r U' r' D r U r",
+        "votes": 3,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U D r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 38",
+    "subgroup": "W Shapes",
+    "setup": "F R' F' R U R U R' U' R U' R'",
+    "standard_alg": "(R U R' U) (R U' R' U') (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R U' R' U' R' F R F'",
+        "votes": 89,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y F R U' R' S U' R U R' f'",
+        "votes": 7,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "r U R' U' r' F R U R U' R' F'",
+        "votes": 2,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y2 L U L' U L U' L' U' L' B L B'",
+        "votes": 2,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (U L B)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 39",
+    "subgroup": "Lightning Shapes",
+    "setup": "L U F' U' L' U L F L' y'",
+    "standard_alg": "y L F' (L' U' L U) F U' L'",
+    "alternatives": [
+      {
+        "moves": "y' f' r U r' U' r' F r S",
+        "votes": 44,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (U F r f S)"
+      },
+      {
+        "moves": "y' R U R' F' U' F U R U2 R'",
+        "votes": 41,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y L F' L' U' L U F U' L'",
+        "votes": 32,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "y' f' L F L' U' L' U L S",
+        "votes": 17,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (U L F f S)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 40",
+    "subgroup": "Lightning Shapes",
+    "setup": "R' U' F U R U' R' F' R y'",
+    "standard_alg": "y R' F (R U R' U') F' U R",
+    "alternatives": [
+      {
+        "moves": "y R' F R U R' U' F' U R",
+        "votes": 67,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y' f R' F' R U R U' R' S'",
+        "votes": 34,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "R r D r' U r D' r' U' R'",
+        "votes": 2,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U D r)"
+      },
+      {
+        "moves": "y' L' U' L F U F' U' L' U2 L",
+        "votes": 1,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 41",
+    "subgroup": "Awkward Shapes",
+    "setup": "F U R U' R' F' R U2' R' U' R U' R' y2'",
+    "standard_alg": "y2 (R U R' U) (R U2 R') F (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "y2 R U R' U R U2 R' F R U R' U' F'",
+        "votes": 53,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 F U R2 D R' U' R D' R2 F'",
+        "votes": 21,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F D)"
+      },
+      {
+        "moves": "y' S U' R' F' U' F U R S'",
+        "votes": 12,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "M U' F' L' U' L U F M'",
+        "votes": 10,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (U L F M)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 42",
+    "subgroup": "Awkward Shapes",
+    "setup": "F U R U' R' F' R' U2' R U R' U R",
+    "standard_alg": "(R' U' R U') (R' U2 R) F (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "R' U' R U' R' U2 R F R U R' U' F'",
+        "votes": 39,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y F S' R U R' U' F' U S",
+        "votes": 25,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U F S)"
+      },
+      {
+        "moves": "y R' F R F' R' F R F' R U R' U' R U R'",
+        "votes": 23,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R' U' F2 u' R U R' D R2 B",
+        "votes": 14,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "6GEN (R U F D B u)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 43",
+    "subgroup": "P Shapes",
+    "setup": "f' U' L' U L f",
+    "standard_alg": "y R' U' (F' U F) R",
+    "alternatives": [
+      {
+        "moves": "y R' U' F' U F R",
+        "votes": 61,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 F' U' L' U L F",
+        "votes": 26,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "f' L' U' L U f",
+        "votes": 25,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (U L f)"
+      },
+      {
+        "moves": "B' U' R' U R B",
+        "votes": 7,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U B)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 44",
+    "subgroup": "P Shapes",
+    "setup": "f U R U' R' f'",
+    "standard_alg": "f (R U R' U') f'",
+    "alternatives": [
+      {
+        "moves": "f R U R' U' f'",
+        "votes": 71,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "y2 F U R U' R' F'",
+        "votes": 67,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R U B U' B' R'",
+        "votes": 6,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U B)"
+      },
+      {
+        "moves": "y' L U F U' F' L'",
+        "votes": 2,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 45",
+    "subgroup": "T Shapes",
+    "setup": "F U R U' R' F'",
+    "standard_alg": "F (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "F R U R' U' F'",
+        "votes": 103,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R' F' U' F U R",
+        "votes": 17,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 f U R U' R' f'",
+        "votes": 5,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "y2 F' L' U' L U F",
+        "votes": 4,
+        "movecount_etm": 6,
+        "movecount_stm": 6,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 46",
+    "subgroup": "C Shapes",
+    "setup": "R' U' F R' F' R U R",
+    "standard_alg": "R' U' (R' F R F') U R",
+    "alternatives": [
+      {
+        "moves": "R' U' R' F R F' U R",
+        "votes": 75,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R' F' U' F R U' R' U2 R",
+        "votes": 6,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y F R U R' U' F' U' R U R' U R U2 R'",
+        "votes": 3,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "l' U2 L2 F' L' F U L' U l",
+        "votes": 3,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (U L F l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 47",
+    "subgroup": "L Shapes",
+    "setup": "F' U' L' U L U' L' U L F",
+    "standard_alg": "F' (L' U' L U) (L' U' L U) F",
+    "alternatives": [
+      {
+        "moves": "y' F R' F' R U2 R U' R' U R U2 R'",
+        "votes": 39,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F' L' U' L U L' U' L U F",
+        "votes": 38,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "R' U' R' F R F' R' F R F' U R",
+        "votes": 28,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y' R' F' U' F U F' U' F U R",
+        "votes": 9,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 48",
+    "subgroup": "L Shapes",
+    "setup": "F U R U' R' U R U' R' F'",
+    "standard_alg": "F (R U R' U') (R U R' U') F'",
+    "alternatives": [
+      {
+        "moves": "F R U R' U' R U R' U' F'",
+        "votes": 68,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 f U R U' R' U R U' R' f'",
+        "votes": 6,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "R U2 R' U' R U R' U2 R' F R F'",
+        "votes": 3,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F R' F' U2 R U R' U R2 U2 R'",
+        "votes": 1,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 49",
+    "subgroup": "L Shapes",
+    "setup": "r' U r2' U' r2' U' r2' U r' y2'",
+    "standard_alg": "y2 r U' (r2 U) (r2 U) (r2) U' r",
+    "alternatives": [
+      {
+        "moves": "y2 r U' r2 U r2 U r2 U' r",
+        "votes": 59,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U r)"
+      },
+      {
+        "moves": "l U' l2 U l2 U l2 U' l",
+        "votes": 14,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U l)"
+      },
+      {
+        "moves": "R B' R2 F R2 B R2 F' R",
+        "votes": 8,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R F B)"
+      },
+      {
+        "moves": "y2 R' F R' F' R2 U2 B' R B R'",
+        "votes": 3,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F B)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 50",
+    "subgroup": "L Shapes",
+    "setup": "r U' r2' U r2' U r2' U' r",
+    "standard_alg": "r' U (r2 U') (r2 U') (r2) U r'",
+    "alternatives": [
+      {
+        "moves": "r' U r2 U' r2 U' r2 U r'",
+        "votes": 51,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U r)"
+      },
+      {
+        "moves": "y2 R' F R2 B' R2 F' R2 B R'",
+        "votes": 11,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R F B)"
+      },
+      {
+        "moves": "y' R U2 R' U' R U' R' F R U R' U' F'",
+        "votes": 9,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y2 l' U l2 U' l2 U' l2 U l'",
+        "votes": 9,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 51",
+    "subgroup": "Line Shapes",
+    "setup": "f U R U' R' U R U' R' f'",
+    "standard_alg": "f (R U R' U') (R U R' U') f'",
+    "alternatives": [
+      {
+        "moves": "y2 F U R U' R' U R U' R' F'",
+        "votes": 63,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "f R U R' U' R U R' U' f'",
+        "votes": 52,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "y' R' U' R' F R F' R U' R' U2 R",
+        "votes": 5,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y r' F' U' F U F' U' F U r",
+        "votes": 3,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (U F r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 52",
+    "subgroup": "Line Shapes",
+    "setup": "F R U R' d R' U' R U' R'",
+    "standard_alg": "y2 R' (F' U' F U') (R U R' U) R",
+    "alternatives": [
+      {
+        "moves": "y2 R' F' U' F U' R U R' U R",
+        "votes": 55,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R U R' U R U' B U' B' R'",
+        "votes": 44,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U B)"
+      },
+      {
+        "moves": "R U R' U R d' R U' R' F'",
+        "votes": 16,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F d)"
+      },
+      {
+        "moves": "R U R' U R U' y R U' R' F'",
+        "votes": 12,
+        "movecount_etm": 11,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 53",
+    "subgroup": "L Shapes",
+    "setup": "r' U2' R U R' U' R U R' U r",
+    "standard_alg": "(r' U' R U') (R' U R U') (R' U2 r)",
+    "alternatives": [
+      {
+        "moves": "r' U' R U' R' U R U' R' U2 r",
+        "votes": 33,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y2 l' U' L U' L' U L U' L' U2 l",
+        "votes": 25,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L l)"
+      },
+      {
+        "moves": "y r' U2 R U R' U' R U R' U r",
+        "votes": 23,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y' l' U2 L U L' U' L U L' U l",
+        "votes": 13,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 54",
+    "subgroup": "L Shapes",
+    "setup": "r U2' R' U' R U R' U' R U' r'",
+    "standard_alg": "(r U R' U) (R U' R' U) (R U2 r')",
+    "alternatives": [
+      {
+        "moves": "r U R' U R U' R' U R U2 r'",
+        "votes": 45,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y' r U2 R' U' R U R' U' R U' r'",
+        "votes": 26,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y' r U r' R U R' U' R U R' U' r U' r'",
+        "votes": 4,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "y2 l U L' U L U' L' U L U2 l'",
+        "votes": 3,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (U L l)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 55",
+    "subgroup": "Line Shapes",
+    "setup": "F R' F' U2' R U R' U R2' U2' R'",
+    "standard_alg": "R U2 R2 (U' R U' R') U2 (F R F')",
+    "alternatives": [
+      {
+        "moves": "y R' F U R U' R2 F' R2 U R' U' R",
+        "votes": 51,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R' F R U R U' R2 F' R2 U' R' U R U R'",
+        "votes": 32,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R U2 R2 U' R U' R' U2 F R F'",
+        "votes": 31,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r U2 R2 F R F' U2 r' F R F'",
+        "votes": 19,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 56",
+    "subgroup": "Line Shapes",
+    "setup": "r U r' R U R' U' R U R' U' r U' r'",
+    "standard_alg": "(r U r') (U R U' R') (U R U' R') (r U' r')",
+    "alternatives": [
+      {
+        "moves": "r U r' U R U' R' U R U' R' r U' r'",
+        "votes": 33,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U r)"
+      },
+      {
+        "moves": "r U r' U R U' R' M' U R U2 r'",
+        "votes": 30,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "F R U R' U' R F' r U R' U' r'",
+        "votes": 19,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "r' U' r U' R' U R U' R' U R r' U r",
+        "votes": 16,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U r)"
+      }
+    ]
+  },
+  {
+    "case_name": "OLL 57",
+    "subgroup": "All Corners Oriented",
+    "setup": "r U R' U' M U R U' R'",
+    "standard_alg": "(R U R' U') M' (U R U' r')",
+    "alternatives": [
+      {
+        "moves": "R U R' U' M' U R U' r'",
+        "votes": 95,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U r M)"
+      },
+      {
+        "moves": "y R U' R' S' R U R' S",
+        "votes": 12,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "y R U R' S' R U' R' S",
+        "votes": 8,
+        "movecount_etm": 8,
+        "movecount_stm": 8,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "R U R' U' R' r U R U' r'",
+        "votes": 6,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U r)"
+      }
+    ]
+  }
+]

@@ -1,0 +1,758 @@
+[
+  {
+    "case_name": "Aa",
+    "subgroup": "Adj Swap",
+    "setup": "x R2' D2' R U R' D2' R U' R x'",
+    "standard_alg": "x (R' U R') D2 (R U' R') D2 R2 x'",
+    "alternatives": [
+      {
+        "moves": "x R' U R' D2 R U' R' D2 R2 x'",
+        "votes": 196,
+        "movecount_etm": 11,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y' x L2 D2 L' U' L D2 L' U L'",
+        "votes": 49,
+        "movecount_etm": 10,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U L D)"
+      },
+      {
+        "moves": "y x' R2 D2 R' U' R D2 R' U R' x",
+        "votes": 42,
+        "movecount_etm": 11,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "l' U R' D2 R U' R' D2 R2 x'",
+        "votes": 41,
+        "movecount_etm": 10,
+        "movecount_stm": 9,
+        "face_moves": "4GEN (R U D l)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ab",
+    "subgroup": "Adj Swap",
+    "setup": "x R' U R' D2' R U' R' D2' R2' x'",
+    "standard_alg": "x R2 D2 (R U R') D2 (R U' R) x'",
+    "alternatives": [
+      {
+        "moves": "x R2 D2 R U R' D2 R U' R x'",
+        "votes": 160,
+        "movecount_etm": 11,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y' x L U' L D2 L' U L D2 L2",
+        "votes": 29,
+        "movecount_etm": 10,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (U L D)"
+      },
+      {
+        "moves": "y x' R U' R D2 R' U R D2 R2 x",
+        "votes": 25,
+        "movecount_etm": 11,
+        "movecount_stm": 9,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R' B' R U' R D R' U R D' R2 B R",
+        "votes": 18,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "4GEN (R U D B)"
+      }
+    ]
+  },
+  {
+    "case_name": "E",
+    "subgroup": "Opp Swap",
+    "setup": "x' D R U R' D' R U' R' D R U' R' D' R U R' x y'",
+    "standard_alg": "y x' (R U' R' D) (R U R' D') (R U R' D) (R U' R' D') x",
+    "alternatives": [
+      {
+        "moves": "y x' R U' R' D R U R' D' R U R' D R U' R' D' x",
+        "votes": 162,
+        "movecount_etm": 18,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y R' U' R' D' R U' R' D R U R' D' R U R' D R2",
+        "votes": 46,
+        "movecount_etm": 17,
+        "movecount_stm": 17,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R2 U F' R' U R U' R' U R U' R' U R U' F U' R2",
+        "votes": 29,
+        "movecount_etm": 18,
+        "movecount_stm": 18,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y x' L' U L D' L' U' L D L' U' L D' L' U L D",
+        "votes": 16,
+        "movecount_etm": 17,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (U L D)"
+      }
+    ]
+  },
+  {
+    "case_name": "F",
+    "subgroup": "Adj Swap",
+    "setup": "R' U' R U' R' U R U R2' F' R U R U' R' F U R y'",
+    "standard_alg": "y (R' U' F') (R U R' U') R' F R2 (U' R' U') (R U R' U) R",
+    "alternatives": [
+      {
+        "moves": "y R' U' F' R U R' U' R' F R2 U' R' U' R U R' U R",
+        "votes": 189,
+        "movecount_etm": 18,
+        "movecount_stm": 18,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R' F R f' R' F R2 U R' U' R' F' R2 U R' S",
+        "votes": 53,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "5GEN (R U F f S)"
+      },
+      {
+        "moves": "R' U R U' R2 F' U' F U R F R' F' R2",
+        "votes": 42,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R2 F R F' R' U' F' U F R2 U R' U' R",
+        "votes": 16,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ga",
+    "subgroup": "Adj Swap",
+    "setup": "R' U' R D' U R2' U R' U R U' R U' R2' D",
+    "standard_alg": "R2 (U R' U R' U' R U') R2 D (U' R' U R) D'",
+    "alternatives": [
+      {
+        "moves": "R2 U R' U R' U' R U' R2 D U' R' U R D'",
+        "votes": 117,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R2 u R' U R' U' R u' R2 F' U F",
+        "votes": 27,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F u)"
+      },
+      {
+        "moves": "y R U R' F' R U R' U' R' F R U' R' F R2 U' R' U' R U R' F'",
+        "votes": 15,
+        "movecount_etm": 22,
+        "movecount_stm": 22,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "D' R2 U R' U R' U' R U' R2 U' D R' U R",
+        "votes": 10,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "Gb",
+    "subgroup": "Adj Swap",
+    "setup": "R2' U R' U R' U' R U' R2' D U' R' U R D'",
+    "standard_alg": "(R' U' R U) D' R2 (U R' U R U' R U') R2 D",
+    "alternatives": [
+      {
+        "moves": "D R' U' R U D' R2 U R' U R U' R U' R2",
+        "votes": 143,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R' U' R U D' R2 U R' U R U' R U' R2 D",
+        "votes": 106,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y F' U' F R2 u R' U R U' R u' R2",
+        "votes": 57,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U F u)"
+      },
+      {
+        "moves": "R' d' F R2 u R' U R U' R u' R2",
+        "votes": 35,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "5GEN (R U F u d)"
+      }
+    ]
+  },
+  {
+    "case_name": "Gc",
+    "subgroup": "Adj Swap",
+    "setup": "D' R U R' U' D R2' U' R U' R' U R' U R2'",
+    "standard_alg": "R2 (U' R U' R U R' U) R2 D' (U R U' R') D",
+    "alternatives": [
+      {
+        "moves": "y2 R2 F2 R U2 R U2 R' F R U R' U' R' F R2",
+        "votes": 91,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R2 U' R U' R U R' U R2 D' U R U' R' D",
+        "votes": 90,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "D R2 U' R U' R U R' U R2 D' U R U' R'",
+        "votes": 75,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R2 u' R U' R U R' u R2 f R' f'",
+        "votes": 21,
+        "movecount_etm": 12,
+        "movecount_stm": 12,
+        "face_moves": "4GEN (R U u f)"
+      }
+    ]
+  },
+  {
+    "case_name": "Gd",
+    "subgroup": "Adj Swap",
+    "setup": "R2' U' R U' R U R' U R2' D' U R U' R' D",
+    "standard_alg": "(R U R' U') D R2 (U' R U' R' U R' U) R2 D'",
+    "alternatives": [
+      {
+        "moves": "R U R' U' D R2 U' R U' R' U R' U R2 D'",
+        "votes": 114,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "D' R U R' U' D R2 U' R U' R' U R' U R2",
+        "votes": 35,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R U R' y' R2 u' R U' R' U R' u R2",
+        "votes": 14,
+        "movecount_etm": 13,
+        "movecount_stm": 12,
+        "face_moves": "3GEN (R U u)"
+      },
+      {
+        "moves": "y R2 F' R U R U' R' F' R U2 R' U2 R' F2 R2",
+        "votes": 13,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "H",
+    "subgroup": "EPLL",
+    "setup": "M2' U' M2' U2' M2' U' M2'",
+    "standard_alg": "(M2 U' M2) U2 (M2 U' M2)",
+    "alternatives": [
+      {
+        "moves": "M2 U' M2 U2 M2 U' M2",
+        "votes": 137,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "M2 U M2 U2 M2 U M2",
+        "votes": 135,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "R2 S2 R2 U' R2 S2 R2",
+        "votes": 17,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "M2 U2 M2 U M2 U2 M2",
+        "votes": 14,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ja",
+    "subgroup": "Adj Swap",
+    "setup": "L' R' U2' R U R' U2' L U' R y'",
+    "standard_alg": "y (R' U L') U2 (R U' R') U2 R L",
+    "alternatives": [
+      {
+        "moves": "y2 x R2 F R F' R U2 r' U r U2 x'",
+        "votes": 151,
+        "movecount_etm": 12,
+        "movecount_stm": 10,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "y R' U L' U2 R U' R' U2 R L",
+        "votes": 68,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R U L)"
+      },
+      {
+        "moves": "L' U' L F L' U' L U L F' L2 U L",
+        "votes": 63,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "R U' L' U R' U2 L U' L' U2 L",
+        "votes": 22,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U L)"
+      }
+    ]
+  },
+  {
+    "case_name": "Jb",
+    "subgroup": "Adj Swap",
+    "setup": "R U R2' F' R U R U' R' F R U' R'",
+    "standard_alg": "(R U R' F') (R U R' U') R' F R2 U' R'",
+    "alternatives": [
+      {
+        "moves": "R U R' F' R U R' U' R' F R2 U' R'",
+        "votes": 208,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R U2 R' U' R U2 L' U R' U' L",
+        "votes": 12,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U L)"
+      },
+      {
+        "moves": "r' F R F' r U2 R' U R U2 R'",
+        "votes": 8,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "4GEN (R U F r)"
+      },
+      {
+        "moves": "L' U R U' L U2 R' U R U2 R'",
+        "votes": 7,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "3GEN (R U L)"
+      }
+    ]
+  },
+  {
+    "case_name": "Na",
+    "subgroup": "Opp Swap",
+    "setup": "R U R' U2' R U R2' F' R U R U' R' F R U' R' U' R U' R'",
+    "standard_alg": "(R U R' U) (R U R' F') (R U R' U') R' F R2 U' R' U2 (R U' R')",
+    "alternatives": [
+      {
+        "moves": "R U R' U R U R' F' R U R' U' R' F R2 U' R' U2 R U' R'",
+        "votes": 142,
+        "movecount_etm": 21,
+        "movecount_stm": 21,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F' R U R' U' R' F R2 F U' R' U' R U F' R'",
+        "votes": 61,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R F U' R' U R U F' R2 F' R U R U' R' F",
+        "votes": 37,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r' D r U2 r' D r U2 r' D r U2 r' D r U2 r' D r",
+        "votes": 31,
+        "movecount_etm": 19,
+        "movecount_stm": 19,
+        "face_moves": "3GEN (U D r)"
+      }
+    ]
+  },
+  {
+    "case_name": "Nb",
+    "subgroup": "Opp Swap",
+    "setup": "F r' F' r U r U' r2' D' F r U r' F' D r",
+    "standard_alg": "(R' U R U' R') (F' U' F) (R U R') (F R' F') (R U' R)",
+    "alternatives": [
+      {
+        "moves": "R' U R U' R' F' U' F R U R' F R' F' R U' R",
+        "votes": 128,
+        "movecount_etm": 17,
+        "movecount_stm": 17,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "r' D' F r U' r' F' D r2 U r' U' r' F r F'",
+        "votes": 109,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "4GEN (U F D r)"
+      },
+      {
+        "moves": "R' U L' U2 R U' L R' U L' U2 R U' L",
+        "votes": 31,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U L)"
+      },
+      {
+        "moves": "L' U' L U' L' U' L F L' U' L U L F' L2 U L U2 L' U L",
+        "votes": 20,
+        "movecount_etm": 21,
+        "movecount_stm": 21,
+        "face_moves": "3GEN (U L F)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ra",
+    "subgroup": "Adj Swap",
+    "setup": "R U2' R D R' U R D' R' U' R' U R U R' y'",
+    "standard_alg": "y (R U' R' U') (R U R D) (R' U' R D') (R' U2 R')",
+    "alternatives": [
+      {
+        "moves": "y R U' R' U' R U R D R' U' R D' R' U2 R'",
+        "votes": 150,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y R U R' F' R U2 R' U2 R' F R U R U2 R'",
+        "votes": 60,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "L U2 L' U2 L F' L' U' L U L F L2",
+        "votes": 31,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (U L F)"
+      },
+      {
+        "moves": "y R U' R' U' R U R' U R' D' R U' R' D R2 U R'",
+        "votes": 18,
+        "movecount_etm": 17,
+        "movecount_stm": 17,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "Rb",
+    "subgroup": "Adj Swap",
+    "setup": "R' U R U R' U' R' D' R U R' D R U2' R",
+    "standard_alg": "(R' U2) (R U2) (R' F R) (U R' U' R') F' R2",
+    "alternatives": [
+      {
+        "moves": "R' U2 R U2 R' F R U R' U' R' F' R2",
+        "votes": 113,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "y R2 F R U R U' R' F' R U2 R' U2 R",
+        "votes": 74,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R' U2 R' D' R U' R' D R U R U' R' U' R",
+        "votes": 49,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "y R' U R U R' U' R' D' R U R' D R U2 R",
+        "votes": 8,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "3GEN (R U D)"
+      }
+    ]
+  },
+  {
+    "case_name": "T",
+    "subgroup": "Adj Swap",
+    "setup": "F R U' R' U R U R2' F' R U R U' R'",
+    "standard_alg": "(R U R' U') (R' F R2) (U' R' U') (R U R' F')",
+    "alternatives": [
+      {
+        "moves": "R U R' U' R' F R2 U' R' U' R U R' F'",
+        "votes": 216,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "l b d' L' U' F U2 L' U' L' U L U' f' S M r u E U' R'",
+        "votes": 25,
+        "movecount_etm": 21,
+        "movecount_stm": 21,
+        "face_moves": "13GEN (R U L F r u f l b d M E S)"
+      },
+      {
+        "moves": "R U R' U' R' F R2 U' R' U F' L' U L",
+        "votes": 19,
+        "movecount_etm": 14,
+        "movecount_stm": 14,
+        "face_moves": "4GEN (R U L F)"
+      },
+      {
+        "moves": "R2 u R2 u' R2 F2 u' F2 u F2",
+        "votes": 19,
+        "movecount_etm": 10,
+        "movecount_stm": 10,
+        "face_moves": "3GEN (R F u)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ua",
+    "subgroup": "EPLL",
+    "setup": "M2' U' M' U2' M U' M2'",
+    "standard_alg": "y2 (M2 U M) U2 (M' U M2)",
+    "alternatives": [
+      {
+        "moves": "y2 M2 U M U2 M' U M2",
+        "votes": 135,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "R U R' U R' U' R2 U' R' U R' U R",
+        "votes": 119,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y R2 U' S' U2 S U' R2",
+        "votes": 81,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "3GEN (R U S)"
+      },
+      {
+        "moves": "y2 R U' R U R U R U' R' U' R2",
+        "votes": 68,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      }
+    ]
+  },
+  {
+    "case_name": "Ub",
+    "subgroup": "EPLL",
+    "setup": "M2' U M' U2' M U M2'",
+    "standard_alg": "y2 (M2 U' M) U2 (M' U' M2)",
+    "alternatives": [
+      {
+        "moves": "y2 M2 U' M U2 M' U' M2",
+        "votes": 125,
+        "movecount_etm": 7,
+        "movecount_stm": 7,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "R' U R' U' R' U' R' U R U R2",
+        "votes": 55,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "R2' U R U R' U' R3 U' R' U R'",
+        "votes": 51,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      },
+      {
+        "moves": "y2 R2 U R U R' U' R' U' R' U R'",
+        "votes": 41,
+        "movecount_etm": 11,
+        "movecount_stm": 11,
+        "face_moves": "2GEN (R U)"
+      }
+    ]
+  },
+  {
+    "case_name": "V",
+    "subgroup": "Opp Swap",
+    "setup": "D2' R' U R D' R2' U' R' U R' U R' D' R U2' R'",
+    "standard_alg": "(R' U R' U') (R D' R' D) (R' U D') (R2 U' R2) D R2",
+    "alternatives": [
+      {
+        "moves": "R' U R' U' R D' R' D R' U D' R2 U' R2 D R2",
+        "votes": 105,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R' U R U' R' f' U' R U2 R' U' R U' R' f R",
+        "votes": 92,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U f)"
+      },
+      {
+        "moves": "y R U' R U R' D R D' R U' D R2 U R2 D' R2",
+        "votes": 81,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U D)"
+      },
+      {
+        "moves": "R' U R' U' y R' F' R2 U' R' U R' F R F",
+        "votes": 80,
+        "movecount_etm": 15,
+        "movecount_stm": 14,
+        "face_moves": "3GEN (R U F)"
+      }
+    ]
+  },
+  {
+    "case_name": "Y",
+    "subgroup": "Opp Swap",
+    "setup": "F R' F' R U R U' R' F R U' R' U R U R' F'",
+    "standard_alg": "F R (U' R' U') (R U R' F') (R U R' U') (R' F R F')",
+    "alternatives": [
+      {
+        "moves": "F R U' R' U' R U R' F' R U R' U' R' F R F'",
+        "votes": 163,
+        "movecount_etm": 17,
+        "movecount_stm": 17,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F R' F R2 U' R' U' R U R' F' R U R' U' F'",
+        "votes": 58,
+        "movecount_etm": 16,
+        "movecount_stm": 16,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "R2 U' R2 U' R2 U F U F' R2 F U' F'",
+        "votes": 13,
+        "movecount_etm": 13,
+        "movecount_stm": 13,
+        "face_moves": "3GEN (R U F)"
+      },
+      {
+        "moves": "F R' F' R U R U' R2 U' R U R f' U' f",
+        "votes": 8,
+        "movecount_etm": 15,
+        "movecount_stm": 15,
+        "face_moves": "4GEN (R U F f)"
+      }
+    ]
+  },
+  {
+    "case_name": "Z",
+    "subgroup": "EPLL",
+    "setup": "M U2' M2' U2' M U' M2' U' M2'",
+    "standard_alg": "(M2 U) (M2 U) (M' U2) M2 (U2 M')",
+    "alternatives": [
+      {
+        "moves": "M' U' M2 U' M2 U' M' U2 M2",
+        "votes": 89,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "M2 U M2 U M' U2 M2 U2 M'",
+        "votes": 83,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "y M2 U' M2 U' M' U2 M2 U2 M'",
+        "votes": 43,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U M)"
+      },
+      {
+        "moves": "y M' U M2 U M2 U M' U2 M2",
+        "votes": 41,
+        "movecount_etm": 9,
+        "movecount_stm": 9,
+        "face_moves": "2GEN (U M)"
+      }
+    ]
+  }
+]

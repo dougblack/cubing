@@ -26,10 +26,24 @@ Checking them in means:
 
 ## What is and isn't merged
 
-Currently only `algdb/algdb.json` flows into `data/methods/cfop/`. JPerm and
-SpeedCubeDB are scouted but not yet integrated — they would be enrichment
-passes adding case groupings, real-solve probabilities, and explicit
-popularity scores.
+All three sources flow into `data/methods/cfop/`:
+
+- `algdb` — drives the base list of cases and algorithms via
+  `tools/scrape/import_algdb.py`. Each case's `algorithms` array is in
+  algdb's upvote order; the first entry is marked `popularity: primary`.
+- `jperm` — adds `jperm_group` and `probability_weight` to each case and
+  marks the matching algorithm with `jperm_recommended: true` (when JPerm's
+  top alg appears in our list). Has no F2L data.
+- `speedcubedb` — adds `community_votes` to matching algorithms and marks
+  the canonical pick with `scdb_standard: true`.
+
+The merge is run via `tools/normalize/merge_sources.py` after the parse
+scripts (`parse_jperm.py`, `parse_speedcubedb.py`) have produced their
+intermediate JSON under each source's `parsed/` subdirectory. The merge is
+**enrichment-only** — it never reorders, rewrites, or adds algorithms.
+Algorithm matching uses a strict normalizer (whitespace + parens stripped,
+unicode primes folded); notation differences like `Uw` vs `u` count as
+non-matches.
 
 ## Licensing
 
