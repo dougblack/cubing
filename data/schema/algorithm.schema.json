@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/dougblack/cubing/data/schema/algorithm.schema.json",
+  "title": "Cubing Method Stage",
+  "description": "Schema for a single stage of a solving method (e.g. CFOP OLL). One JSON file = one stage.",
+  "type": "object",
+  "required": ["method", "stage", "cases"],
+  "properties": {
+    "method": {
+      "type": "string",
+      "description": "Solving method identifier (e.g. 'cfop', 'roux', 'zz').",
+      "enum": ["cfop", "roux", "zz", "petrus", "eg", "cll", "ell"]
+    },
+    "stage": {
+      "type": "string",
+      "description": "Stage within the method (e.g. 'pll', 'oll', '2loll', 'f2l', 'cross').",
+      "examples": ["cross", "f2l", "oll", "2loll", "pll", "ocll", "oell"]
+    },
+    "stage_name": {
+      "type": "string",
+      "description": "Human-readable stage name (e.g. 'Permutation of the Last Layer')."
+    },
+    "puzzle": {
+      "type": "string",
+      "description": "WCA puzzle identifier.",
+      "enum": ["3x3", "2x2", "4x4", "5x5", "6x6", "7x7", "skewb", "pyraminx", "megaminx", "square1"],
+      "default": "3x3"
+    },
+    "notation": {
+      "type": "string",
+      "description": "Move notation system used in algorithm strings.",
+      "enum": ["wca-singmaster"],
+      "default": "wca-singmaster"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional prose description of the stage."
+    },
+    "cases": {
+      "type": "array",
+      "description": "All cases for this stage.",
+      "items": { "$ref": "#/$defs/case" }
+    }
+  },
+  "$defs": {
+    "case": {
+      "type": "object",
+      "required": ["id", "name", "algorithms"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Stable kebab-case identifier unique within the stage.",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "examples": ["t-perm", "sune", "oll-21"]
+        },
+        "name": {
+          "type": "string",
+          "description": "Canonical case name (e.g. 'T Perm', 'Sune').",
+          "examples": ["T Perm", "Sune", "Anti-Sune"]
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Other names this case is known by.",
+          "items": { "type": "string" }
+        },
+        "number": {
+          "type": ["integer", "null"],
+          "description": "Standard numbering within the stage where one exists (e.g. OLL 1-57).",
+          "minimum": 1
+        },
+        "group": {
+          "type": "string",
+          "description": "Sub-grouping within the stage (e.g. 'edges-only', 'corners-only', 'adjacent-swap', 'dot', 'cross', 'sune').",
+          "examples": ["edges-only", "corners-only", "adjacent-swap", "diagonal-swap", "g-perm", "cross", "dot", "line", "l-shape", "sune", "pi", "h", "u", "t", "l", "anti-sune"]
+        },
+        "subgroup": {
+          "type": "string",
+          "description": "Optional second-level grouping (e.g. 'g-perm-a' vs 'g-perm-b')."
+        },
+        "tags": {
+          "type": "array",
+          "description": "Freeform tags (e.g. '2loll', 'beginner', 'one-handed').",
+          "items": { "type": "string" }
+        },
+        "setup": {
+          "type": "string",
+          "description": "Scramble (WCA notation) that produces this case from a solved cube. Applying any of the algorithms to the resulting state should solve it back."
+        },
+        "recognition": {
+          "type": "string",
+          "description": "Notes on how to recognize this case visually."
+        },
+        "diagram": {
+          "$ref": "#/$defs/diagram"
+        },
+        "algorithms": {
+          "type": "array",
+          "description": "All known algorithms for this case, ordered by popularity (most popular first).",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/algorithm" }
+        }
+      }
+    },
+    "algorithm": {
+      "type": "object",
+      "required": ["moves"],
+      "properties": {
+        "moves": {
+          "type": "string",
+          "description": "Algorithm in WCA Singmaster notation.",
+          "examples": ["R U R' U R U2 R'", "R U R' U' R' F R2 U' R' U' R U R' F'"]
+        },
+        "auf_pre": {
+          "type": "string",
+          "description": "Optional pre-AUF (Adjust U Face) move if recognition is rotation-dependent.",
+          "enum": ["", "U", "U'", "U2"]
+        },
+        "auf_post": {
+          "type": "string",
+          "description": "Optional post-AUF move after the algorithm.",
+          "enum": ["", "U", "U'", "U2"]
+        },
+        "rotation": {
+          "type": "string",
+          "description": "Cube rotation before the algorithm (e.g. 'y', 'y2').",
+          "enum": ["", "x", "x'", "x2", "y", "y'", "y2", "z", "z'", "z2"]
+        },
+        "popularity": {
+          "type": "string",
+          "description": "Coarse popularity tier. 'primary' = the canonical/most-used alg for this case.",
+          "enum": ["primary", "common", "alternative", "obscure"]
+        },
+        "popularity_rank": {
+          "type": "integer",
+          "description": "Optional numeric ranking within this case (1 = most popular).",
+          "minimum": 1
+        },
+        "popularity_source": {
+          "type": "string",
+          "description": "Where the popularity judgment came from (e.g. 'algdb.net votes', 'jperm.net recommended', 'curator')."
+        },
+        "best_for": {
+          "type": "array",
+          "description": "What this algorithm is especially well-suited for.",
+          "items": {
+            "type": "string",
+            "enum": ["two-handed", "one-handed-left", "one-handed-right", "fingertricks", "low-stm", "low-htm", "beginner", "feet"]
+          }
+        },
+        "length_htm": {
+          "type": "integer",
+          "description": "Move count in Half Turn Metric.",
+          "minimum": 0
+        },
+        "length_stm": {
+          "type": "integer",
+          "description": "Move count in Slice Turn Metric.",
+          "minimum": 0
+        },
+        "length_qtm": {
+          "type": "integer",
+          "description": "Move count in Quarter Turn Metric.",
+          "minimum": 0
+        },
+        "author": {
+          "type": "string",
+          "description": "Who is credited with the algorithm, if known."
+        },
+        "source_urls": {
+          "type": "array",
+          "description": "Where this algorithm was sourced from.",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        },
+        "notes": {
+          "type": "string",
+          "description": "Prose notes: fingertricks, regrips, when to prefer this variant."
+        }
+      }
+    },
+    "diagram": {
+      "type": "object",
+      "description": "How to render the case's cube state diagram.",
+      "properties": {
+        "style": {
+          "type": "string",
+          "description": "Diagram style. 'last-layer' = top-down view showing only the U face and top stickers of side faces. 'full' = full cube net.",
+          "enum": ["last-layer", "full", "f2l-pair"]
+        },
+        "stickers": {
+          "type": "object",
+          "description": "Sticker colors by face position, when overriding derivation from the setup scramble. Keys are face letters (U/F/R/B/L/D); values are arrays of 9 color codes ('w','y','r','o','b','g','-' for hidden/gray).",
+          "additionalProperties": {
+            "type": "array",
+            "items": { "type": "string", "enum": ["w", "y", "r", "o", "b", "g", "-", "n"] },
+            "minItems": 9,
+            "maxItems": 9
+          }
+        },
+        "arrows": {
+          "type": "array",
+          "description": "PLL-style arrows showing piece movement. Each arrow is {from, to} where positions reference sticker grid indices.",
+          "items": {
+            "type": "object",
+            "required": ["from", "to"],
+            "properties": {
+              "from": { "type": "string" },
+              "to": { "type": "string" }
+            }
+          }
+        },
+        "svg_path": {
+          "type": "string",
+          "description": "Relative path to the pre-generated SVG (filled in by the diagram-generation tool)."
+        }
+      }
+    }
+  }
+}
