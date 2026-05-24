@@ -3,9 +3,11 @@ import { describe, expect, it } from "vitest";
 import {
   collapseDoubleTurns,
   isComplete,
+  markExtraneousMoves,
   newTrackerState,
   parseScramble,
   remainingMoves,
+  simplifyMoves,
   tickTracker,
 } from "./scramble-tracker.js";
 
@@ -178,5 +180,76 @@ describe("collapseDoubleTurns", () => {
 
   it("returns an empty array for empty input", () => {
     expect(collapseDoubleTurns([])).toEqual([]);
+  });
+});
+
+describe("markExtraneousMoves", () => {
+  it("returns all-false for single moves and mixed faces", () => {
+    expect(markExtraneousMoves([])).toEqual([]);
+    expect(markExtraneousMoves(["R"])).toEqual([false]);
+    expect(markExtraneousMoves(["R", "U", "R'", "U'"])).toEqual([
+      false,
+      false,
+      false,
+      false,
+    ]);
+  });
+
+  it("flags any consecutive same-base run of 2+", () => {
+    expect(markExtraneousMoves(["U2", "U"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["U2", "U'"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["U", "U2"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["R", "R'"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["U2", "U2"])).toEqual([true, true]);
+  });
+
+  it("flags only the offending run inside a longer sequence", () => {
+    expect(markExtraneousMoves(["R", "U2", "U", "R'"])).toEqual([
+      false,
+      true,
+      true,
+      false,
+    ]);
+  });
+
+  it("handles wide moves and rotations by base", () => {
+    expect(markExtraneousMoves(["Rw", "Rw'"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["y", "y2"])).toEqual([true, true]);
+    expect(markExtraneousMoves(["R", "Rw"])).toEqual([false, false]);
+  });
+});
+
+describe("simplifyMoves", () => {
+  it("leaves clean sequences alone", () => {
+    expect(simplifyMoves([])).toEqual([]);
+    expect(simplifyMoves(["R"])).toEqual(["R"]);
+    expect(simplifyMoves(["R", "U", "R'", "U'"])).toEqual([
+      "R",
+      "U",
+      "R'",
+      "U'",
+    ]);
+  });
+
+  it("reduces same-face runs to the net quarter-turn count", () => {
+    expect(simplifyMoves(["F", "F'", "F"])).toEqual(["F"]);
+    expect(simplifyMoves(["F", "F'"])).toEqual([]);
+    expect(simplifyMoves(["R", "R", "R"])).toEqual(["R'"]);
+    expect(simplifyMoves(["R", "R", "R", "R"])).toEqual([]);
+    expect(simplifyMoves(["U", "U", "U", "U", "U"])).toEqual(["U"]);
+    expect(simplifyMoves(["F2", "F"])).toEqual(["F'"]);
+    expect(simplifyMoves(["F2", "F'"])).toEqual(["F"]);
+    expect(simplifyMoves(["F2", "F2"])).toEqual([]);
+  });
+
+  it("treats different faces as separate runs", () => {
+    expect(simplifyMoves(["F", "F'", "R", "R", "F"])).toEqual(["R2", "F"]);
+    expect(simplifyMoves(["R", "U", "U", "R'"])).toEqual(["R", "U2", "R'"]);
+  });
+
+  it("handles wide moves and rotations as their own base", () => {
+    expect(simplifyMoves(["Rw", "Rw'", "Rw"])).toEqual(["Rw"]);
+    expect(simplifyMoves(["y", "y2"])).toEqual(["y'"]);
+    expect(simplifyMoves(["R", "Rw"])).toEqual(["R", "Rw"]);
   });
 });

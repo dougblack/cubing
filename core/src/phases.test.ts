@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 
+import { applyAlg, solved } from "./cube.js";
 import type { MoveEvent } from "./entities.js";
-import { batchPhases } from "./phases.js";
+import { batchPhases, findCrossFaceForColor } from "./phases.js";
 
 /** Build a synthetic move stream with sequential timestamps (1s per move). */
 function moves(...notation: string[]): MoveEvent[] {
@@ -82,5 +83,38 @@ describe("batchPhases", () => {
     const r = batchPhases("R U R' U' R U R' U'", moves("F"));
     expect(r.crossFace).toBe("D");
     expect(r.completed).toBe(false);
+  });
+});
+
+describe("findCrossFaceForColor", () => {
+  it("finds the W cross at D on a solved cube", () => {
+    expect(findCrossFaceForColor(solved(), "W")).toBe("D");
+  });
+
+  it("finds the W cross at U after the cube is flipped (x2)", () => {
+    // Simulates the frame-mismatch case: cuber holds Y on top, so the
+    // cross color (W) lives on the cuber's bottom, but in the sim's
+    // tracking it ends up on the U position. The detector must find it
+    // there even though the U-center is Y, not W.
+    const state = applyAlg(solved(), "x2");
+    expect(findCrossFaceForColor(state, "W")).toBe("U");
+  });
+
+  it("returns null when no face has 4 cross-color edges", () => {
+    // A single R turn breaks the cross on every face.
+    const state = applyAlg(solved(), "R");
+    expect(findCrossFaceForColor(state, "W")).toBeNull();
+  });
+
+  it("doesn't require the face's center color to match", () => {
+    // Manually set up an "8 W stickers + Y center on U" state — this is
+    // what a Y-top cuber's end-of-F2L state looks like in the sim after
+    // applying cube-frame moves. The detector should still pick U.
+    const state = solved();
+    // Replace U-face (slots 0..8) with all W except slot 4 (center).
+    for (let i = 0; i < 9; i++) {
+      if (i !== 4) state[i] = "W";
+    }
+    expect(findCrossFaceForColor(state, "W")).toBe("U");
   });
 });

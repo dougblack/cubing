@@ -35,6 +35,52 @@ export function solved(): State {
   return s;
 }
 
+/** Parse a 54-character Kociemba facelets string (URFDLB face order, each
+ *  face row-major from top-left when viewed from outside) into our internal
+ *  State. The chars `U/R/F/D/L/B` are mapped to their standard sticker
+ *  colors (U→Y, D→W, F→G, B→B, L→O, R→R). Throws on bad input. */
+export function parseKociembaFacelets(facelets: string): State {
+  if (facelets.length !== 54) {
+    throw new Error(
+      `parseKociembaFacelets: expected 54 chars, got ${facelets.length}`,
+    );
+  }
+  const FACE_TO_COLOR: Record<string, StickerColor> = {
+    U: "Y",
+    D: "W",
+    F: "G",
+    B: "B",
+    L: "O",
+    R: "R",
+  };
+  // Kociemba slices: U=0..8, R=9..17, F=18..26, D=27..35, L=36..44, B=45..53.
+  // Our internal face order: U=0, L=1, F=2, R=3, B=4, D=5.
+  const offsets: Record<FaceLetter, number> = {
+    U: 0,
+    R: 9,
+    F: 18,
+    D: 27,
+    L: 36,
+    B: 45,
+  };
+  const state: StickerColor[] = new Array(54);
+  for (const face of FACES) {
+    const off = offsets[face];
+    const base = FACE_INDEX[face] * 9;
+    for (let i = 0; i < 9; i++) {
+      const ch = facelets[off + i]!;
+      const color = FACE_TO_COLOR[ch];
+      if (!color) {
+        throw new Error(
+          `parseKociembaFacelets: unknown character "${ch}" at index ${off + i}`,
+        );
+      }
+      state[base + i] = color;
+    }
+  }
+  return state;
+}
+
 /** Sticker index helper: faceIndex * 9 + slotIndex. */
 const idx = (face: number, slot: number): number => face * 9 + slot;
 

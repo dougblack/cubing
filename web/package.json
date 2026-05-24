@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
-    "build": "vite build",
-    "preview": "vite preview",
-    "check": "svelte-check --tsconfig ./tsconfig.json"
+    "dev": "NODE_OPTIONS=--disable-warning=DEP0205 vite dev",
+    "build": "NODE_OPTIONS=--disable-warning=DEP0205 vite build",
+    "preview": "NODE_OPTIONS=--disable-warning=DEP0205 vite preview",
+    "check": "NODE_OPTIONS=--disable-warning=DEP0205 svelte-check --tsconfig ./tsconfig.json"
   },
   "devDependencies": {
     "@sveltejs/adapter-static": "^3.0.10",

@@ -38,6 +38,16 @@ function newId<T extends string>(): T {
   return crypto.randomUUID() as T;
 }
 
+/** YYYY-MM-DD in the user's local timezone. Used to detect day rollover so
+ *  reopening the timer the next morning starts a fresh session. */
+function localDateKey(ms: number): string {
+  const d = new Date(ms);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
 class TimerStore {
   sessions = $state<Session[]>([]);
   solves = $state<Solve[]>([]);
@@ -48,15 +58,37 @@ class TimerStore {
     this.sessions = readJSON<Session[]>(KEY_SESSIONS, []);
     this.solves = readJSON<Solve[]>(KEY_SOLVES, []);
 
+    // One-time migration: strip the legacy "Session " prefix from names.
+    let mutated = false;
+    this.sessions = this.sessions.map((s) => {
+      const m = /^Session (\d+)$/.exec(s.name);
+      if (m && m[1]) {
+        mutated = true;
+        return { ...s, name: m[1] };
+      }
+      return s;
+    });
+    if (mutated) writeJSON(KEY_SESSIONS, this.sessions);
+
     // Bootstrap a default session on first run.
     if (this.sessions.length === 0) {
-      const first: Session = {
-        id: newId<SessionId>(),
-        name: "Session 1",
-        createdAt: Date.now(),
-      };
-      this.sessions = [first];
+      this.sessions = [this.makeSession()];
       writeJSON(KEY_SESSIONS, this.sessions);
+    }
+
+    // If the most-recent session was created on a different local date,
+    // auto-start a new one so daily sessions stay distinct without the user
+    // having to remember to click "+ new".
+    const latest = [...this.sessions].sort(
+      (a, b) => b.createdAt - a.createdAt,
+    )[0]!;
+    if (localDateKey(latest.createdAt) !== localDateKey(Date.now())) {
+      const fresh = this.makeSession();
+      this.sessions = [...this.sessions, fresh];
+      writeJSON(KEY_SESSIONS, this.sessions);
+      this.currentSessionId = fresh.id;
+      writeJSON(KEY_CURRENT_SESSION, fresh.id);
+      return;
     }
 
     const persisted = readJSON<SessionId | null>(KEY_CURRENT_SESSION, null);
@@ -64,6 +96,14 @@ class TimerStore {
       persisted && this.sessions.some((s) => s.id === persisted)
         ? persisted
         : (this.sessions[0]?.id ?? null);
+  }
+
+  private makeSession(): Session {
+    return {
+      id: newId<SessionId>(),
+      name: String(this.nextSessionNumber()),
+      createdAt: Date.now(),
+    };
   }
 
   // ---- queries ----
@@ -115,14 +155,10 @@ class TimerStore {
 
   // ---- session mutations ----
 
-  /** Create a new session named "Session N" where N is one greater than the
-   *  highest existing Session-numbered session. Auto-switches to it. */
+  /** Create a new session named "N" where N is one greater than the
+   *  highest existing numbered session. Auto-switches to it. */
   createSession(): Session {
-    const session: Session = {
-      id: newId<SessionId>(),
-      name: `Session ${this.nextSessionNumber()}`,
-      createdAt: Date.now(),
-    };
+    const session = this.makeSession();
     this.sessions = [...this.sessions, session];
     writeJSON(KEY_SESSIONS, this.sessions);
     this.setCurrentSession(session.id);
@@ -132,11 +168,8 @@ class TimerStore {
   private nextSessionNumber(): number {
     let max = 0;
     for (const s of this.sessions) {
-      const m = /^Session (\d+)$/.exec(s.name);
-      if (m && m[1]) {
-        const n = Number.parseInt(m[1], 10);
-        if (n > max) max = n;
-      }
+      const n = Number.parseInt(s.name, 10);
+      if (Number.isFinite(n) && n > max) max = n;
     }
     return max + 1;
   }
@@ -160,6 +193,24 @@ class TimerStore {
       this.currentSessionId = nextId;
       writeJSON(KEY_CURRENT_SESSION, nextId);
     }
+  }
+
+  // ---- export ----
+
+  /** Snapshot of every session and solve, suitable for download. Session
+   *  `id` is the UUID — external tools can dedupe on it. */
+  exportSnapshot(): {
+    exportedAt: number;
+    version: 1;
+    sessions: Session[];
+    solves: Solve[];
+  } {
+    return {
+      exportedAt: Date.now(),
+      version: 1,
+      sessions: this.sessions,
+      solves: this.solves,
+    };
   }
 }
 

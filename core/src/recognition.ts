@@ -6,23 +6,23 @@
 // Algorithm: at module init, for each case in the dataset, apply the
 // inverse of its primary algorithm to a solved cube. That produces the
 // case's canonical state. Normalize so yellow is on top, then capture
-// the pattern (which top-layer stickers are which colors / U-color)
-// across all 4 AUF rotations. Store in a Map<pattern → caseId>.
+// a color-independent pattern across all 4 AUF rotations. Store in a
+// Map<pattern → caseId>.
+//
+// Color independence: OLL is encoded as "which U-layer stickers match
+// the U-center" (Y/N). PLL is encoded as "which side-center color does
+// each side-top sticker match" (F/R/B/L). Both encodings only depend on
+// the cube's RELATIVE state, not on which physical colors live on which
+// faces — so recognition works regardless of the cuber's cross color.
+//
+// Orientation: before encoding, callers should rotate the state so the
+// cross face is on D (i.e. so the cuber's last layer is on U). Use
+// `normalizeToCrossOnD` from phases.ts. The recognition functions below
+// expect their input to already be in that frame.
 //
 // At recognition time: encode the user's state into the same pattern
 // string and look up. O(1) per recognition after the one-time table
 // build (~250µs).
-//
-// Limitations:
-//   - Assumes cross-on-D (standard CFOP, white-cross). For a yellow-cross
-//     cuber or color-neutral cubers, the post-F2L state would have the
-//     OLL pattern on a different face — we'd need to rotate first.
-//     `analyzeSolveCases` honors the cross face from the supplied
-//     PhaseAnalysis and rotates accordingly.
-//   - Some OLL cases share primary-alg algs with non-clean (wide-move)
-//     notation. We use the same alg-picking logic as the SVG renderer
-//     (`pickCleanAlg`) which prefers face-only algs and falls back to
-//     `normalizeYellowOnTop` for the rest.
 
 import ollData from "../../data/methods/cfop/oll.json" with { type: "json" };
 import pllData from "../../data/methods/cfop/pll.json" with { type: "json" };
@@ -36,7 +36,7 @@ import {
   solved,
 } from "./cube.js";
 import type { MoveEvent } from "./entities.js";
-import type { PhaseAnalysis } from "./phases.js";
+import { normalizeToCrossOnD, type PhaseAnalysis } from "./phases.js";
 
 export interface RecognizedCase {
   id: string;
@@ -87,13 +87,23 @@ function encodeOLLPattern(state: State): string {
   return out;
 }
 
-/** PLL pattern: the 12 side-top sticker colors as a string. Compared
- *  with the cube's own color scheme (Western) so this works as long as
- *  the simulator state was reached from a solved cube. */
+/** PLL pattern: for each of the 12 side-top stickers, emit which side
+ *  face's center it matches (`F`/`R`/`B`/`L`). Color-independent — only
+ *  the *relationship* between LL stickers and their side centers matters,
+ *  so this works for any orientation the state was rotated into. */
 function encodePLLPattern(state: State): string {
+  const fc = state[F * 9 + 4];
+  const rc = state[R * 9 + 4];
+  const bc = state[B * 9 + 4];
+  const lc = state[L * 9 + 4];
   let out = "";
   for (const i of SIDE_TOP_INDICES) {
-    out += state[i];
+    const c = state[i];
+    if (c === fc) out += "F";
+    else if (c === rc) out += "R";
+    else if (c === bc) out += "B";
+    else if (c === lc) out += "L";
+    else out += "?"; // U-color showing on a side-top sticker (invalid PLL input)
   }
   return out;
 }
@@ -164,17 +174,26 @@ function buildOLLMap(): Map<string, RecognizedCase> {
   return map;
 }
 
+/** Whole-cube y rotations. Together with AUFs these cover every cross-on-D
+ *  orientation a normalized state can land in. AUF cycles only U-layer
+ *  stickers; y cycles stickers AND side centers — for our face-letter PLL
+ *  encoding these produce *different* strings, so both must be enumerated. */
+const Y_ROTATIONS = ["", "y", "y2", "y'"] as const;
+
 function buildPLLMap(): Map<string, RecognizedCase> {
   if (pllMap) return pllMap;
   const map = new Map<string, RecognizedCase>();
   for (const c of pllData.cases as CaseRecord[]) {
     const base = caseStateFor(c);
     if (!base) continue;
-    for (const auf of AUFS) {
-      const rotated = auf === "" ? base : applyAlg(base, auf);
-      const pattern = encodePLLPattern(rotated);
-      if (!map.has(pattern)) {
-        map.set(pattern, { id: c.id, name: c.name });
+    for (const y of Y_ROTATIONS) {
+      const yRotated = y === "" ? base : applyAlg(base, y);
+      for (const auf of AUFS) {
+        const rotated = auf === "" ? yRotated : applyAlg(yRotated, auf);
+        const pattern = encodePLLPattern(rotated);
+        if (!map.has(pattern)) {
+          map.set(pattern, { id: c.id, name: c.name });
+        }
       }
     }
   }
@@ -204,21 +223,15 @@ export interface CaseAnalysis {
 
 /** Top-level: take a scramble + move stream + the phase analysis (from
  *  `batchPhases`) and return the recognized OLL + PLL cases. Re-simulates
- *  the solve up to the phase boundaries — cheap, just walks the moves
- *  once each. */
+ *  the solve up to the phase boundaries, then rotates the state so the
+ *  cuber's last layer lands on U before pattern matching — that's what
+ *  makes recognition work for any cross face (white, yellow, color-
+ *  neutral) and for any orientation the cuber holds the cube in. */
 export function analyzeSolveCases(
   scramble: string,
   moveStream: readonly MoveEvent[],
   analysis: PhaseAnalysis,
 ): CaseAnalysis {
-  // We only recognize OLL/PLL when cross is on D — that's the only
-  // orientation the predicates and case patterns are aligned to. For
-  // other cross faces, we'd need to rotate state before recognition.
-  // Yellow-cross / color-neutral support is a future extension.
-  if (analysis.crossFace !== "D") {
-    return { oll: null, pll: null };
-  }
-
   const f2l = analysis.phases.find((p) => p.stage === "f2l");
   const oll = analysis.phases.find((p) => p.stage === "oll");
   if (!f2l && !oll) return { oll: null, pll: null };
@@ -233,7 +246,8 @@ export function analyzeSolveCases(
   let ollCase: RecognizedCase | null = null;
   let pllCase: RecognizedCase | null = null;
 
-  // Walk to end of F2L → recognize OLL from this state.
+  // Walk to end of F2L → recognize OLL from this state, rotated so the
+  // last layer is on U.
   if (f2l) {
     for (let i = 0; i < f2l.endIndex; i++) {
       try {
@@ -242,7 +256,7 @@ export function analyzeSolveCases(
         // skip malformed
       }
     }
-    ollCase = recognizeOLL(state);
+    ollCase = recognizeOLL(normalizeToCrossOnD(state, analysis.crossFace));
   }
 
   // Continue to end of OLL → recognize PLL from this state.
@@ -254,7 +268,7 @@ export function analyzeSolveCases(
         // skip malformed
       }
     }
-    pllCase = recognizePLL(state);
+    pllCase = recognizePLL(normalizeToCrossOnD(state, analysis.crossFace));
   }
 
   return { oll: ollCase, pll: pllCase };

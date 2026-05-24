@@ -25,6 +25,10 @@
   --color-learning-bg: #f1e3b8;
   --color-learned-bg: #d8e6cb;
   --color-preferred-tint: rgba(184, 145, 70, 0.07);
+  --color-best-bg: #dfe8f1;
+  --color-best-text: #2d5773;
+  --color-worst-bg: #f1dfdf;
+  --color-worst-text: #7d3737;
 
   --color-flag-bg: #f0ede5;
   --color-flag-text: #4f4c47;
@@ -74,6 +78,10 @@ html.dark {
   --color-learning-bg: #3f3525;
   --color-learned-bg: #2a3826;
   --color-preferred-tint: rgba(200, 160, 90, 0.10);
+  --color-best-bg: #283544;
+  --color-best-text: #b2cbdd;
+  --color-worst-bg: #3a282a;
+  --color-worst-text: #dbb2b2;
 
   --color-flag-bg: #2a2724;
   --color-flag-text: #c2bbb0;

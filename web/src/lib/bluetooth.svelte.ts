@@ -260,7 +260,12 @@ class BluetoothStore {
       this.connection = await connectGanCube(provider);
       this.deviceName = this.connection.deviceName;
       this.status = "connected";
-      this.log(`connect: connected to ${this.connection.deviceName}`);
+      // Treat the cube as solved on connect. The user almost always picks up
+      // a solved cube before opening the timer, and assuming-solved means
+      // the first FACELETS event won't fire a stray "solved!" callback that
+      // would stop the timer before they even started.
+      this.lastFaceletsWasSolved = true;
+      this.log(`connect: connected to ${this.connection.deviceName} (assumed solved)`);
       this.subscription = this.connection.events$.subscribe({
         next: (evt) => this.handleEvent(evt),
         error: (err) => {

@@ -158,6 +158,20 @@ export function remapMove(
   return swapped ? swapped + move.slice(1) : move;
 }
 
+/** Translate every move in a whitespace-separated alg string from cube
+ *  frame to user frame. Empty or null `remap` is a no-op. */
+export function remapAlg(
+  alg: string,
+  remap: Record<CubeFace, CubeFace> | null,
+): string {
+  if (!remap || !alg) return alg;
+  return alg
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((m) => remapMove(m, remap))
+    .join(" ");
+}
+
 /** Convenience: `buildFaceRemap` returns the identity table for the
  *  factory orientation. Use this to avoid recomputing/re-applying when no
  *  swap is needed. */

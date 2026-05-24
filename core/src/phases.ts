@@ -103,18 +103,68 @@ function isSolved(state: State): boolean {
 // lookup tables; relies on the simulator's rotation moves being correct
 // (which they are — they're already used by the diagram renderer).
 
+// x maps D→F, F→U, U→B, B→D — so to bring B's contents down to D you do `x`,
+// and to bring F's contents down to D you do `x'`. (Easy to flip; doesn't
+// matter for `isCrossSolved_D` on uniform-cross states until you actually
+// look at OLL/PLL stickers post-normalization, then suddenly it does.)
 const NORMALIZE_ROTATION: Record<CubeFace, string> = {
   D: "",
   U: "x2",
-  F: "x",
-  B: "x'",
+  F: "x'",
+  B: "x",
   L: "z'",
   R: "z",
 };
 
-function normalize(state: State, crossFace: CubeFace): State {
+/** Rotate `state` so `crossFace` lands on D (and therefore the opposite
+ *  face — the cuber's last layer — lands on U). Useful for any predicate
+ *  or pattern check that wants to look at the LL from above without
+ *  hard-coding a particular orientation. */
+export function normalizeToCrossOnD(state: State, crossFace: CubeFace): State {
   const rot = NORMALIZE_ROTATION[crossFace];
   return rot === "" ? state : applyAlg(state, rot);
+}
+
+/** Find which face holds a cross of the given color (its 4 edge stickers
+ *  all show `crossColor`), or `null` if none. Deliberately ignores the
+ *  face's CENTER color — for renders coming out of the BT-frame-mismatch
+ *  pipeline, the cube's centers may not align with the cuber's color
+ *  expectations, but the cross-color stickers themselves do end up at a
+ *  recoverable face. Useful for orienting a render so the cuber's cross
+ *  color sits on the bottom regardless of how the sim's frame tracked
+ *  the solve. */
+export function findCrossFaceForColor(
+  state: State,
+  crossColor: StickerColor,
+): CubeFace | null {
+  // Map our public face letters to the internal index used elsewhere
+  // in this file. CUBE_FACES from orientation.ts is in ULFRBD order
+  // already-matching FACE_INDEX, but we re-derive the offset to stay
+  // independent of that array's order.
+  const FACE_OFFSET: Record<CubeFace, number> = {
+    U: U * 9,
+    L: L * 9,
+    F: F * 9,
+    R: R * 9,
+    B: B * 9,
+    D: D * 9,
+  };
+  for (const face of CUBE_FACES) {
+    const base = FACE_OFFSET[face];
+    if (
+      state[base + 1] === crossColor &&
+      state[base + 3] === crossColor &&
+      state[base + 5] === crossColor &&
+      state[base + 7] === crossColor
+    ) {
+      return face;
+    }
+  }
+  return null;
+}
+
+function normalize(state: State, crossFace: CubeFace): State {
+  return normalizeToCrossOnD(state, crossFace);
 }
 
 function isCrossSolvedOn(state: State, crossFace: CubeFace): boolean {

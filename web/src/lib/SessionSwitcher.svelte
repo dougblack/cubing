@@ -20,23 +20,47 @@
   function onDelete() {
     if (!current || !canDelete) return;
     const ok = window.confirm(
-      `Delete ${current.name} and its solves? This can't be undone.`,
+      `Delete session ${current.name} and its solves? This can't be undone.`,
     );
     if (!ok) return;
     timerStore.deleteSession(current.id);
+  }
+
+  function onExport() {
+    const snapshot = timerStore.exportSnapshot();
+    const blob = new Blob([JSON.stringify(snapshot, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const stamp = new Date(snapshot.exportedAt)
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .slice(0, 19);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `cubing-export-${stamp}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
   }
 </script>
 
 <div class="session-switcher">
   <select onchange={onSelect} value={currentId ?? ""}>
     {#each sessions as s (s.id)}
-      <option value={s.id}>{s.name}</option>
+      <option value={s.id}>session {s.name}</option>
     {/each}
   </select>
   {#if current}
     <span class="started">started {formatDateTime(current.createdAt)}</span>
   {/if}
   <span class="spacer"></span>
+  <button
+    class="icon-btn"
+    title="Download every session and solve as a JSON file"
+    onclick={onExport}>export</button
+  >
   <button class="icon-btn" title="New session" onclick={onNew}>+ new</button>
   <button
     class="icon-btn danger"

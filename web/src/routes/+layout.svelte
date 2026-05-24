@@ -23,10 +23,10 @@
 <header class="site-header">
   <a href="/" class="brand">cubing</a>
   <nav>
+    <a href="/cfop">algs</a>
     {#each STAGES as s (s.slug)}
       <a href="/cfop/{s.slug}">{s.shortName}</a>
     {/each}
-    <a href="/timer">Timer</a>
     <ThemeToggle />
   </nav>
 </header>

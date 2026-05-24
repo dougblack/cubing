@@ -165,3 +165,73 @@ export function collapseDoubleTurns(moves: readonly string[]): string[] {
   }
   return out;
 }
+
+/** Returns a parallel boolean array marking moves that participate in a
+ *  consecutive same-face run that uses more turns than strictly needed.
+ *  Examples: `["U2", "U"]` → `[true, true]` (one move would do); `["R",
+ *  "U", "R'"]` → `[false, false, false]`; `["R", "R'"]` → `[true, true]`
+ *  (cancels). Strictly a notation check — doesn't reason about commuting
+ *  faces (e.g. `R L R'`), only literal adjacency on the same base. */
+export function markExtraneousMoves(moves: readonly string[]): boolean[] {
+  const out = new Array<boolean>(moves.length).fill(false);
+  let i = 0;
+  while (i < moves.length) {
+    const base = moveBase(moves[i]!);
+    let j = i + 1;
+    while (j < moves.length && moveBase(moves[j]!) === base) j++;
+    // A run of >1 same-base moves can always be reduced to at most one
+    // move (the equivalent of the summed quarter-turns mod 4) — so every
+    // member of the run is extraneous.
+    if (j - i > 1) {
+      for (let k = i; k < j; k++) out[k] = true;
+    }
+    i = j;
+  }
+  return out;
+}
+
+/** Strip the trailing `'` or `2` to get the move's base face token. */
+function moveBase(move: string): string {
+  const last = move.charAt(move.length - 1);
+  if (last === "'" || last === "2") return move.slice(0, -1);
+  return move;
+}
+
+/** Quarter-turn count of a single move: 1 for `F`, -1 for `F'`, 2 for `F2`.
+ *  Unrecognized suffix → 1. */
+function moveTurns(move: string): number {
+  const last = move.charAt(move.length - 1);
+  if (last === "'") return -1;
+  if (last === "2") return 2;
+  return 1;
+}
+
+/** Reduce consecutive same-face turns to their net effect. Use this for
+ *  the canonical scramble string — `F F' F → F`, `R R R R → ` (nothing),
+ *  `U U U → U'`, `F2 F → F'`. Different-face runs are kept as-is.
+ *
+ *  This is a stronger version of `collapseDoubleTurns`. Use it when the
+ *  display should show only the effective state-transforming moves and
+ *  hide hesitations. For solve move-by-move display, prefer
+ *  `collapseDoubleTurns` + `markExtraneousMoves`, which preserves what
+ *  the cuber actually did and flags the waste. */
+export function simplifyMoves(moves: readonly string[]): string[] {
+  const out: string[] = [];
+  let i = 0;
+  while (i < moves.length) {
+    const base = moveBase(moves[i]!);
+    let net = 0;
+    let j = i;
+    while (j < moves.length && moveBase(moves[j]!) === base) {
+      net += moveTurns(moves[j]!);
+      j++;
+    }
+    const n = ((net % 4) + 4) % 4;
+    if (n === 1) out.push(base);
+    else if (n === 2) out.push(base + "2");
+    else if (n === 3) out.push(base + "'");
+    // n === 0 → cancels, emit nothing
+    i = j;
+  }
+  return out;
+}
