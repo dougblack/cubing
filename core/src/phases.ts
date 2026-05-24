@@ -1,20 +1,11 @@
 // CFOP phase detection.
 //
-// Two entry points, both pure functions over a scramble + a move stream:
-//
-//   - streamPhases  — greedy, walks the moves once with cross-on-D
-//                     assumed. Cheap. Fits a live "which phase are you
-//                     in?" UI during a solve.
-//   - batchPhases   — color-neutral. Walks the moves twice: once to
-//                     detect which face the cuber treated as the cross,
-//                     then again with that face baked into the
-//                     predicates. Right answer for white-cross,
-//                     yellow-cross, or any-color cubers.
-//
-// Both functions return the same `PhaseAnalysis` shape. The returned
-// `crossFace` is always set — `streamPhases` returns `"D"` unconditionally;
-// `batchPhases` returns the detected face (or `"D"` as a fallback if it
-// can't find one).
+// `batchPhases(scramble, moveStream)` is the entry point. It walks the
+// moves once to detect which face the cuber treated as the cross
+// (any of U/D/L/R/F/B by checking all 6 candidates per move and picking
+// the first to fire), then re-runs detection with that face baked into
+// rotation-normalized predicates. Returns a `PhaseAnalysis` with the
+// per-phase boundaries, durations, and the detected cross face.
 //
 // Phases, in CFOP order:
 //   cross  — the 4 cross-color edges placed and oriented
@@ -153,23 +144,12 @@ export interface PhaseAnalysis {
   phases: Phase[];
   /** True iff the cube ended in the solved state. */
   completed: boolean;
-  /** The cross face used for predicate checks. `streamPhases` always
-   *  reports `"D"`; `batchPhases` returns whatever it detected. */
+  /** The cross face that was detected and used for predicate checks.
+   *  Defaults to `"D"` when no cross ever completes (incomplete solve). */
   crossFace: CubeFace;
 }
 
-/** Streaming detection — assumes cross-on-D (factory orientation, the
- *  common case for white-cross cubers). Walks the moves once. */
-export function streamPhases(
-  scramble: string,
-  moveStream: readonly MoveEvent[],
-): PhaseAnalysis {
-  return runDetection(scramble, moveStream, "D");
-}
-
-/** Batch detection — color-neutral. First walks the moves to find the
- *  face whose cross fires first (the cuber's chosen cross). Then runs
- *  detection with predicates rotated to that face. */
+/** Detect CFOP phase boundaries in a solve, color-neutral. */
 export function batchPhases(
   scramble: string,
   moveStream: readonly MoveEvent[],

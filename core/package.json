@@ -3,21 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Runtime cube-domain library: entity types, trainer scrambles, alg matching, stage segmentation. Consumed by web/ now and by future iOS code conceptually.",
+  "description": "Speedcubing domain library: entity types, cube simulator, scramble + tracker, stats, phase detection, OLL/PLL recognition. Pure-logic; cubing.js dependency is isolated to scramble + alg parsing.",
   "main": "src/index.ts",
   "types": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./entities": "./src/entities.ts",
-    "./repositories": "./src/repositories.ts",
-    "./trainer": "./src/trainer.ts",
-    "./alg-match": "./src/alg-match.ts",
+    "./cube": "./src/cube.ts",
+    "./scramble": "./src/scramble.ts",
+    "./scramble-tracker": "./src/scramble-tracker.ts",
+    "./stats": "./src/stats.ts",
     "./phases": "./src/phases.ts",
     "./recognition": "./src/recognition.ts",
-    "./scramble": "./src/scramble.ts",
-    "./stats": "./src/stats.ts",
-    "./orientation": "./src/orientation.ts",
-    "./scramble-tracker": "./src/scramble-tracker.ts"
+    "./orientation": "./src/orientation.ts"
   },
   "scripts": {
     "test": "vitest run",
