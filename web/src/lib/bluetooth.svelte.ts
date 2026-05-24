@@ -201,7 +201,14 @@ function logTimestamp(): string {
 }
 
 export type MoveCallback = (move: string, tMs: number) => void;
-export type SolvedCallback = () => void;
+/** Invoked when the cube transitions to solved. `lastMoveAt` is the
+ *  `performance.now()` of the move that *put* the cube into the solved
+ *  state (i.e. the cube's `localTimestamp` from the most recent MOVE
+ *  event). Use this as the timer endpoint instead of "now" — the FACELETS
+ *  event that triggers SOLVED arrives a few hundred ms after the move,
+ *  so timing off "now" overcounts. Null only if no MOVE event has fired
+ *  this session (shouldn't happen in normal play). */
+export type SolvedCallback = (lastMoveAt: number | null) => void;
 
 class BluetoothStore {
   status = $state<ConnectionStatus>("disconnected");
@@ -219,6 +226,10 @@ class BluetoothStore {
   private moveListeners = new Set<MoveCallback>();
   private solvedListeners = new Set<SolvedCallback>();
   private lastFaceletsWasSolved = false;
+  /** performance.now()-equivalent timestamp of the most recent MOVE event.
+   *  Used as the authoritative timer endpoint when the cube fires SOLVED —
+   *  beats waiting for the FACELETS event that's lagging behind. */
+  private lastMoveAt: number | null = null;
   private gyroLogged = false;
 
   isAvailable(): boolean {
@@ -315,6 +326,7 @@ class BluetoothStore {
     this.batteryPct = null;
     this.recentMoves = [];
     this.lastFaceletsWasSolved = false;
+    this.lastMoveAt = null;
   }
 
   /** Subscribe to MOVE events. Returns an unsubscribe function. */
@@ -338,6 +350,7 @@ class BluetoothStore {
     switch (evt.type) {
       case "MOVE": {
         const tMs = evt.localTimestamp ?? performance.now();
+        this.lastMoveAt = tMs;
         const move = evt.move;
         this.log(`MOVE ${move} serial=${evt.serial} t=${tMs}`);
         this.recentMoves = [...this.recentMoves, move].slice(-RECENT_CAPACITY);
@@ -362,7 +375,7 @@ class BluetoothStore {
               : " (state-solved; facelets-not-solved)";
         this.log(`FACELETS serial=${evt.serial} ${evt.facelets}${tag}`);
         if (nowSolved && !this.lastFaceletsWasSolved) {
-          for (const cb of this.solvedListeners) cb();
+          for (const cb of this.solvedListeners) cb(this.lastMoveAt);
         }
         this.lastFaceletsWasSolved = nowSolved;
         break;

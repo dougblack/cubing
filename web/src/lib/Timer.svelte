@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Penalty } from "@cubing/core";
+  import { beep, cancelSpeech, speak } from "./audio";
   import { formatMs } from "./format";
 
   // Phase-1 keyboard timer with WCA-style 15s inspection.
@@ -39,10 +40,15 @@
 
   /** Imperative stop, exposed via `bind:this`. External signals — a BT cube
    *  reaching solved state, for example — can call this to end the active
-   *  solve as if the spacebar had been pressed. No-op outside the solving
-   *  phase, so it's safe to fire opportunistically. */
-  export function stop(): void {
-    if (phase === "solving") stopSolve();
+   *  solve as if the spacebar had been pressed.
+   *
+   *  When the trigger has a more accurate "end time" than `performance.now()`
+   *  (e.g. the timestamp of the last BT MOVE event, which arrives a few
+   *  hundred ms before the FACELETS that actually says "solved"), pass it
+   *  via `endTimeOverride` so the recorded duration doesn't include BT
+   *  protocol + decoder + handler latency. No-op outside the solving phase. */
+  export function stop(endTimeOverride?: number): void {
+    if (phase === "solving") stopSolve(endTimeOverride);
   }
   export function isSolving(): boolean {
     return phase === "solving";
@@ -110,8 +116,30 @@
     }
   }
 
+  /** Seconds-remaining values the user has asked us to speak aloud during
+   *  inspection. Reset on each inspection start. */
+  const SPEAK_AT_REMAINING = new Set([10, 5, 4, 3, 2, 1]);
+  let spokenRemaining = new Set<number>();
+
   function tickInspection() {
+    // A stale rAF can fire one frame after we've already transitioned
+    // out of inspection (into solving or stopped). Bail before queuing
+    // another tick or speaking a stale countdown.
+    if (
+      phase !== "inspecting" &&
+      phase !== "holding" &&
+      phase !== "ready"
+    ) {
+      return;
+    }
     inspectionElapsedMs = performance.now() - inspectionStartedAt;
+    const remaining = Math.ceil(
+      (INSPECTION_MS - inspectionElapsedMs) / 1000,
+    );
+    if (SPEAK_AT_REMAINING.has(remaining) && !spokenRemaining.has(remaining)) {
+      spokenRemaining.add(remaining);
+      speak(String(remaining));
+    }
     rafId = requestAnimationFrame(tickInspection);
   }
 
@@ -125,7 +153,9 @@
     lastResult = null;
     inspectionStartedAt = performance.now();
     inspectionElapsedMs = 0;
+    spokenRemaining = new Set();
     phase = "inspecting";
+    beep(); // inspection-start cue
     tickInspection();
     dnfTimeoutId = setTimeout(() => {
       // Auto-DNF if the user never starts solving by the 17s mark.
@@ -167,12 +197,17 @@
     solvingStartedAt = performance.now();
     displayMs = 0;
     phase = "solving";
+    cancelSpeech(); // kill any queued countdown — solve has started
+    beep(); // solve-start cue
     onSolveStart?.();
     tickSolving();
   }
 
-  function stopSolve() {
-    const durationMs = performance.now() - solvingStartedAt;
+  function stopSolve(endTimeOverride?: number) {
+    const endTime = endTimeOverride ?? performance.now();
+    // Guard against negative durations if the override is older than the
+    // solve start (shouldn't happen in practice, but be defensive).
+    const durationMs = Math.max(0, endTime - solvingStartedAt);
     const inspMs = solvingStartedAt - inspectionStartedAt;
     let penalty: Penalty = "none";
     if (inspMs > INSPECTION_DNF_MS) penalty = "DNF";
@@ -182,10 +217,12 @@
 
   function finishWith(result: { durationMs: number; penalty: Penalty }) {
     cancelTimers();
+    cancelSpeech(); // auto-DNF during inspection could fire mid-countdown
     lastResult = result;
     displayMs = result.durationMs;
     phase = "stopped";
     stoppedAt = performance.now();
+    beep(); // solve-end cue
     onSolve(result);
   }
 

@@ -18,7 +18,7 @@
   import { timerStore } from "$lib/timer-store.svelte";
 
   type TimerApi = {
-    stop: () => void;
+    stop: (endTimeOverride?: number) => void;
     isSolving: () => boolean;
     isInspecting: () => boolean;
     startInspection: () => void;
@@ -227,8 +227,11 @@
       }
     });
 
-    const unsubSolved = bluetoothStore.onSolved(() => {
-      timerRef?.stop();
+    const unsubSolved = bluetoothStore.onSolved((lastMoveAt) => {
+      // Backtrack the timer endpoint to the last MOVE event — FACELETS
+      // arrives a few hundred ms after the move that solved the cube,
+      // so using "now" would overcount.
+      timerRef?.stop(lastMoveAt ?? undefined);
     });
 
     return () => {

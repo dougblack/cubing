@@ -1,9 +1,16 @@
 <script lang="ts">
   import {
+    analyzeSolveCases,
+    batchPhases,
+    type CaseAnalysis,
     collapseDoubleTurns,
     effectiveMs,
+    type MoveEvent,
     type Penalty,
+    type Phase,
+    type PhaseAnalysis,
     type Solve,
+    type StageSlug,
   } from "@cubing/core";
   import { formatMs } from "./format";
   import { timerStore } from "./timer-store.svelte";
@@ -11,6 +18,74 @@
   let { solves }: { solves: Solve[] } = $props();
 
   let expandedId = $state<string | null>(null);
+
+  /** Per-solve analysis cache. Solves are immutable except for penalty
+   *  (which doesn't affect phases or recognized cases), so keying by id
+   *  is safe and avoids re-running the analysis on every render. */
+  interface SolveAnalysis {
+    phases: PhaseAnalysis;
+    cases: CaseAnalysis;
+  }
+  const analysisCache = new Map<string, SolveAnalysis>();
+  function getAnalysis(s: Solve): SolveAnalysis | null {
+    if (!s.moveStream || s.moveStream.length === 0) return null;
+    let cached = analysisCache.get(s.id);
+    if (!cached) {
+      const phases = batchPhases(s.scramble, s.moveStream);
+      const cases = analyzeSolveCases(s.scramble, s.moveStream, phases);
+      cached = { phases, cases };
+      analysisCache.set(s.id, cached);
+    }
+    return cached;
+  }
+  function getPhases(s: Solve): PhaseAnalysis | null {
+    return getAnalysis(s)?.phases ?? null;
+  }
+  function getCase(s: Solve, stage: "oll" | "pll") {
+    return getAnalysis(s)?.cases[stage] ?? null;
+  }
+
+  const STAGES: StageSlug[] = ["cross", "f2l", "oll", "pll"];
+  const STAGE_LABELS: Record<StageSlug, string> = {
+    cross: "cross",
+    f2l: "F2L",
+    oll: "OLL",
+    pll: "PLL",
+  };
+
+  function findPhase(
+    analysis: PhaseAnalysis | null,
+    stage: StageSlug,
+  ): Phase | undefined {
+    return analysis?.phases.find((p) => p.stage === stage);
+  }
+  function phaseDurationText(
+    analysis: PhaseAnalysis | null,
+    stage: StageSlug,
+  ): string {
+    const p = findPhase(analysis, stage);
+    if (!p) return "—";
+    if (p.durationMs === 0) return "skip";
+    return formatMs(p.durationMs);
+  }
+  function phaseMoves(
+    analysis: PhaseAnalysis | null,
+    stage: StageSlug,
+    stream: MoveEvent[] | undefined,
+  ): string[] {
+    const p = findPhase(analysis, stage);
+    if (!p || !stream) return [];
+    return collapseDoubleTurns(
+      stream.slice(p.startIndex, p.endIndex).map((m) => m.move),
+    );
+  }
+  function phaseMoveCount(
+    analysis: PhaseAnalysis | null,
+    stage: StageSlug,
+  ): number {
+    const p = findPhase(analysis, stage);
+    return p ? p.endIndex - p.startIndex : 0;
+  }
 
   function displayTime(s: Solve): { text: string; isDnf: boolean } {
     const e = effectiveMs(s);
@@ -33,6 +108,7 @@
     const ok = window.confirm(`Delete this ${t} solve? This can't be undone.`);
     if (!ok) return;
     if (expandedId === s.id) expandedId = null;
+    analysisCache.delete(s.id);
     timerStore.deleteSolve(s.id);
   }
 
@@ -54,9 +130,6 @@
     if (!text) return text;
     return collapseDoubleTurns(text.trim().split(/\s+/)).join(" ");
   }
-  function displayMoveStream(stream: { move: string }[]): string {
-    return collapseDoubleTurns(stream.map((m) => m.move)).join(" ");
-  }
 </script>
 
 <section class="solves">
@@ -68,7 +141,9 @@
         <tr>
           <th class="col-idx">#</th>
           <th class="col-time">time</th>
-          <th class="col-scramble">scramble</th>
+          {#each STAGES as stage (stage)}
+            <th class="col-phase">{STAGE_LABELS[stage]}</th>
+          {/each}
           <th class="col-actions">actions</th>
         </tr>
       </thead>
@@ -76,6 +151,7 @@
         {#each solves as solve, i (solve.id)}
           {@const t = displayTime(solve)}
           {@const isExpanded = expandedId === solve.id}
+          {@const analysis = getPhases(solve)}
           <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
           <tr
             class="solve-row"
@@ -89,7 +165,18 @@
           >
             <td class="col-idx">{solves.length - i}</td>
             <td class="col-time" class:dnf={t.isDnf}>{t.text}</td>
-            <td class="col-scramble"><code>{displayMoves(solve.scramble)}</code></td>
+            {#each STAGES as stage (stage)}
+              {@const c =
+                stage === "oll" || stage === "pll"
+                  ? getCase(solve, stage)
+                  : null}
+              <td class="col-phase">
+                <div>{phaseDurationText(analysis, stage)}</div>
+                {#if c}
+                  <div class="col-case" title={c.id}>{c.name}</div>
+                {/if}
+              </td>
+            {/each}
             <td class="col-actions">
               <button
                 class="pen"
@@ -112,24 +199,51 @@
           </tr>
           {#if isExpanded}
             <tr class="solve-detail">
-              <td colspan="4">
+              <td colspan="7">
                 <div class="detail-grid">
                   <div class="detail-label">scramble</div>
                   <div class="detail-value">
                     <code>{displayMoves(solve.scramble)}</code>
                   </div>
-                  {#if solve.moveStream && solve.moveStream.length > 0}
-                    <div class="detail-label">
-                      solve <span class="muted">({solve.moveStream.length} moves)</span>
-                    </div>
-                    <div class="detail-value">
-                      <code>{displayMoveStream(solve.moveStream)}</code>
-                    </div>
-                  {:else}
+                  {#if !solve.moveStream || solve.moveStream.length === 0}
                     <div class="detail-label">solve</div>
                     <div class="detail-value muted">
                       no move stream recorded (keyboard-only solve)
                     </div>
+                  {:else if !analysis}
+                    <div class="detail-label">solve</div>
+                    <div class="detail-value">
+                      <code>{collapseDoubleTurns(solve.moveStream.map((m) => m.move)).join(" ")}</code>
+                    </div>
+                  {:else}
+                    {#each STAGES as stage (stage)}
+                      {@const p = findPhase(analysis, stage)}
+                      {@const c =
+                        stage === "oll" || stage === "pll"
+                          ? getCase(solve, stage)
+                          : null}
+                      {#if p}
+                        <div class="detail-label">
+                          {STAGE_LABELS[stage]}
+                          {#if c}
+                            <span class="case-name">{c.name}</span>
+                          {/if}
+                          <span class="muted">
+                            {phaseMoveCount(analysis, stage)} moves ·
+                            {phaseDurationText(analysis, stage)}
+                          </span>
+                        </div>
+                        <div class="detail-value">
+                          {#if phaseMoveCount(analysis, stage) === 0}
+                            <span class="muted">skip</span>
+                          {:else}
+                            <code
+                              >{phaseMoves(analysis, stage, solve.moveStream).join(" ")}</code
+                            >
+                          {/if}
+                        </div>
+                      {/if}
+                    {/each}
                   {/if}
                 </div>
               </td>
@@ -189,7 +303,7 @@
     font-variant-numeric: tabular-nums;
   }
   .col-time {
-    width: 100px;
+    width: 90px;
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
     font-weight: 600;
@@ -197,9 +311,22 @@
   .col-time.dnf {
     color: var(--color-danger);
   }
-  .col-scramble code {
+  .col-phase {
+    width: 80px;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
     color: var(--color-text-muted);
-    word-break: break-word;
+    line-height: 1.3;
+  }
+  .col-case {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    color: var(--color-text);
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 72px;
   }
   .col-actions {
     width: 140px;
@@ -240,7 +367,7 @@
   }
   .detail-grid {
     display: grid;
-    grid-template-columns: 90px 1fr;
+    grid-template-columns: 130px 1fr;
     gap: 8px 16px;
     font-size: 12px;
   }
@@ -253,6 +380,15 @@
   .detail-label .muted {
     text-transform: none;
     letter-spacing: normal;
+    color: var(--color-text-muted);
+    margin-left: 6px;
+  }
+  .detail-label .case-name {
+    text-transform: none;
+    letter-spacing: normal;
+    color: var(--color-text);
+    font-weight: 500;
+    margin-left: 6px;
   }
   .detail-value code {
     font-family: var(--font-mono);
@@ -261,7 +397,8 @@
     word-break: break-word;
     line-height: 1.5;
   }
-  .detail-value.muted {
+  .detail-value.muted,
+  .detail-value > .muted {
     color: var(--color-text-muted);
     font-style: italic;
   }

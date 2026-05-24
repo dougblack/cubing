@@ -12,3 +12,4 @@ build/
 .claude/
 tools/render/preview/
 site/
+.svelte-kit/
