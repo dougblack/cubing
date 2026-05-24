@@ -5,7 +5,7 @@
   "stage_name": "Two-Look OLL",
   "puzzle": "3x3",
   "notation": "wca-singmaster",
-  "description": "Beginner-friendly subset of OLL that splits last-layer orientation into two algorithms: first orient edges (OELL: 3 cases), then orient corners with edges already oriented (OCLL: 7 cases identical to OLL 21-27). Total 10 algorithms vs 57 for full OLL.",
+  "description": "Beginner-friendly subset of OLL that splits last-layer orientation into two steps: first orient all U-face edges with one of three setup algorithms (OELL: dot, line, L), then orient the corners (OCLL) given edges are already oriented. 9 algorithms total versus 57 for full OLL.",
   "cases": [
     {
       "id": "oell-dot",
@@ -13,6 +13,7 @@
       "aliases": ["No Edges Oriented", "OELL Dot"],
       "group": "oell",
       "tags": ["2loll", "oell"],
+      "view": "u-only",
       "number": 1,
       "recognition": "U face shows the cross color on the center only; all 4 edges have the cross color on a side face.",
       "algorithms": [
@@ -38,6 +39,7 @@
       "aliases": ["Bar", "OELL L", "Adjacent Edges"],
       "group": "oell",
       "tags": ["2loll", "oell"],
+      "view": "u-only",
       "number": 2,
       "recognition": "Two adjacent edges have the cross color on the U face, forming an L with the center (also known as a 'bar').",
       "algorithms": [
@@ -63,6 +65,7 @@
       "aliases": ["Bar", "OELL Line", "Opposite Edges"],
       "group": "oell",
       "tags": ["2loll", "oell"],
+      "view": "u-only",
       "number": 3,
       "recognition": "Two opposite edges have the cross color on the U face, forming a horizontal line through the center.",
       "algorithms": [
@@ -201,36 +204,12 @@
       ]
     },
     {
-      "id": "ocll-t",
-      "name": "T",
-      "aliases": ["OLL 24", "OCLL T", "Chameleon"],
-      "group": "ocll",
-      "tags": ["2loll", "ocll"],
-      "number": 9,
-      "recognition": "Two diagonally opposite corners are correct; the other two need to swap orientations.",
-      "algorithms": [
-        {
-          "moves": "r U R' U' r' F R F'",
-          "popularity": "primary",
-          "popularity_rank": 1,
-          "popularity_source": "ubiquitous beginner curriculum",
-          "best_for": ["beginner", "two-handed"]
-        },
-        {
-          "moves": "R U R' U' R' F R F'",
-          "popularity": "common",
-          "popularity_rank": 2,
-          "notes": "Sledgehammer-style variant without the wide move."
-        }
-      ]
-    },
-    {
       "id": "ocll-l",
       "name": "L",
       "aliases": ["OLL 25", "OCLL L", "Bowtie"],
       "group": "ocll",
       "tags": ["2loll", "ocll"],
-      "number": 10,
+      "number": 9,
       "recognition": "Two diagonally opposite corners are correct; the other two need to swap orientations the opposite direction from the T case.",
       "algorithms": [
         {

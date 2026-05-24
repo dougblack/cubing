@@ -24,6 +24,12 @@ import type { State, StickerColor } from "./cube.js";
 
 export type ColorMode = "oll" | "pll";
 
+/** What to draw. "full" shows the U face plus the top row of each side face
+ *  (the standard last-layer view). "u-only" shows just the 3×3 U face — used
+ *  for OELL where the side stickers don't help (and would mislead) the
+ *  cuber, who only needs to see which top edges show the U color. */
+export type ViewMode = "full" | "u-only";
+
 // U-layer slot identifiers and the (face, slot) reads that identify their pieces.
 // Each corner has 2 side stickers; each edge has 1 side sticker.
 type CornerSlot = "UBL" | "UBR" | "UFL" | "UFR";
@@ -81,8 +87,14 @@ const COLOR_HEX: Record<StickerColor, string> = {
 };
 
 const GRAY = "#5A5A5A";
-const STROKE = "#111111";
-const BG = "#FFFFFF";
+// Cell stroke is a medium gray rather than near-black so the diagrams work
+// on both the light cream and dark warm page backgrounds — a true-black
+// stroke disappears against the dark mode bg, especially between adjacent
+// non-yellow OLL stickers (themselves a similar gray).
+const STROKE = "#888888";
+// Arrow lines/heads stay dark; they're always drawn over the yellow U face,
+// never over the page background.
+const ARROW_COLOR = "#111111";
 
 const U_COLOR: StickerColor = "Y";
 
@@ -265,17 +277,52 @@ function uSlotCenter(slot: number, unit: number, startU: number): { x: number; y
   return { x: startU + col * unit + unit / 2, y: startU + row * unit + unit / 2 };
 }
 
-export function renderLastLayerSVG(state: State, mode: ColorMode): string {
+export function renderLastLayerSVG(
+  state: State,
+  mode: ColorMode,
+  view: ViewMode = "full",
+): string {
   const unit = 40; // SVG units per U-face cell
+  const pad = 6;
+
+  if (view === "u-only") {
+    // Tight 3×3 U-face view; no side bands, no arrows. Used for OELL where
+    // the cuber only needs to see which top edges show the U color. In OLL
+    // color mode, corner cells are explicitly drawn gray — OELL recognition
+    // looks at edges only, and the corners would otherwise show whichever
+    // orientation the setup alg happens to produce (noise).
+    const total = 3 * unit;
+    const viewBox = `${-pad} ${-pad} ${total + 2 * pad} ${total + 2 * pad}`;
+    const rx = (unit * 0.08).toFixed(2);
+    const CORNER_SLOTS = new Set([0, 2, 6, 8]);
+    const rects: string[] = [];
+    for (let r = 0; r < 3; r++) {
+      for (let c = 0; c < 3; c++) {
+        const slot = r * 3 + c;
+        const x = (c * unit).toFixed(2);
+        const y = (r * unit).toFixed(2);
+        const fill =
+          mode === "oll" && CORNER_SLOTS.has(slot)
+            ? GRAY
+            : colorForMode(s(state, "U", slot), mode);
+        rects.push(
+          `<rect x="${x}" y="${y}" width="${unit.toFixed(2)}" height="${unit.toFixed(2)}" rx="${rx}" fill="${fill}" stroke="${STROKE}" stroke-width="1.5"/>`,
+        );
+      }
+    }
+    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${total + 2 * pad}" height="${total + 2 * pad}">
+  ${rects.join("\n  ")}
+</svg>
+`;
+  }
+
   const cells = buildCells(state, unit);
 
   const sideThickness = unit * 0.22;
   const gap = unit * 0.04;
   const startU = sideThickness + gap;
-  const total = 2 * (sideThickness + gap) + 3 * unit;
-
-  const pad = 6;
-  const viewBox = `${-pad} ${-pad} ${total + 2 * pad} ${total + 2 * pad}`;
+  const fullTotal = 2 * (sideThickness + gap) + 3 * unit;
+  const viewBox = `${-pad} ${-pad} ${fullTotal + 2 * pad} ${fullTotal + 2 * pad}`;
 
   const rects = cells
     .map((c) => {
@@ -300,7 +347,7 @@ export function renderLastLayerSVG(state: State, mode: ColorMode): string {
       defsBlock = `
   <defs>
     <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#111111"/>
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="${ARROW_COLOR}"/>
     </marker>
   </defs>`;
       const inset = unit * 0.12; // pull endpoints toward the line center
@@ -318,15 +365,14 @@ export function renderLastLayerSVG(state: State, mode: ColorMode): string {
         const x2 = (b.x - ux * inset).toFixed(2);
         const y2 = (b.y - uy * inset).toFixed(2);
         lines.push(
-          `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#111111" stroke-width="1.8" marker-end="url(#ah)"/>`,
+          `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${ARROW_COLOR}" stroke-width="1.8" marker-end="url(#ah)"/>`,
         );
       }
       arrowsBlock = "\n  " + lines.join("\n  ");
     }
   }
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${total + 2 * pad}" height="${total + 2 * pad}">${defsBlock}
-  <rect x="${-pad}" y="${-pad}" width="${total + 2 * pad}" height="${total + 2 * pad}" fill="${BG}"/>
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${fullTotal + 2 * pad}" height="${fullTotal + 2 * pad}">${defsBlock}
   ${rects}${arrowsBlock}
 </svg>
 `;

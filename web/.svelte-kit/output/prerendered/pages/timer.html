@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
+      rel="stylesheet"
+    />
+    <script>
+      // Set the html.dark class before first paint so the page doesn't flash
+      // light-then-dark on load. Kept in sync with src/lib/theme.svelte.ts.
+      (function () {
+        try {
+          var saved = localStorage.getItem("cubing_theme");
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var dark = saved === "dark" || (saved !== "light" && prefersDark);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (_) {}
+      })();
+    </script>
+    <link href="./_app/immutable/entry/start.DZZ68H7i.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/JeRmQWXm.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/DpZwRfv7.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/BuFlayix.js" rel="modulepreload">
+		<link href="./_app/immutable/entry/app.CZtdt_wL.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/kNaey6uv.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/xihTtKlq.js" rel="modulepreload">
+		<link href="./_app/immutable/nodes/0.Vyk3jKKs.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/MmD0HhNO.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/DqCjBAWq.js" rel="modulepreload">
+		<link href="./_app/immutable/nodes/5.BpWRPXxt.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/BdpGOGGd.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/2lX7CMDX.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/BMefSCSj.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/pdMlnyl7.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/Bf2EMgl3.js" rel="modulepreload">
+		<link href="./_app/immutable/chunks/Cc1gj6Y1.js" rel="modulepreload">
+		
+		<link href="./_app/immutable/assets/0.zGiH7gW8.css" rel="stylesheet">
+		<link href="./_app/immutable/assets/5.TV4Ex5_f.css" rel="stylesheet">
+  </head>
+  <body>
+    <div style="display: contents">
+			<script>
+				{
+					__sveltekit_1vtt6jb = {
+						base: new URL(".", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					Promise.all([
+						import("./_app/immutable/entry/start.DZZ68H7i.js"),
+						import("./_app/immutable/entry/app.CZtdt_wL.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element);
+					});
+				}
+			</script>
+		</div>
+  </body>
+</html>

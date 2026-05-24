@@ -14,7 +14,7 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { applyAlg, invertAlg, normalizeYellowOnTop, solved } from "./cube.js";
-import { type ColorMode, renderLastLayerSVG } from "./svg.js";
+import { type ColorMode, type ViewMode, renderLastLayerSVG } from "./svg.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(__dirname, "..", "..", "..");
@@ -29,6 +29,7 @@ interface Case {
   id: string;
   name: string;
   algorithms: Algorithm[];
+  view?: ViewMode;
 }
 
 /** Returns true if the alg uses only face-only moves (no wide moves, slices,
@@ -102,7 +103,7 @@ async function renderStageFile(stageFile: string): Promise<void> {
       skipped++;
       continue;
     }
-    const svg = renderLastLayerSVG(state, mode);
+    const svg = renderLastLayerSVG(state, mode, caseDef.view ?? "full");
     const outPath = join(outDir, `${caseDef.id}.svg`);
     await writeFile(outPath, svg);
     count++;

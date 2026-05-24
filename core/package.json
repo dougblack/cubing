@@ -1,0 +1,33 @@
+{
+  "name": "@cubing/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Runtime cube-domain library: entity types, trainer scrambles, alg matching, stage segmentation. Consumed by web/ now and by future iOS code conceptually.",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./entities": "./src/entities.ts",
+    "./repositories": "./src/repositories.ts",
+    "./trainer": "./src/trainer.ts",
+    "./alg-match": "./src/alg-match.ts",
+    "./segmentation": "./src/segmentation.ts",
+    "./scramble": "./src/scramble.ts",
+    "./stats": "./src/stats.ts",
+    "./orientation": "./src/orientation.ts",
+    "./scramble-tracker": "./src/scramble-tracker.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cubing": "^0.63.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "vitest": "^4.1.0"
+  }
+}

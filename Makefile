@@ -1,7 +1,13 @@
-.PHONY: build serve
+.PHONY: dev build preview test
+
+dev:
+	cd web && npm run dev
 
 build:
-	uv run python tools/build_site/build.py
+	cd web && npm run build
 
-serve: build
-	python3 -m http.server 8080 -d site
+preview: build
+	cd web && npm run preview
+
+test:
+	cd core && npm test

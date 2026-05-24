@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* --------------------------------------------------------------------------
+ * Light theme defaults (also Tailwind v4 tokens via @theme so utilities can
+ * reference them as e.g. `bg-bg` or `text-text-muted`).
+ * -------------------------------------------------------------------------- */
+@theme {
+  --color-bg: #faf9f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f4f2ee;
+  --color-border: #e5e1d8;
+  --color-text: #2e2c28;
+  --color-text-muted: #7a766e;
+  --color-link: #4b7795;
+  --color-link-hover: #2d5773;
+
+  --color-learning: #b89146;
+  --color-learned: #6e9462;
+  --color-unlearned: #c8c4ba;
+  --color-warn: #b78527;
+  --color-danger: #a25151;
+
+  --color-hold-bg: #f5e8e6;
+  --color-ready-bg: #e9efe3;
+  --color-learning-bg: #f1e3b8;
+  --color-learned-bg: #d8e6cb;
+  --color-preferred-tint: rgba(184, 145, 70, 0.07);
+
+  --color-flag-bg: #f0ede5;
+  --color-flag-text: #4f4c47;
+  --color-flag-primary-bg: #e3edd8;
+  --color-flag-primary-text: #4d6e3a;
+  --color-flag-jperm-bg: #e3e8f1;
+  --color-flag-jperm-text: #3d5c87;
+  --color-flag-scdb-bg: #f1e8e0;
+  --color-flag-scdb-text: #87603d;
+  --color-flag-stm-bg: #ebebe9;
+  --color-flag-stm-text: #5e5b56;
+
+  --radius-card: 6px;
+  /* Inter for UI / body, Newsreader for headings + brand. Both are loaded
+   * via Google Fonts in app.html. System stacks are the fallback while the
+   * web fonts load and for users blocking Google. */
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif:
+    "Newsreader", Iowan Old Style, Charter, Cambria, Georgia, serif;
+  --font-mono: "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+ * Dark theme. Activated by `<html class="dark">`. The theme toggle below
+ * adds/removes that class; the anti-flash script in app.html sets it before
+ * first paint based on saved preference / system setting.
+ * -------------------------------------------------------------------------- */
+html.dark {
+  --color-bg: #18161a;
+  --color-surface: #221f23;
+  --color-surface-2: #2b282c;
+  --color-border: #383438;
+  --color-text: #e6e2da;
+  --color-text-muted: #918a7e;
+  --color-link: #82a4bb;
+  --color-link-hover: #b2cbdd;
+
+  --color-learning: #c8a05a;
+  --color-learned: #82a878;
+  --color-unlearned: #4a4642;
+  --color-warn: #cb9b4a;
+  --color-danger: #c47272;
+
+  --color-hold-bg: #3a2826;
+  --color-ready-bg: #2c3a28;
+  --color-learning-bg: #3f3525;
+  --color-learned-bg: #2a3826;
+  --color-preferred-tint: rgba(200, 160, 90, 0.10);
+
+  --color-flag-bg: #2a2724;
+  --color-flag-text: #c2bbb0;
+  --color-flag-primary-bg: #2e3a26;
+  --color-flag-primary-text: #a5c294;
+  --color-flag-jperm-bg: #28303d;
+  --color-flag-jperm-text: #9eb6d6;
+  --color-flag-scdb-bg: #3a2e26;
+  --color-flag-scdb-text: #c9a585;
+  --color-flag-stm-bg: #2e2c2a;
+  --color-flag-stm-text: #b0aaa1;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-size: 15px;
+  line-height: 1.5;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+a:hover {
+  color: var(--color-link-hover);
+}
+
+/* Serif headings + brand. Slightly looser tracking and a tiny bit of weight
+ * help the serif feel intentional rather than incidental. */
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+h1 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
