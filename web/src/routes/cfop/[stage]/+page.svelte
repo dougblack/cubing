@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from "$app/paths";
   import { cubingState } from "$lib/store.svelte";
 
   let { data } = $props();
@@ -68,14 +69,14 @@
         <div class="case-card-body">
           <img
             class="case-diagram"
-            src="/diagrams/cfop/{stage.slug}/{card.id}.svg"
+            src="{base}/diagrams/cfop/{stage.slug}/{card.id}.svg"
             alt="{card.name} diagram"
             loading="lazy"
           />
           <div class="case-meta">
             <a
               class="case-name"
-              href="/cfop/{stage.slug}/{card.id}"
+              href="{base}/cfop/{stage.slug}/{card.id}"
               onclick={stopBubble}
             >
               {card.name}

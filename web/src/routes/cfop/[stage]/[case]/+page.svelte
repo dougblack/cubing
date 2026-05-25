@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from "$app/paths";
   import StateFlag from "$lib/StateFlag.svelte";
   import { cubingState } from "$lib/store.svelte";
 
@@ -19,9 +20,9 @@
 
 <section class="case-detail">
   <nav class="breadcrumbs">
-    <a href="/">cubing</a>
+    <a href="{base}/">cubing</a>
     <span>/</span>
-    <a href="/cfop/{stage.slug}">{stage.shortName}</a>
+    <a href="{base}/cfop/{stage.slug}">{stage.shortName}</a>
     <span>/</span>
     <span>{c.name}</span>
   </nav>
@@ -29,7 +30,7 @@
   <div class="case-detail-head">
     <img
       class="case-detail-diagram"
-      src="/diagrams/cfop/{stage.slug}/{c.id}.svg"
+      src="{base}/diagrams/cfop/{stage.slug}/{c.id}.svg"
       alt="{c.name} diagram"
     />
     <div class="case-detail-info">

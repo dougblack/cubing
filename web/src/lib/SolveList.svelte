@@ -15,6 +15,7 @@
     type Solve,
     type StageSlug,
   } from "@cubing/core";
+  import { base } from "$app/paths";
   import { formatMs } from "./format";
   import { orientationPref } from "./orientation-pref.svelte";
   import { timerStore } from "./timer-store.svelte";
@@ -121,7 +122,7 @@
     const params = new URLSearchParams();
     if (s.scramble) params.set("scramble", s.scramble);
     if (prefixMoves) params.set("alg", prefixMoves);
-    return `/cube?${params.toString()}`;
+    return `${base}/cube?${params.toString()}`;
   }
 
   function displayTime(s: Solve): { text: string; isDnf: boolean } {
@@ -333,7 +334,7 @@
                 {#if c}
                   <a
                     class="col-case"
-                    href="/cfop/{stage}/{c.id}"
+                    href="{base}/cfop/{stage}/{c.id}"
                     target="_blank"
                     rel="noopener"
                     title="View {c.name} ({c.id}) — opens in new tab"
@@ -398,20 +399,20 @@
                             onclick={(e) => e.stopPropagation()}
                             >{STAGE_LABELS[stage]}</a
                           >
+                          <span class="muted">
+                            {phaseMoveCount(analysis, stage)} moves ·
+                            {phaseDurationText(analysis, stage)}
+                          </span>
                           {#if c}
                             <a
                               class="case-name"
-                              href="/cfop/{stage}/{c.id}"
+                              href="{base}/cfop/{stage}/{c.id}"
                               target="_blank"
                               rel="noopener"
                               title="View {c.name} ({c.id}) — opens in new tab"
                               onclick={(e) => e.stopPropagation()}>{c.name}</a
                             >
                           {/if}
-                          <span class="muted">
-                            {phaseMoveCount(analysis, stage)} moves ·
-                            {phaseDurationText(analysis, stage)}
-                          </span>
                         </div>
                         <div class="detail-value">
                           {#if phaseMoveCount(analysis, stage) === 0}
@@ -573,7 +574,10 @@
   }
   .detail-grid {
     display: grid;
-    grid-template-columns: 130px 1fr;
+    /* Left column auto-sizes to the widest label so every "PHASE  case ·
+     * moves · time" stays on a single line; right column takes the rest
+     * and wraps the move list as needed. */
+    grid-template-columns: auto 1fr;
     gap: 8px 16px;
     font-size: 12px;
   }
@@ -582,6 +586,7 @@
     text-transform: uppercase;
     letter-spacing: 0.06em;
     font-size: 11px;
+    white-space: nowrap;
   }
   a.phase-link {
     color: inherit;

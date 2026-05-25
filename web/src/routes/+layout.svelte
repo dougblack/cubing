@@ -1,5 +1,6 @@
 <script lang="ts">
   import "../app.css";
+  import { base } from "$app/paths";
   import { STAGES } from "$lib/stages";
   import { getStageFile } from "$lib/data";
   import ThemeToggle from "$lib/ThemeToggle.svelte";
@@ -21,11 +22,11 @@
 </script>
 
 <header class="site-header">
-  <a href="/" class="brand">cubing</a>
+  <a href="{base}/" class="brand">cubing</a>
   <nav>
-    <a href="/cfop">algs</a>
+    <a href="{base}/cfop">algs</a>
     {#each STAGES as s (s.slug)}
-      <a href="/cfop/{s.slug}">{s.shortName}</a>
+      <a href="{base}/cfop/{s.slug}">{s.shortName}</a>
     {/each}
     <ThemeToggle />
   </nav>

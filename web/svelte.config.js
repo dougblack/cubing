@@ -8,6 +8,9 @@ const config = {
     adapter: adapter({
       fallback: "404.html",
     }),
+    paths: {
+      base: process.env.CUBING_BASE ?? "",
+    },
     alias: {
       // Sibling TS package — imported as @cubing/core. Aliased here so both
       // Vite and the generated tsconfig pick it up.

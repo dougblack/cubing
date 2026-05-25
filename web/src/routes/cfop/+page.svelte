@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { base } from "$app/paths";
   import { STAGES } from "$lib/stages";
   import { getStageCases } from "$lib/data";
   import { cubingState } from "$lib/store.svelte";
@@ -29,7 +30,7 @@
 
 <section class="method-grid">
   {#each stageCards as stage (stage.slug)}
-    <a class="method-card" href="/cfop/{stage.slug}">
+    <a class="method-card" href="{base}/cfop/{stage.slug}">
       <h2>{stage.shortName}</h2>
       <p class="method-subtitle">{stage.fullName}</p>
       <p class="method-meta">
