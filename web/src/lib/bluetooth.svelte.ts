@@ -231,6 +231,12 @@ class BluetoothStore {
    *  beats waiting for the FACELETS event that's lagging behind. */
   private lastMoveAt: number | null = null;
   private gyroLogged = false;
+  /** Interval that periodically re-requests the battery level. Some cube
+   *  firmware (e.g. GANi4 sw 1.12+) doesn't reliably respond to the first
+   *  REQUEST_BATTERY sent during the connect burst — polling gives us a
+   *  chance to fill the indicator in once the cube is settled. */
+  private batteryPollTimer: ReturnType<typeof setInterval> | null = null;
+  private batteryRetryTimer: ReturnType<typeof setTimeout> | null = null;
 
   isAvailable(): boolean {
     return browser && "bluetooth" in navigator;
@@ -281,6 +287,19 @@ class BluetoothStore {
       await this.sendCommand("REQUEST_HARDWARE");
       await this.sendCommand("REQUEST_BATTERY");
       await this.sendCommand("REQUEST_FACELETS");
+
+      // Some firmware swallows the first REQUEST_BATTERY mid-handshake.
+      // Retry a few seconds later, and poll every minute afterwards to
+      // keep the indicator fresh during long sessions.
+      this.batteryRetryTimer = setTimeout(() => {
+        if (this.batteryPct === null) {
+          this.log("BATTERY retry (no response to initial request)");
+          this.sendCommand("REQUEST_BATTERY");
+        }
+      }, 4000);
+      this.batteryPollTimer = setInterval(() => {
+        this.sendCommand("REQUEST_BATTERY");
+      }, 60_000);
     } catch (err) {
       this.status = "error";
       this.errorMessage = (err as Error).message ?? "Failed to connect";
@@ -314,6 +333,14 @@ class BluetoothStore {
 
   async disconnect(): Promise<void> {
     this.log("disconnect: requested");
+    if (this.batteryRetryTimer) {
+      clearTimeout(this.batteryRetryTimer);
+      this.batteryRetryTimer = null;
+    }
+    if (this.batteryPollTimer) {
+      clearInterval(this.batteryPollTimer);
+      this.batteryPollTimer = null;
+    }
     if (this.subscription) {
       this.subscription.unsubscribe();
       this.subscription = null;

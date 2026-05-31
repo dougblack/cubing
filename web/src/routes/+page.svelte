@@ -297,6 +297,15 @@
     <p class="scramble-undo-hint" aria-live="polite">
       wrong move — do <code>{inverseMove(pendingUndo.wrongMove)}</code> to undo, or any other move to commit to a new scramble
     </p>
+  {:else}
+    <div class="scramble-actions">
+      <button
+        class="scramble-refresh"
+        title="Generate a new scramble"
+        aria-label="Generate a new scramble"
+        onclick={advanceScramble}>↻</button
+      >
+    </div>
   {/if}
 
   <Timer
@@ -315,14 +324,25 @@
       <span class="bt-status">
         <span class="bt-dot bt-dot-on"></span>
         {bluetoothStore.deviceName ?? "cube"}
-        {#if bluetoothStore.batteryPct !== null}
-          · <span class="bt-batt">{bluetoothStore.batteryPct}%</span>
-        {/if}
+        ·
+        <span
+          class="bt-batt"
+          title={bluetoothStore.batteryPct === null
+            ? "Cube hasn't reported battery yet — retrying"
+            : `Battery: ${bluetoothStore.batteryPct}%`}
+        >
+          {bluetoothStore.batteryPct === null
+            ? "?%"
+            : `${bluetoothStore.batteryPct}%`}
+        </span>
       </span>
       <button
         class="bt-btn"
-        title="Tell the cube its current physical state is solved. Use when the cube's tracked state has drifted from reality."
-        onclick={() => bluetoothStore.resetCubeState()}>cube is solved</button
+        title="Tell the cube its current physical state is solved AND generate a fresh scramble. Use after a manual reset/reassembly."
+        onclick={() => {
+          bluetoothStore.resetCubeState();
+          advanceScramble();
+        }}>cube is solved</button
       >
       <button class="bt-btn" onclick={() => bluetoothStore.disconnect()}
         >disconnect</button
@@ -443,6 +463,26 @@
     background: var(--color-learning-bg);
     padding: 1px 5px;
     border-radius: 3px;
+  }
+  .scramble-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: -4px;
+  }
+  .scramble-refresh {
+    font: inherit;
+    font-size: 13px;
+    line-height: 1;
+    padding: 2px 6px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 3px;
+  }
+  .scramble-refresh:hover {
+    color: var(--color-text);
+    background: var(--color-surface-2);
   }
 
   .bt-bar {

@@ -291,6 +291,7 @@
         <tr>
           <th class="col-idx">#</th>
           <th class="col-time">time</th>
+          <th class="col-moves" title="Total number of moves (BT-tracked solves only)">moves</th>
           {#each STAGES as stage (stage)}
             <th class="col-phase">{STAGE_LABELS[stage]}</th>
           {/each}
@@ -320,6 +321,11 @@
               class:best={isBestSingle(solve)}
               class:worst={isWorstSingle(solve)}>{t.text}</td
             >
+            <td class="col-moves">
+              {solve.moveStream && solve.moveStream.length > 0
+                ? solve.moveStream.length
+                : "—"}
+            </td>
             {#each STAGES as stage (stage)}
               {@const c =
                 stage === "oll" || stage === "pll"
@@ -365,7 +371,7 @@
           </tr>
           {#if isExpanded}
             <tr class="solve-detail">
-              <td colspan="7">
+              <td colspan="8">
                 <div class="detail-grid">
                   <div class="detail-label">scramble</div>
                   <div class="detail-value">
@@ -489,6 +495,12 @@
   }
   .col-time.dnf {
     color: var(--color-danger);
+  }
+  .col-moves {
+    width: 56px;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    color: var(--color-text-muted);
   }
   .col-time.best {
     background: var(--color-best-bg);
