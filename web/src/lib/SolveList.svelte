@@ -101,12 +101,22 @@
         .map((m) => orientationPref.displayMove(m.move)),
     );
   }
+  /** HTM (Half-Turn Metric) count: each face turn — quarter or half —
+   *  counts as one move. BT cubes report only quarter turns, so a
+   *  physical D2 lands in the stream as two `D` events; collapsing
+   *  adjacent same-direction pairs into half turns recovers the HTM
+   *  count the cuber expects to see. */
+  function htmCount(moves: readonly string[]): number {
+    return collapseDoubleTurns(moves).length;
+  }
   function phaseMoveCount(
     analysis: PhaseAnalysis | null,
     stage: StageSlug,
+    stream: MoveEvent[] | undefined,
   ): number {
     const p = findPhase(analysis, stage);
-    return p ? p.endIndex - p.startIndex : 0;
+    if (!p || !stream) return 0;
+    return htmCount(stream.slice(p.startIndex, p.endIndex).map((m) => m.move));
   }
 
   /** Build a `/cube?...` URL whose state is "what the cuber was looking
@@ -323,7 +333,7 @@
             >
             <td class="col-moves">
               {solve.moveStream && solve.moveStream.length > 0
-                ? solve.moveStream.length
+                ? htmCount(solve.moveStream.map((m) => m.move))
                 : "—"}
             </td>
             {#each STAGES as stage (stage)}
@@ -406,7 +416,7 @@
                             >{STAGE_LABELS[stage]}</a
                           >
                           <span class="muted">
-                            {phaseMoveCount(analysis, stage)} moves ·
+                            {phaseMoveCount(analysis, stage, solve.moveStream)} moves ·
                             {phaseDurationText(analysis, stage)}
                           </span>
                           {#if c}
@@ -421,7 +431,7 @@
                           {/if}
                         </div>
                         <div class="detail-value">
-                          {#if phaseMoveCount(analysis, stage) === 0}
+                          {#if phaseMoveCount(analysis, stage, solve.moveStream) === 0}
                             <span class="muted">skip</span>
                           {:else}
                             {@render moveCode(phaseMoves(analysis, stage, solve.moveStream))}
