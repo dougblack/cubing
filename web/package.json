@@ -4,8 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_OPTIONS=--disable-warning=DEP0205 vite dev",
-    "build": "NODE_OPTIONS=--disable-warning=DEP0205 vite build",
+    "vendor": "node scripts/vendor-cubing.mjs",
+    "dev": "npm run vendor && NODE_OPTIONS=--disable-warning=DEP0205 vite dev",
+    "build": "npm run vendor && NODE_OPTIONS=--disable-warning=DEP0205 vite build",
     "preview": "NODE_OPTIONS=--disable-warning=DEP0205 vite preview",
     "check": "NODE_OPTIONS=--disable-warning=DEP0205 svelte-check --tsconfig ./tsconfig.json"
   },

@@ -9,6 +9,14 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap"
       rel="stylesheet"
     />
+    <script type="importmap">
+      {
+        "imports": {
+          "cubing/scramble": "%sveltekit.assets%/vendor/cubing/scramble/index.js",
+          "cubing/alg": "%sveltekit.assets%/vendor/cubing/alg/index.js"
+        }
+      }
+    </script>
     <script>
       // Set the html.dark class before first paint so the page doesn't flash
       // light-then-dark on load. Kept in sync with src/lib/theme.svelte.ts.
