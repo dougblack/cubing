@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { SessionId } from "@cubing/core";
+  import { buildExportSnapshot } from "./export";
   import { formatDateTime } from "./format";
   import { timerStore } from "./timer-store.svelte";
 
@@ -27,7 +28,10 @@
   }
 
   function onExport() {
-    const snapshot = timerStore.exportSnapshot();
+    const snapshot = buildExportSnapshot(
+      timerStore.sessions,
+      timerStore.solves,
+    );
     const blob = new Blob([JSON.stringify(snapshot, null, 2)], {
       type: "application/json",
     });

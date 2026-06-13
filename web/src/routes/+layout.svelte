@@ -24,6 +24,7 @@
 <header class="site-header">
   <a href="{base}/" class="brand">cubing</a>
   <nav>
+    <a href="{base}/trainer">trainer</a>
     <a href="{base}/cfop">algs</a>
     {#each STAGES as s (s.slug)}
       <a href="{base}/cfop/{s.slug}">{s.shortName}</a>

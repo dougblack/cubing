@@ -61,7 +61,23 @@ function parseMove(token: string): ScrambleMove | null {
   if (suffix === "") return { face, quantity: 1 };
   if (suffix === "'") return { face, quantity: -1 };
   if (suffix === "2") return { face, quantity: 2 };
+  // `R2'` and `R'2` both mean the same half-turn as `R2` — the apostrophe
+  // is meaningless on a self-inverse move. cubing.js's invertAlg emits
+  // `R2'` for the inverse of `R2`; accept it here so the parser doesn't
+  // silently drop the token.
+  if (suffix === "2'" || suffix === "'2") return { face, quantity: 2 };
   return null;
+}
+
+/** Convert a free-form face-turn scramble string into canonical WCA
+ *  notation: one token per move, no redundant apostrophes (`R2'` → `R2`),
+ *  unknown tokens dropped. Useful when displaying algorithmically-
+ *  generated strings (e.g. from `invertAlg`) that may include the
+ *  redundant-apostrophe artifact. */
+export function normalizeScramble(scramble: string): string {
+  return parseScramble(scramble)
+    .map((m) => m.face + (m.quantity === -1 ? "'" : m.quantity === 2 ? "2" : ""))
+    .join(" ");
 }
 
 /** Fresh tracker for a scramble string. Caller passes this around as the

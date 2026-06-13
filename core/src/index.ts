@@ -26,6 +26,7 @@ export * from "./scramble-tracker.js";
 export * from "./stats.js";
 export * from "./phases.js";
 export * from "./recognition.js";
+export * from "./trainer.js";
 
 // Orientation: face enum + colors and the cube↔user frame remap.
 export type { CubeColor, CubeFace } from "./orientation.js";

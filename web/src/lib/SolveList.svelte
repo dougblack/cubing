@@ -23,6 +23,38 @@
   let { solves }: { solves: Solve[] } = $props();
 
   let expandedId = $state<string | null>(null);
+  /** Per-solve "show pause markers" toggle. Lives in the expanded detail
+   *  view so collapsed rows don't carry extra chrome. Ephemeral. */
+  let pausesShown = $state<Set<string>>(new Set());
+  function togglePauses(e: MouseEvent, id: string) {
+    e.stopPropagation();
+    const next = new Set(pausesShown);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    pausesShown = next;
+  }
+
+  /** Session-relative pause threshold. We use median × 4 (with a 300ms
+   *  floor for very fast sessions) instead of stddev: pauses ARE the
+   *  outliers we want to flag, and they pull the stddev up with them,
+   *  blunting the very signal we're trying to detect. Median is robust
+   *  to that. The floor keeps blazing sessions (median ~50ms) from
+   *  flagging every normal-tempo gap. Recomputes whenever the visible
+   *  solve set changes. */
+  const pauseThresholdMs = $derived.by(() => {
+    const gaps: number[] = [];
+    for (const s of solves) {
+      const ms = s.moveStream;
+      if (!ms) continue;
+      for (let i = 1; i < ms.length; i++) {
+        gaps.push(ms[i]!.tMs - ms[i - 1]!.tMs);
+      }
+    }
+    if (gaps.length < 20) return 500;
+    gaps.sort((a, b) => a - b);
+    const median = gaps[Math.floor(gaps.length / 2)]!;
+    return Math.max(300, median * 4);
+  });
 
   /** Per-(solve + orientation) analysis cache. Solves are immutable
    *  except for penalty (which doesn't affect phases or cases), but the
@@ -84,22 +116,21 @@
     if (p.durationMs === 0) return "skip";
     return formatMs(p.durationMs);
   }
-  function phaseMoves(
+  /** User-frame events for a phase. Used by the renderer, which collapses
+   *  to half turns AND needs the original quarter-turn tMs values to draw
+   *  pause markers. Returning events instead of pre-collapsed strings
+   *  keeps both pieces of information available. */
+  function phaseEvents(
     analysis: PhaseAnalysis | null,
     stage: StageSlug,
     stream: MoveEvent[] | undefined,
-  ): string[] {
+  ): MoveEvent[] {
     const p = findPhase(analysis, stage);
     if (!p || !stream) return [];
-    // Translate to the cuber's preferred frame BEFORE collapsing — pairs
-    // that were identical in cube frame might map to different letters
-    // in user frame (e.g. cube's "L L" → user's "R R" → still collapses,
-    // but the input letter has to be the user-frame one for display).
-    return collapseDoubleTurns(
-      stream
-        .slice(p.startIndex, p.endIndex)
-        .map((m) => orientationPref.displayMove(m.move)),
-    );
+    return stream.slice(p.startIndex, p.endIndex).map((m) => ({
+      ...m,
+      move: orientationPref.displayMove(m.move),
+    }));
   }
   /** HTM (Half-Turn Metric) count: each face turn — quarter or half —
    *  counts as one move. BT cubes report only quarter turns, so a
@@ -180,25 +211,72 @@
     return simplifyMoves(translated.trim().split(/\s+/)).join(" ");
   }
 
-  /** Group adjacent moves of the same extraneous-ness into runs so the
-   *  underline draws as one continuous line over a wasted sequence (e.g.
-   *  `U2 U` underlined as a single span) instead of broken per token. */
-  interface MoveSegment {
-    text: string;
-    extraneous: boolean;
-  }
-  function segmentExtraneousRuns(moves: string[]): MoveSegment[] {
-    const flags = markExtraneousMoves(moves);
-    const out: MoveSegment[] = [];
-    let i = 0;
-    while (i < moves.length) {
-      const ex = flags[i]!;
-      let j = i + 1;
-      while (j < moves.length && flags[j] === ex) j++;
-      out.push({ text: moves.slice(i, j).join(" "), extraneous: ex });
-      i = j;
+  /** Collapse identical adjacent quarter-turns to half turns while
+   *  recording, for each output token, the index in the input event
+   *  array of its FIRST contributing quarter turn. The renderer uses
+   *  that index to read tMs and decide whether a pause marker belongs
+   *  immediately before this token. */
+  function collapseWithFirstIndex(events: readonly MoveEvent[]): {
+    tokens: string[];
+    firstIndex: number[];
+  } {
+    const tokens: string[] = [];
+    const firstIndex: number[] = [];
+    for (let i = 0; i < events.length; i++) {
+      const move = events[i]!.move;
+      const last = tokens.length - 1;
+      if (last >= 0 && tokens[last] === move && !move.endsWith("2")) {
+        tokens[last] = move.charAt(0) + "2";
+      } else {
+        tokens.push(move);
+        firstIndex.push(i);
+      }
     }
-    return out;
+    return { tokens, firstIndex };
+  }
+
+  /** Render atom: a contiguous run of same-extraneousness moves, or a
+   *  pause marker (with the gap duration so the tooltip can show it).
+   *  A long pause splits an extraneous run so the marker sits visibly
+   *  inside it — the underline restarts on the other side. */
+  type RenderAtom =
+    | { kind: "segment"; text: string; extraneous: boolean }
+    | { kind: "pause"; gapMs: number };
+  function buildAtoms(
+    events: readonly MoveEvent[],
+    showPauses: boolean,
+    thresholdMs: number,
+  ): RenderAtom[] {
+    const { tokens, firstIndex } = collapseWithFirstIndex(events);
+    const flags = markExtraneousMoves(tokens);
+    const atoms: RenderAtom[] = [];
+    let cur: { tokens: string[]; ex: boolean } | null = null;
+    const flush = () => {
+      if (cur) {
+        atoms.push({
+          kind: "segment",
+          text: cur.tokens.join(" "),
+          extraneous: cur.ex,
+        });
+        cur = null;
+      }
+    };
+    for (let k = 0; k < tokens.length; k++) {
+      const ex = flags[k]!;
+      const idx = firstIndex[k]!;
+      const gapMs =
+        idx > 0 ? events[idx]!.tMs - events[idx - 1]!.tMs : 0;
+      const isPaused = showPauses && gapMs > thresholdMs;
+      if (cur && cur.ex === ex && !isPaused) {
+        cur.tokens.push(tokens[k]!);
+      } else {
+        flush();
+        if (isPaused) atoms.push({ kind: "pause", gapMs });
+        cur = { tokens: [tokens[k]!], ex };
+      }
+    }
+    flush();
+    return atoms;
   }
 
   /** Fastest/slowest valid (non-DNF) effective time and per-phase duration
@@ -251,6 +329,62 @@
     );
   }
 
+  /** Column-wise mean/median for the visible solves. Skips DNFs (for the
+   *  single column) and skip-phases / DNFs (for phase columns) — same
+   *  exclusions used for best/worst highlighting, for consistency. */
+  function mean(xs: number[]): number | null {
+    if (xs.length === 0) return null;
+    let sum = 0;
+    for (const x of xs) sum += x;
+    return sum / xs.length;
+  }
+  function median(xs: number[]): number | null {
+    if (xs.length === 0) return null;
+    const s = [...xs].sort((a, b) => a - b);
+    const mid = s.length >> 1;
+    return s.length % 2 === 1 ? s[mid]! : (s[mid - 1]! + s[mid]!) / 2;
+  }
+  const stats = $derived.by(() => {
+    const single: number[] = [];
+    const phase: Record<StageSlug, number[]> = {
+      cross: [],
+      f2l: [],
+      oll: [],
+      pll: [],
+    };
+    for (const s of solves) {
+      if (s.penalty === "DNF") continue;
+      const e = effectiveMs(s);
+      if (typeof e === "number") single.push(e);
+      const a = getPhases(s);
+      if (!a) continue;
+      for (const stage of STAGES) {
+        const p = findPhase(a, stage);
+        if (!p || p.durationMs <= 0) continue;
+        phase[stage].push(p.durationMs);
+      }
+    }
+    return {
+      mean: {
+        single: mean(single),
+        cross: mean(phase.cross),
+        f2l: mean(phase.f2l),
+        oll: mean(phase.oll),
+        pll: mean(phase.pll),
+      },
+      median: {
+        single: median(single),
+        cross: median(phase.cross),
+        f2l: median(phase.f2l),
+        oll: median(phase.oll),
+        pll: median(phase.pll),
+      },
+    };
+  });
+  function statText(v: number | null): string {
+    return v === null ? "—" : formatMs(v);
+  }
+
   function isBestSingle(s: Solve): boolean {
     if (s.penalty === "DNF") return false;
     const v = effectiveMs(s);
@@ -283,12 +417,17 @@
   }
 </script>
 
-{#snippet moveCode(moves: string[])}
-  {@const segments = segmentExtraneousRuns(moves)}
+{#snippet moveCode(events: MoveEvent[], solveId: string)}
+  {@const atoms = buildAtoms(
+    events,
+    pausesShown.has(solveId),
+    pauseThresholdMs,
+  )}
   <code>
-    {#each segments as seg, i (i)}
-      <span class:extraneous={seg.extraneous}>{seg.text}</span>{i < segments.length - 1 ? " " : ""}
-    {/each}
+    {#each atoms as atom, i (i)}{#if i > 0}{" "}{/if}{#if atom.kind === "pause"}<span
+          class="pause"
+          title="{formatMs(atom.gapMs)}s pause">⊢⊣</span
+        >{:else}<span class:extraneous={atom.extraneous}>{atom.text}</span>{/if}{/each}
   </code>
 {/snippet}
 
@@ -382,6 +521,19 @@
           {#if isExpanded}
             <tr class="solve-detail">
               <td colspan="8">
+                {#if solve.moveStream && solve.moveStream.length > 0}
+                  <div class="detail-toolbar">
+                    <button
+                      class="pen pause-toggle"
+                      class:active={pausesShown.has(solve.id)}
+                      title="Highlight gaps longer than {formatMs(
+                        pauseThresholdMs,
+                      )}s (session-relative)"
+                      onclick={(e) => togglePauses(e, solve.id)}
+                      >⊢⊣ pauses</button
+                    >
+                  </div>
+                {/if}
                 <div class="detail-grid">
                   <div class="detail-label">scramble</div>
                   <div class="detail-value">
@@ -395,7 +547,13 @@
                   {:else if !analysis}
                     <div class="detail-label">solve</div>
                     <div class="detail-value">
-                      {@render moveCode(collapseDoubleTurns(solve.moveStream.map((m) => orientationPref.displayMove(m.move))))}
+                      {@render moveCode(
+                        solve.moveStream.map((m) => ({
+                          ...m,
+                          move: orientationPref.displayMove(m.move),
+                        })),
+                        solve.id,
+                      )}
                     </div>
                   {:else}
                     {#each STAGES as stage (stage)}
@@ -434,7 +592,10 @@
                           {#if phaseMoveCount(analysis, stage, solve.moveStream) === 0}
                             <span class="muted">skip</span>
                           {:else}
-                            {@render moveCode(phaseMoves(analysis, stage, solve.moveStream))}
+                            {@render moveCode(
+                              phaseEvents(analysis, stage, solve.moveStream),
+                              solve.id,
+                            )}
                           {/if}
                         </div>
                       {/if}
@@ -446,6 +607,28 @@
           {/if}
         {/each}
       </tbody>
+      {#if solves.length >= 2}
+        <tfoot>
+          <tr class="stats-row">
+            <td class="col-idx stats-label">mean</td>
+            <td class="col-time">{statText(stats.mean.single)}</td>
+            <td class="col-moves">—</td>
+            {#each STAGES as stage (stage)}
+              <td class="col-phase">{statText(stats.mean[stage])}</td>
+            {/each}
+            <td class="col-actions"></td>
+          </tr>
+          <tr class="stats-row">
+            <td class="col-idx stats-label">median</td>
+            <td class="col-time">{statText(stats.median.single)}</td>
+            <td class="col-moves">—</td>
+            {#each STAGES as stage (stage)}
+              <td class="col-phase">{statText(stats.median[stage])}</td>
+            {/each}
+            <td class="col-actions"></td>
+          </tr>
+        </tfoot>
+      {/if}
     </table>
   {/if}
 </section>
@@ -648,6 +831,35 @@
     text-decoration-color: var(--color-warn);
     text-decoration-thickness: 1px;
     text-underline-offset: 3px;
+  }
+  .detail-value code .pause {
+    color: var(--color-text-muted);
+    opacity: 0.7;
+    cursor: help;
+    margin: 0 1px;
+  }
+  .detail-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+  }
+  .pause-toggle {
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .stats-row td {
+    border-top: 1px solid var(--color-border);
+    border-bottom: none;
+    color: var(--color-text-muted);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+  }
+  .stats-label {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-size: 10px;
+    font-family: var(--font-sans);
   }
   .detail-value.muted,
   .detail-value .muted {

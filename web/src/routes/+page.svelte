@@ -6,12 +6,12 @@
     newTrackerState,
     next3x3Scramble,
     remainingMoves,
-    type ScrambleMove,
     tickTracker,
     type TrackerState,
   } from "@cubing/core";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
+  import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
   import SessionStats from "$lib/SessionStats.svelte";
   import SessionSwitcher from "$lib/SessionSwitcher.svelte";
   import SolveList from "$lib/SolveList.svelte";
@@ -259,13 +259,6 @@
     void bluetoothStore.debugLog.length;
     if (debugLogEl) debugLogEl.scrollTop = debugLogEl.scrollHeight;
   });
-
-  function moveLabel(step: ScrambleMove): string {
-    return (
-      step.face +
-      (step.quantity === -1 ? "'" : step.quantity === 2 ? "2" : "")
-    );
-  }
 </script>
 
 <svelte:head>
@@ -276,23 +269,11 @@
   <div class="orient-row">
     <OrientationPicker />
   </div>
-  <p class="scramble" aria-live="polite">
-    {#if currentScramble && trackerState}
-      {#each trackerState.steps as step, i (i)}
-        {@const isDone = i < trackerState.currentIndex}
-        {@const isCurrent = i === trackerState.currentIndex}
-        {@const isHalf = isCurrent && trackerState.subProgress === 1}
-        <span
-          class="scramble-token"
-          class:done={isDone}
-          class:current={isCurrent}
-          class:half={isHalf}>{moveLabel(step)}</span
-        >{" "}
-      {/each}
-    {:else}
-      {currentScramble ?? "Loading scramble…"}
-    {/if}
-  </p>
+  {#if currentScramble}
+    <ScrambleDisplay scramble={currentScramble} tracker={trackerState} />
+  {:else}
+    <p class="scramble-placeholder">Loading scramble…</p>
+  {/if}
   {#if pendingUndo}
     <p class="scramble-undo-hint" aria-live="polite">
       wrong move — do <code>{inverseMove(pendingUndo.wrongMove)}</code> to undo, or any other move to commit to a new scramble
@@ -417,38 +398,12 @@
     justify-content: flex-end;
     margin-bottom: -8px;
   }
-  .scramble {
+  .scramble-placeholder {
     font-family: var(--font-mono);
     font-size: 18px;
     text-align: center;
     margin: 0;
-    word-break: break-word;
-    color: var(--color-text);
-    line-height: 1.6;
-  }
-  .scramble-token {
-    display: inline-block;
-    padding: 1px 5px;
-    border-radius: 3px;
-    transition:
-      background 0.12s ease,
-      color 0.12s ease,
-      opacity 0.12s ease;
-  }
-  .scramble-token.done {
-    opacity: 0.35;
-  }
-  .scramble-token.current {
-    background: var(--color-learning-bg);
-    color: var(--color-text);
-    font-weight: 600;
-  }
-  .scramble-token.half {
-    /* R2 with one of two turns done — underline as a "halfway" cue */
-    text-decoration: underline;
-    text-decoration-color: var(--color-learning);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 3px;
+    color: var(--color-text-muted);
   }
   .scramble-undo-hint {
     margin: 0;

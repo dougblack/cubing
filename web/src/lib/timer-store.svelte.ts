@@ -195,23 +195,6 @@ class TimerStore {
     }
   }
 
-  // ---- export ----
-
-  /** Snapshot of every session and solve, suitable for download. Session
-   *  `id` is the UUID — external tools can dedupe on it. */
-  exportSnapshot(): {
-    exportedAt: number;
-    version: 1;
-    sessions: Session[];
-    solves: Solve[];
-  } {
-    return {
-      exportedAt: Date.now(),
-      version: 1,
-      sessions: this.sessions,
-      solves: this.solves,
-    };
-  }
 }
 
 export const timerStore = new TimerStore();
