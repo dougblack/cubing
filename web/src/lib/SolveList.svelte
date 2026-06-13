@@ -415,8 +415,7 @@
   )}
   <code>
     {#each atoms as atom, i (i)}{#if i > 0}{" "}{/if}{#if atom.kind === "pause"}<span
-          class="pause"
-          title="{formatMs(atom.gapMs)}s pause">⊢⊣</span
+          class="pause">⊢{formatMs(atom.gapMs)}s⊣</span
         >{:else}<span class:extraneous={atom.extraneous}>{atom.text}</span>{/if}{/each}
   </code>
 {/snippet}
@@ -825,7 +824,6 @@
   .detail-value code .pause {
     color: var(--color-text-muted);
     opacity: 0.7;
-    cursor: help;
     margin: 0 1px;
   }
   .detail-toolbar {

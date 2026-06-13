@@ -10,6 +10,7 @@
     type TrackerState,
   } from "@cubing/core";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
+  import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
   import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
   import SessionStats from "$lib/SessionStats.svelte";
@@ -83,24 +84,34 @@
     };
   });
 
+  /** Scramble shown to the cuber and used to build the tracker. When
+   *  `scrambleInUserFrame` is on, this is the WCA scramble translated
+   *  into the cuber's preferred frame; otherwise it's identity. The
+   *  raw `currentScramble` stays unchanged so the stored solve record
+   *  (and any /cube?scramble=... reconstruction) keeps the canonical
+   *  WCA frame. */
+  const displayedScramble = $derived(
+    currentScramble ? orientationPref.scrambleForView(currentScramble) : null,
+  );
+
   // Initialize / tear down the tracker on BT (dis)connect. Doesn't fire on
   // every currentScramble change — those are handled explicitly so the
   // revert path can install a snapshot tracker without being clobbered.
   $effect(() => {
     if (
       bluetoothStore.status === "connected" &&
-      currentScramble &&
+      displayedScramble &&
       !trackerState
     ) {
-      trackerState = newTrackerState(currentScramble);
+      trackerState = newTrackerState(displayedScramble);
     } else if (bluetoothStore.status !== "connected" && trackerState) {
       trackerState = null;
     }
   });
 
   function freshTrackerForCurrent() {
-    if (bluetoothStore.status === "connected" && currentScramble) {
-      trackerState = newTrackerState(currentScramble);
+    if (bluetoothStore.status === "connected" && displayedScramble) {
+      trackerState = newTrackerState(displayedScramble);
     }
   }
 
@@ -148,7 +159,9 @@
       }
       const tokens = fresh.trim().split(/\s+/).slice(0, length);
       currentScramble = tokens.join(" ");
-      trackerState = newTrackerState(currentScramble);
+      trackerState = newTrackerState(
+        orientationPref.scrambleForView(currentScramble),
+      );
     } finally {
       regenPending = false;
     }
@@ -208,11 +221,18 @@
         return;
       }
 
-      // Idle / stopped: advance the live scramble tracker.
+      // Idle / stopped: advance the live scramble tracker. The tracker
+      // is in whichever frame `displayedScramble` is in (cube-frame by
+      // default, user-frame when scrambleInUserFrame is on), so the BT
+      // move needs the same translation before comparison. The raw
+      // `move` still feeds appliedMoves above — the stored solve keeps
+      // the canonical-frame scramble.
+      const tickMove = orientationPref.scrambleTickMove(move);
+
       // First, if a wrong move is pending undo, this is the move that
       // decides between undo and commit.
       if (pendingUndo) {
-        if (move === inverseMove(pendingUndo.wrongMove)) {
+        if (tickMove === inverseMove(pendingUndo.wrongMove)) {
           // Revert: restore the previous scramble and tracker, discard
           // the in-flight regen.
           currentScramble = pendingUndo.previousScramble;
@@ -230,10 +250,10 @@
       }
 
       if (!trackerState) return;
-      const r = tickTracker(trackerState, move);
+      const r = tickTracker(trackerState, tickMove);
       trackerState = r.state;
       if (r.result === "wrong") {
-        handleWrongMove(move);
+        handleWrongMove(tickMove);
       } else if (isComplete(trackerState)) {
         api.startInspection();
       }
@@ -269,8 +289,8 @@
   <div class="orient-row">
     <OrientationPicker />
   </div>
-  {#if currentScramble}
-    <ScrambleDisplay scramble={currentScramble} tracker={trackerState} />
+  {#if displayedScramble}
+    <ScrambleDisplay scramble={displayedScramble} tracker={trackerState} />
   {:else}
     <p class="scramble-placeholder">Loading scramble…</p>
   {/if}

@@ -14,6 +14,7 @@
   import { base } from "$app/paths";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
   import { formatMs } from "$lib/format";
+  import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
   import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
   import { trainerStore } from "$lib/trainer-store.svelte";
@@ -29,14 +30,28 @@
    */
   type Phase = "presenting" | "recognizing" | "executing" | "done";
 
-  let stage = $state<TrainerStage>("pll");
-  let phase = $state<Phase>("presenting");
-  let current = $state<{
+  interface CaseRec {
     caseId: string;
     caseName: string;
     scramble: string;
-  } | null>(null);
+  }
+
+  let stage = $state<TrainerStage>("pll");
+  let phase = $state<Phase>("presenting");
+  let current = $state<CaseRec | null>(null);
+  /** Pre-generated next case. Set when the current attempt completes
+   *  (success or DNF), so the next scramble is already visible in the
+   *  done view and the cuber can start applying it immediately —
+   *  starting the new scramble is then equivalent to clicking "next
+   *  case". Cleared on stage toggle (stale across stages) and on the
+   *  transition into the next case. */
+  let pendingNext = $state<CaseRec | null>(null);
   let trackerState = $state<TrackerState | null>(null);
+  /** Wrong moves made during scrambling, in the order the cuber made
+   *  them. While this stack is non-empty the scramble tracker is
+   *  frozen — the cuber must undo by playing the inverses (in reverse
+   *  order) before the tracker resumes. */
+  let wrongMoves = $state<string[]>([]);
 
   let recognitionStartedAt = 0;
   let executionStartedAt = 0;
@@ -46,6 +61,35 @@
    *  solved state) or DNF'd (escape / abort). Only meaningful in the
    *  `done` phase. */
   let lastWasDnf = $state(false);
+
+  /** Inverse of a single quarter turn. BT only reports quarter turns
+   *  so we don't need to handle the half-turn case here. */
+  function inverseQuarterTurn(move: string): string {
+    return move.endsWith("'") ? move.slice(0, -1) : move + "'";
+  }
+
+  /** Recovery move list shown to the cuber when they've made one or
+   *  more wrong moves during scrambling. To undo "R F" the cuber must
+   *  play "F' R'" (last wrong move undone first), so we reverse the
+   *  stack and invert each entry. */
+  const recoveryHint = $derived(
+    wrongMoves.length === 0
+      ? ""
+      : wrongMoves
+          .slice()
+          .reverse()
+          .map(inverseQuarterTurn)
+          .join(" "),
+  );
+
+  function generateNextCase(): CaseRec {
+    const c = pickRandomCase(stage);
+    return {
+      caseId: c.id,
+      caseName: c.name,
+      scramble: generateTrainerScramble(stage, c.id),
+    };
+  }
 
   /** Live counter for the current running phase (recognize OR execute).
    *  30ms tick — smooth enough that the cuber sees movement without
@@ -68,17 +112,54 @@
 
   function loadCase() {
     stopLive();
-    const c = pickRandomCase(stage);
-    const scramble = generateTrainerScramble(stage, c.id);
-    current = { caseId: c.id, caseName: c.name, scramble };
+    // Consume the pre-generated next case if we have one (the
+    // cuber just hit "next case" or started applying its scramble);
+    // otherwise generate a fresh one from scratch (initial load,
+    // skip, stage change).
+    current = pendingNext ?? generateNextCase();
+    pendingNext = null;
     phase = "presenting";
     trackerState =
-      bluetoothStore.status === "connected" ? newTrackerState(scramble) : null;
+      bluetoothStore.status === "connected"
+        ? newTrackerState(current.scramble)
+        : null;
     recognitionMs = null;
     executionMs = null;
     liveMs = 0;
     lastWasDnf = false;
+    wrongMoves = [];
   }
+
+  /** Finalize an attempt — record it and pre-generate the next case so
+   *  its scramble shows up in the done view. The cuber can then either
+   *  click "next case" or just start applying the new scramble; both
+   *  routes lead through loadCase, which swaps `pendingNext` into
+   *  `current`. */
+  function recordAndQueueNext(args: {
+    recognitionMs: number;
+    executionMs: number;
+    dnf: boolean;
+  }) {
+    if (!current) return;
+    trainerStore.addAttempt({
+      caseId: current.caseId,
+      stage,
+      scramble: current.scramble,
+      recognitionMs: args.recognitionMs,
+      executionMs: args.executionMs,
+      correct: !args.dnf,
+    });
+    pendingNext = generateNextCase();
+  }
+
+  // Note: trainer scrambles are emitted in the simulator's Y-top G-front
+  // frame, NOT in WCA W-top frame like the timer's scrambles. They're
+  // meant to be interpreted by the cuber relative to their TOP face —
+  // "U" turn always means "turn the top face" regardless of color — so
+  // they don't need a per-orientation translation pass. (`scrambleForView`
+  // assumes a W-top source, so applying it here would land the case on
+  // the wrong layer for a Y-top user.) The "scramble in this orientation"
+  // toggle only affects timer-page scrambles.
 
   /** "Cube is solved" — used when the BT cube's solved-state detection
    *  misses a transition. Resyncs the BT cube's solved reference to
@@ -92,17 +173,15 @@
   function markSolved() {
     if (!canMarkSolved) return;
     if (phase === "executing" && current && recognitionMs !== null) {
-      executionMs = performance.now() - executionStartedAt;
+      const finalExecMs = performance.now() - executionStartedAt;
+      executionMs = finalExecMs;
       stopLive();
       phase = "done";
       lastWasDnf = false;
-      trainerStore.addAttempt({
-        caseId: current.caseId,
-        stage,
-        scramble: current.scramble,
+      recordAndQueueNext({
         recognitionMs,
-        executionMs,
-        correct: true,
+        executionMs: finalExecMs,
+        dnf: false,
       });
     }
     if (bluetoothStore.status === "connected") {
@@ -115,17 +194,15 @@
    *  phases, no useful timing yet — just regenerate. */
   function markDnf() {
     if (phase === "executing" && current && recognitionMs !== null) {
-      executionMs = performance.now() - executionStartedAt;
+      const finalExecMs = performance.now() - executionStartedAt;
+      executionMs = finalExecMs;
       stopLive();
       phase = "done";
       lastWasDnf = true;
-      trainerStore.addAttempt({
-        caseId: current.caseId,
-        stage,
-        scramble: current.scramble,
+      recordAndQueueNext({
         recognitionMs,
-        executionMs,
-        correct: false,
+        executionMs: finalExecMs,
+        dnf: true,
       });
       return;
     }
@@ -171,6 +248,9 @@
   function setStage(next: TrainerStage) {
     if (next === stage) return;
     recordPendingDnf();
+    // Any pre-generated next case was for the OLD stage — discard so
+    // loadCase below draws fresh from the new stage's pool.
+    pendingNext = null;
     stage = next;
     loadCase();
   }
@@ -202,13 +282,50 @@
     }
   });
 
-  // BT wiring: tracker advance during presenting, recognition→execution
-  // on first post-scramble move, execution→done on solved-state.
+  // BT wiring: done→presenting auto-advance, scramble tracker (with
+  // wrong-move freeze + recovery) during presenting, recognition→
+  // execution on the first post-scramble move, execution→done on the
+  // solved-state transition.
   $effect(() => {
     if (bluetoothStore.status !== "connected") return;
     const unsubMove = bluetoothStore.onMove((move) => {
+      // The trainer scramble is interpreted in the cuber's frame
+      // ("U" means "turn the top face"), so BT's cube-frame move
+      // needs the cube→user remap before any tracker comparison.
+      // This translation is unconditional — independent of the
+      // timer's `scrambleInUserFrame` toggle.
+      const tickMove = orientationPref.displayMove(move);
+
+      // In `done`, the cube is solved and pendingNext is shown. The
+      // first BT move IS the cuber starting the next scramble — pull
+      // the pre-generated case in (same path as the "next case"
+      // button) and then fall through to tick this move on the new
+      // tracker.
+      if (phase === "done" && pendingNext) {
+        loadCase();
+      }
+
       if (phase === "presenting" && trackerState) {
-        const r = tickTracker(trackerState, move);
+        // Wrong-move recovery: the tracker is frozen until the cuber
+        // has played the inverse of every wrong move (LIFO). A move
+        // that matches the inverse of the most recent wrong move
+        // pops it; any other move stacks deeper.
+        if (wrongMoves.length > 0) {
+          const top = wrongMoves[wrongMoves.length - 1]!;
+          if (tickMove === inverseQuarterTurn(top)) {
+            wrongMoves = wrongMoves.slice(0, -1);
+          } else {
+            wrongMoves = [...wrongMoves, tickMove];
+          }
+          return;
+        }
+        const r = tickTracker(trackerState, tickMove);
+        if (r.result === "wrong") {
+          // Freeze: don't advance the tracker, record the wrong move
+          // so the recovery hint shows the path back.
+          wrongMoves = [tickMove];
+          return;
+        }
         trackerState = r.state;
         if (isComplete(trackerState)) startRecognition();
         return;
@@ -223,17 +340,15 @@
     const unsubSolved = bluetoothStore.onSolved((lastMoveAt) => {
       if (phase !== "executing") return;
       const endAt = lastMoveAt ?? performance.now();
-      executionMs = endAt - executionStartedAt;
+      const finalExecMs = endAt - executionStartedAt;
+      executionMs = finalExecMs;
       stopLive();
       phase = "done";
       if (current && recognitionMs !== null) {
-        trainerStore.addAttempt({
-          caseId: current.caseId,
-          stage,
-          scramble: current.scramble,
+        recordAndQueueNext({
           recognitionMs,
-          executionMs,
-          correct: true,
+          executionMs: finalExecMs,
+          dnf: false,
         });
       }
     });
@@ -333,14 +448,25 @@
 
   {#if current}
     <div class="scramble-block">
-      <ScrambleDisplay scramble={current.scramble} tracker={trackerState} />
-      <p class="scramble-hint">
-        {#if bluetoothStore.status === "connected"}
-          apply this scramble to the cube — recognition starts automatically
+      {#if phase === "done" && pendingNext}
+        <ScrambleDisplay scramble={pendingNext.scramble} tracker={null} />
+        <p class="scramble-hint">
+          next scramble — start applying to advance
+        </p>
+      {:else}
+        <ScrambleDisplay scramble={current.scramble} tracker={trackerState} />
+        {#if wrongMoves.length > 0}
+          <p class="scramble-hint warn" aria-live="polite">
+            wrong move — do <code>{recoveryHint}</code> to get back on track
+          </p>
+        {:else if bluetoothStore.status === "connected"}
+          <p class="scramble-hint">
+            apply this scramble to the cube — recognition starts automatically
+          </p>
         {:else}
-          apply this scramble, then press begin
+          <p class="scramble-hint">apply this scramble, then press begin</p>
         {/if}
-      </p>
+      {/if}
     </div>
 
     <div class="timing">
@@ -564,6 +690,20 @@
     margin: 8px 0 0;
     color: var(--color-text-muted);
     font-size: 12px;
+  }
+  .scramble-hint strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .scramble-hint.warn {
+    color: var(--color-warn);
+  }
+  .scramble-hint.warn code {
+    font-family: var(--font-mono);
+    color: var(--color-text);
+    background: var(--color-learning-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
   }
 
   .timing {

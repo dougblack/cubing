@@ -1,12 +1,13 @@
 // User's preferred cube orientation (which color goes on top, which on
-// front). Drives the CubeView's display rotation and the move-stream
-// relabeling. Default: yellow on top, green on front — the dominant
-// CFOP-cuber convention.
+// front). Drives the CubeView's display rotation, the move-stream
+// relabeling, and — when `scrambleInUserFrame` is on — the scramble
+// translation pipeline too. Default: yellow on top, green on front —
+// the dominant CFOP-cuber convention.
 //
-// We intentionally DO NOT translate scrambles: WCA scrambles are
-// conventionally executed in the W-top/G-front frame, and most cubers
-// scramble in that frame and then rotate the cube to their solving
-// orientation. Re-translating the scramble would break that workflow.
+// Scrambling-in-user-frame is OFF by default to preserve the WCA
+// workflow (scramble in W-top/G-front, then rotate to solving
+// orientation). Cubers who want their scramble in their own frame
+// (so they never have to flip the cube to scramble) flip the toggle.
 
 import { browser } from "$app/environment";
 import {
@@ -18,6 +19,7 @@ import {
   FACE_INDEX,
   findCrossFaceForColor,
   normalizeToCrossOnD,
+  remapAlg,
   remapMove,
   solved,
   type State,
@@ -27,16 +29,23 @@ import {
 const KEY = "cubing_orientation";
 const DEFAULT_TOP: CubeColor = "Y";
 const DEFAULT_FRONT: CubeColor = "G";
+const DEFAULT_SCRAMBLE_IN_USER_FRAME = false;
 
 interface Stored {
   top: CubeColor;
   front: CubeColor;
+  scrambleInUserFrame?: boolean;
 }
 
 function loadStored(): Stored {
-  if (!browser) return { top: DEFAULT_TOP, front: DEFAULT_FRONT };
+  const fallback: Stored = {
+    top: DEFAULT_TOP,
+    front: DEFAULT_FRONT,
+    scrambleInUserFrame: DEFAULT_SCRAMBLE_IN_USER_FRAME,
+  };
+  if (!browser) return fallback;
   const raw = window.localStorage.getItem(KEY);
-  if (!raw) return { top: DEFAULT_TOP, front: DEFAULT_FRONT };
+  if (!raw) return fallback;
   try {
     const parsed = JSON.parse(raw) as Partial<Stored>;
     if (
@@ -45,12 +54,17 @@ function loadStored(): Stored {
       parsed.top !== parsed.front &&
       COLOR_OPPOSITE[parsed.top] !== parsed.front
     ) {
-      return { top: parsed.top, front: parsed.front };
+      return {
+        top: parsed.top,
+        front: parsed.front,
+        scrambleInUserFrame:
+          parsed.scrambleInUserFrame ?? DEFAULT_SCRAMBLE_IN_USER_FRAME,
+      };
     }
   } catch {
     // fall through to defaults
   }
-  return { top: DEFAULT_TOP, front: DEFAULT_FRONT };
+  return fallback;
 }
 
 // The 24 valid cube orientations expressed as rotation algorithms
@@ -119,16 +133,35 @@ function rotateYToFront(state: State, frontColor: StickerColor): State {
 class OrientationStore {
   top = $state<CubeColor>(DEFAULT_TOP);
   front = $state<CubeColor>(DEFAULT_FRONT);
+  /** When true, scrambles are translated into the user's frame before
+   *  display, and incoming BT moves are translated before being ticked
+   *  against the scramble tracker. Off by default so the canonical
+   *  W-top/G-front workflow keeps working unchanged. */
+  scrambleInUserFrame = $state<boolean>(DEFAULT_SCRAMBLE_IN_USER_FRAME);
 
   constructor() {
     if (!browser) return;
     const stored = loadStored();
     this.top = stored.top;
     this.front = stored.front;
+    this.scrambleInUserFrame =
+      stored.scrambleInUserFrame ?? DEFAULT_SCRAMBLE_IN_USER_FRAME;
   }
 
   isDefault(): boolean {
     return this.top === DEFAULT_TOP && this.front === DEFAULT_FRONT;
+  }
+
+  private persist(): void {
+    if (!browser) return;
+    window.localStorage.setItem(
+      KEY,
+      JSON.stringify({
+        top: this.top,
+        front: this.front,
+        scrambleInUserFrame: this.scrambleInUserFrame,
+      }),
+    );
   }
 
   /** Save a new orientation. Silently ignores invalid pairs (same color
@@ -137,9 +170,12 @@ class OrientationStore {
     if (top === front || COLOR_OPPOSITE[top] === front) return;
     this.top = top;
     this.front = front;
-    if (browser) {
-      window.localStorage.setItem(KEY, JSON.stringify({ top, front }));
-    }
+    this.persist();
+  }
+
+  setScrambleInUserFrame(on: boolean): void {
+    this.scrambleInUserFrame = on;
+    this.persist();
   }
 
   /** Orient a state for display. Always tries to put the user's cross
@@ -174,6 +210,23 @@ class OrientationStore {
 
   /** Translate a single move from cube frame to user frame for display. */
   displayMove(move: string): string {
+    return remapMove(move, this.faceRemap());
+  }
+
+  /** Translate a scramble for the cuber's view AND for the scramble
+   *  tracker, IFF `scrambleInUserFrame` is on. Otherwise returns the
+   *  scramble verbatim (canonical WCA-frame workflow). */
+  scrambleForView(scramble: string): string {
+    if (!this.scrambleInUserFrame) return scramble;
+    return remapAlg(scramble, this.faceRemap());
+  }
+
+  /** Translate an incoming BT move into the frame the scramble tracker
+   *  is built in. Mirrors `scrambleForView` — when the scramble is in
+   *  user frame, the tracker is too, so cube-frame BT moves need the
+   *  same remap before ticking. */
+  scrambleTickMove(move: string): string {
+    if (!this.scrambleInUserFrame) return move;
     return remapMove(move, this.faceRemap());
   }
 }

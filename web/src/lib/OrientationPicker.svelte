@@ -27,6 +27,10 @@
     const newFront = (e.currentTarget as HTMLSelectElement).value as CubeColor;
     orientationPref.set(orientationPref.top, newFront);
   }
+  function onScrambleFrameChange(e: Event) {
+    const on = (e.currentTarget as HTMLInputElement).checked;
+    orientationPref.setScrambleInUserFrame(on);
+  }
 
   const COLOR_NAME: Record<CubeColor, string> = {
     Y: "yellow",
@@ -82,6 +86,17 @@
         </select>
       </label>
     </div>
+    <label
+      class="scramble-frame"
+      title="On: scrambles are shown in this orientation, so you never have to flip the cube. Off: scrambles are in WCA-canonical W-top/G-front frame."
+    >
+      <input
+        type="checkbox"
+        checked={orientationPref.scrambleInUserFrame}
+        onchange={onScrambleFrameChange}
+      />
+      <span>scramble in this orientation</span>
+    </label>
   {/if}
 </div>
 
@@ -138,6 +153,18 @@
     border-radius: 3px;
     background: var(--color-surface);
     color: var(--color-text);
+    cursor: pointer;
+  }
+  .scramble-frame {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+  .scramble-frame input {
+    margin: 0;
     cursor: pointer;
   }
 </style>
