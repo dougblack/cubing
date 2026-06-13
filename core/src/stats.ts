@@ -43,6 +43,25 @@ export function averageOfN(
   return sum / middle.length;
 }
 
+/** Arithmetic mean of a number list. Returns null for empty input rather
+ *  than NaN, so callers can render `—` without a guard. */
+export function mean(xs: readonly number[]): number | null {
+  if (xs.length === 0) return null;
+  let sum = 0;
+  for (const x of xs) sum += x;
+  return sum / xs.length;
+}
+
+/** Median of a number list. For even counts, returns the average of the
+ *  two middle values (true statistical median). Returns null for empty
+ *  input. */
+export function median(xs: readonly number[]): number | null {
+  if (xs.length === 0) return null;
+  const s = [...xs].sort((a, b) => a - b);
+  const mid = s.length >> 1;
+  return s.length % 2 === 1 ? s[mid]! : (s[mid - 1]! + s[mid]!) / 2;
+}
+
 /** Fastest single solve. Returns null if there are no solves; "DNF" if every
  *  solve was a DNF. */
 export function bestSingleMs(solves: readonly Solve[]): AverageResult {

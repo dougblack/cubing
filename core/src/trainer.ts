@@ -70,18 +70,23 @@ function validatesAsCase(
   }
 }
 
-/** Per-case usable alg pool, computed once at module load. We prefer
- *  clean (face-turn-only) algs because they leave the cube in a standard
- *  orientation; algs with rotations/wide moves end with the cube tilted,
- *  which makes the cuber's solved state look "wrong" colors-on-faces.
- *  An additional validation pass rejects mislabeled algs. */
-const VALID_ALGS: Record<TrainerStage, Map<string, string[]>> = {
-  oll: buildValidAlgPool("oll"),
-  pll: buildValidAlgPool("pll"),
-};
+/** Per-stage cache of the validated alg pool + the trainable-case list.
+ *  Built lazily on first access — the validation pass runs ~80 algs
+ *  through the recognizer (applyAlg + recognize), which we don't want
+ *  to pay at module load for pages that never open the trainer.
+ *  Because @cubing/core's index re-exports this module, every consumer
+ *  imports it; making the work lazy keeps the timer / cfop pages free. */
+interface StagePool {
+  algsByCase: Map<string, string[]>;
+  trainable: TrainerCase[];
+}
+const POOL_CACHE: Partial<Record<TrainerStage, StagePool>> = {};
 
-function buildValidAlgPool(stage: TrainerStage): Map<string, string[]> {
-  const out = new Map<string, string[]>();
+function getPool(stage: TrainerStage): StagePool {
+  const cached = POOL_CACHE[stage];
+  if (cached) return cached;
+  const algsByCase = new Map<string, string[]>();
+  const trainable: TrainerCase[] = [];
   for (const c of STAGE_DATA[stage]) {
     // Pre-filter to face-turn-only algs; everything else loses meaning
     // after `normalizeScramble` strips wide/slice/rotation tokens.
@@ -89,9 +94,12 @@ function buildValidAlgPool(stage: TrainerStage): Map<string, string[]> {
       .filter((a) => isCleanAlg(a.moves))
       .map((a) => a.moves);
     const valid = candidates.filter((m) => validatesAsCase(m, stage, c.id));
-    out.set(c.id, valid);
+    algsByCase.set(c.id, valid);
+    if (valid.length > 0) trainable.push({ id: c.id, name: c.name });
   }
-  return out;
+  const pool: StagePool = { algsByCase, trainable };
+  POOL_CACHE[stage] = pool;
+  return pool;
 }
 
 /** True iff the trainer can ship at least one valid scramble for this
@@ -99,7 +107,7 @@ function buildValidAlgPool(stage: TrainerStage): Map<string, string[]> {
  *  bearing algs; those won't survive the face-turn-only normalization
  *  and the case is currently un-trainable in Phase 1. */
 export function isCaseTrainable(stage: TrainerStage, caseId: string): boolean {
-  return (VALID_ALGS[stage].get(caseId) ?? []).length > 0;
+  return (getPool(stage).algsByCase.get(caseId) ?? []).length > 0;
 }
 
 /** All cases in the dataset for a stage, in dataset order. Some may not
@@ -109,9 +117,10 @@ export function trainerCases(stage: TrainerStage): TrainerCase[] {
 }
 
 /** All cases for which the trainer can currently generate a valid
- *  scramble. `pickRandomCase` draws from this list. */
+ *  scramble. `pickRandomCase` draws from this list. O(1) after the
+ *  first call (the trainable list is cached alongside the alg pool). */
 export function trainableCases(stage: TrainerStage): TrainerCase[] {
-  return trainerCases(stage).filter((c) => isCaseTrainable(stage, c.id));
+  return getPool(stage).trainable;
 }
 
 const AUF_OPTIONS = ["", "U", "U'", "U2"] as const;
@@ -159,7 +168,7 @@ export function generateTrainerScramble(
   stage: TrainerStage,
   caseId: string,
 ): string {
-  const pool = VALID_ALGS[stage].get(caseId);
+  const pool = getPool(stage).algsByCase.get(caseId);
   if (!pool || pool.length === 0) {
     throw new Error(`unknown ${stage} case: ${caseId}`);
   }

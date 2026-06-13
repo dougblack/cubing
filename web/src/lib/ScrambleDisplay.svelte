@@ -7,9 +7,9 @@
   // token is annotated with done / current / half classes so the cuber
   // sees live progress.
   //
-  // Style hooks (`.scramble-display`, `.scramble-token`) are exported as
-  // unscoped via :global so callers can tweak font-size / color / etc.
-  // without forking the component.
+  // Styles are component-scoped on purpose: callers that want a
+  // different font size or color should wrap this component in a styled
+  // container, not reach into its internals.
 
   import {
     newTrackerState,

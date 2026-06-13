@@ -2,6 +2,7 @@
   import {
     generateTrainerScramble,
     isComplete,
+    isCaseTrainable,
     newTrackerState,
     pickRandomCase,
     tickTracker,
@@ -9,6 +10,7 @@
     type TrainerStage,
     trainerCases,
   } from "@cubing/core";
+  import { untrack } from "svelte";
   import { base } from "$app/paths";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
   import { formatMs } from "$lib/format";
@@ -79,10 +81,16 @@
   }
 
   /** "Cube is solved" — used when the BT cube's solved-state detection
-   *  misses a transition. Always resyncs the BT cube to its physical
-   *  state. If currently `executing`, also closes the attempt as if
-   *  `onSolved` had fired (records correct + advances to `done`). */
+   *  misses a transition. Resyncs the BT cube's solved reference to
+   *  the current physical state. CRITICAL: we must NOT call this
+   *  during `presenting`/`recognizing` — the cube is mid-scramble or
+   *  in case state, not actually solved, and pointing BT's reference
+   *  at the wrong state corrupts `onSolved` detection for the whole
+   *  session. So the button is gated to phases where the cube can
+   *  reasonably be assumed solved. */
+  const canMarkSolved = $derived(phase === "executing" || phase === "done");
   function markSolved() {
+    if (!canMarkSolved) return;
     if (phase === "executing" && current && recognitionMs !== null) {
       executionMs = performance.now() - executionStartedAt;
       stopLive();
@@ -142,12 +150,41 @@
     loadCase();
   }
 
-  // Reset state on stage change so the cuber doesn't end up holding a
-  // PLL scramble after toggling to OLL training.
-  $effect(() => {
-    void stage;
+  /** Record an in-flight executing attempt as DNF before abandoning it.
+   *  Shared between stage-toggle and any future "abandon-and-skip" path
+   *  — both should preserve the timing data rather than silently dropping
+   *  the attempt from stats. */
+  function recordPendingDnf() {
+    if (phase !== "executing" || !current || recognitionMs === null) return;
+    executionMs = performance.now() - executionStartedAt;
+    stopLive();
+    trainerStore.addAttempt({
+      caseId: current.caseId,
+      stage,
+      scramble: current.scramble,
+      recognitionMs,
+      executionMs,
+      correct: false,
+    });
+  }
+
+  function setStage(next: TrainerStage) {
+    if (next === stage) return;
+    recordPendingDnf();
+    stage = next;
     loadCase();
+  }
+
+  // Initial case load. `untrack` keeps loadCase's `bluetoothStore.status`
+  // read from registering as a dep of this effect — otherwise every BT
+  // (dis)connect would regenerate a fresh case mid-attempt.
+  $effect(() => {
+    untrack(() => loadCase());
   });
+
+  // Stop the live timer on unmount. The timer would otherwise keep
+  // ticking and writing to detached $state after SPA navigation.
+  $effect(() => () => stopLive());
 
   // Init / drop the tracker as BT (dis)connects mid-presenting. The
   // tracker is only useful while we have moves arriving; without BT,
@@ -206,16 +243,24 @@
     };
   });
 
-  const cases = $derived(trainerCases(stage));
+  // Show only cases the trainer can currently produce scrambles for.
+  // Untrainable cases (e.g. M-slice-only OLLs) would otherwise show
+  // permanent dashes that never change, since `pickRandomCase` never
+  // selects them.
+  const cases = $derived(
+    trainerCases(stage).filter((c) => isCaseTrainable(stage, c.id)),
+  );
   const totalAttempts = $derived(
     trainerStore.attempts.filter((a) => a.stage === stage).length,
   );
 
   // Esc: DNF the current attempt (or skip if no timing has started yet).
   // Mirrors the Timer component's keybinding so muscle memory carries.
+  // Guard against OS key-repeat: holding Esc would otherwise burn through
+  // fresh scrambles at ~30Hz on each keydown.
   $effect(() => {
     function onKey(e: KeyboardEvent) {
-      if (e.code === "Escape") {
+      if (e.code === "Escape" && !e.repeat) {
         e.preventDefault();
         markDnf();
       }
@@ -248,7 +293,10 @@
       </span>
       <button
         class="bt-btn"
-        title="Sync the cube's BT state to physically-solved. Ends the execution timer if it's running."
+        title={canMarkSolved
+          ? "Sync the cube's BT state to physically-solved. Ends the execution timer if it's running."
+          : "Only available during execute or after a solve — clicking mid-scramble would corrupt the cube's solved reference."}
+        disabled={!canMarkSolved}
         onclick={markSolved}>cube is solved</button
       >
       <button class="bt-btn" onclick={() => bluetoothStore.disconnect()}
@@ -278,7 +326,7 @@
         aria-selected={stage === s}
         class="stage-btn"
         class:active={stage === s}
-        onclick={() => (stage = s)}>{s.toUpperCase()}</button
+        onclick={() => setStage(s)}>{s.toUpperCase()}</button
       >
     {/each}
   </div>

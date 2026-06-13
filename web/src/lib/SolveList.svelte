@@ -6,6 +6,8 @@
     collapseDoubleTurns,
     effectiveMs,
     markExtraneousMoves,
+    mean,
+    median,
     type MoveEvent,
     type Penalty,
     type Phase,
@@ -51,9 +53,8 @@
       }
     }
     if (gaps.length < 20) return 500;
-    gaps.sort((a, b) => a - b);
-    const median = gaps[Math.floor(gaps.length / 2)]!;
-    return Math.max(300, median * 4);
+    const m = median(gaps) ?? 0;
+    return Math.max(300, m * 4);
   });
 
   /** Per-(solve + orientation) analysis cache. Solves are immutable
@@ -187,7 +188,13 @@
     const ok = window.confirm(`Delete this ${t} solve? This can't be undone.`);
     if (!ok) return;
     if (expandedId === s.id) expandedId = null;
-    analysisCache.delete(s.id);
+    // Cache keys are `${id}:${top}:${front}`, so a bare `.delete(s.id)`
+    // leaks every orientation-bearing entry. Drop every key with the
+    // solve's id prefix.
+    const prefix = `${s.id}:`;
+    for (const k of analysisCache.keys()) {
+      if (k.startsWith(prefix)) analysisCache.delete(k);
+    }
     timerStore.deleteSolve(s.id);
   }
 
@@ -279,43 +286,83 @@
     return atoms;
   }
 
-  /** Fastest/slowest valid (non-DNF) effective time and per-phase duration
-   *  across the visible solves. Skips (0-ms phases) and DNFs are excluded —
-   *  the solve never finished or the phase didn't happen, so the numbers
-   *  aren't comparable. Worst-highlighting also requires 2+ samples and a
-   *  spread (best !== worst), so the lone solve doesn't get a red cell. */
-  interface Extremes {
-    best: number | null;
-    worst: number | null;
-    samples: number;
-  }
-  const extremes = $derived.by(() => {
-    const single: Extremes = { best: null, worst: null, samples: 0 };
-    const phase: Record<StageSlug, Extremes> = {
-      cross: { best: null, worst: null, samples: 0 },
-      f2l: { best: null, worst: null, samples: 0 },
-      oll: { best: null, worst: null, samples: 0 },
-      pll: { best: null, worst: null, samples: 0 },
-    };
-    const update = (e: Extremes, v: number) => {
-      e.samples += 1;
-      if (e.best === null || v < e.best) e.best = v;
-      if (e.worst === null || v > e.worst) e.worst = v;
+  /** Single-pass aggregation over the visible solves: collect each
+   *  column's numeric samples once, then derive best/worst/mean/median
+   *  from those arrays. Skips DNFs (single + phases) and skip-phases
+   *  (0-ms duration) — the solve never finished or the phase didn't
+   *  happen, so the numbers aren't comparable. Doing this in one pass
+   *  avoids the older split between `extremes` and `stats` derivations
+   *  that walked solves twice with the exact same filter rules. */
+  const samples = $derived.by(() => {
+    const single: number[] = [];
+    const phase: Record<StageSlug, number[]> = {
+      cross: [],
+      f2l: [],
+      oll: [],
+      pll: [],
     };
     for (const s of solves) {
       if (s.penalty === "DNF") continue;
       const e = effectiveMs(s);
-      if (typeof e === "number") update(single, e);
+      if (typeof e === "number") single.push(e);
       const analysis = getPhases(s);
       if (!analysis) continue;
       for (const stage of STAGES) {
         const p = findPhase(analysis, stage);
         if (!p || p.durationMs <= 0) continue;
-        update(phase[stage], p.durationMs);
+        phase[stage].push(p.durationMs);
       }
     }
     return { single, phase };
   });
+
+  /** Best (min) is used to highlight every render. Worst (max) is only
+   *  highlighted when there are 2+ samples AND a real spread — a single
+   *  solve shouldn't be both best and worst. */
+  interface Extremes {
+    best: number | null;
+    worst: number | null;
+    samples: number;
+  }
+  function extremesOf(xs: readonly number[]): Extremes {
+    if (xs.length === 0) return { best: null, worst: null, samples: 0 };
+    let best = xs[0]!;
+    let worst = xs[0]!;
+    for (let i = 1; i < xs.length; i++) {
+      const v = xs[i]!;
+      if (v < best) best = v;
+      if (v > worst) worst = v;
+    }
+    return { best, worst, samples: xs.length };
+  }
+  const extremes = $derived({
+    single: extremesOf(samples.single),
+    phase: {
+      cross: extremesOf(samples.phase.cross),
+      f2l: extremesOf(samples.phase.f2l),
+      oll: extremesOf(samples.phase.oll),
+      pll: extremesOf(samples.phase.pll),
+    },
+  });
+  const stats = $derived({
+    mean: {
+      single: mean(samples.single),
+      cross: mean(samples.phase.cross),
+      f2l: mean(samples.phase.f2l),
+      oll: mean(samples.phase.oll),
+      pll: mean(samples.phase.pll),
+    },
+    median: {
+      single: median(samples.single),
+      cross: median(samples.phase.cross),
+      f2l: median(samples.phase.f2l),
+      oll: median(samples.phase.oll),
+      pll: median(samples.phase.pll),
+    },
+  });
+  function statText(v: number | null): string {
+    return v === null ? "—" : formatMs(v);
+  }
 
   function isBest(e: Extremes, v: number): boolean {
     return e.best !== null && v === e.best;
@@ -328,63 +375,6 @@
       e.worst !== e.best
     );
   }
-
-  /** Column-wise mean/median for the visible solves. Skips DNFs (for the
-   *  single column) and skip-phases / DNFs (for phase columns) — same
-   *  exclusions used for best/worst highlighting, for consistency. */
-  function mean(xs: number[]): number | null {
-    if (xs.length === 0) return null;
-    let sum = 0;
-    for (const x of xs) sum += x;
-    return sum / xs.length;
-  }
-  function median(xs: number[]): number | null {
-    if (xs.length === 0) return null;
-    const s = [...xs].sort((a, b) => a - b);
-    const mid = s.length >> 1;
-    return s.length % 2 === 1 ? s[mid]! : (s[mid - 1]! + s[mid]!) / 2;
-  }
-  const stats = $derived.by(() => {
-    const single: number[] = [];
-    const phase: Record<StageSlug, number[]> = {
-      cross: [],
-      f2l: [],
-      oll: [],
-      pll: [],
-    };
-    for (const s of solves) {
-      if (s.penalty === "DNF") continue;
-      const e = effectiveMs(s);
-      if (typeof e === "number") single.push(e);
-      const a = getPhases(s);
-      if (!a) continue;
-      for (const stage of STAGES) {
-        const p = findPhase(a, stage);
-        if (!p || p.durationMs <= 0) continue;
-        phase[stage].push(p.durationMs);
-      }
-    }
-    return {
-      mean: {
-        single: mean(single),
-        cross: mean(phase.cross),
-        f2l: mean(phase.f2l),
-        oll: mean(phase.oll),
-        pll: mean(phase.pll),
-      },
-      median: {
-        single: median(single),
-        cross: median(phase.cross),
-        f2l: median(phase.f2l),
-        oll: median(phase.oll),
-        pll: median(phase.pll),
-      },
-    };
-  });
-  function statText(v: number | null): string {
-    return v === null ? "—" : formatMs(v);
-  }
-
   function isBestSingle(s: Solve): boolean {
     if (s.penalty === "DNF") return false;
     const v = effectiveMs(s);
