@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     collapseDoubleTurns,
+    invertMove,
     isComplete,
     type MoveEvent,
     newTrackerState,
@@ -126,13 +127,6 @@
     });
   }
 
-  /** Inverse of a single 90°/180° move. `R` ↔ `R'`, `R2` is its own inverse. */
-  function inverseMove(move: string): string {
-    if (move.endsWith("'")) return move.slice(0, -1);
-    if (move.endsWith("2")) return move;
-    return move + "'";
-  }
-
   /** Triggered when the cube does something the tracker didn't expect.
    *  Snapshots the original state into pendingUndo, then fetches a fresh
    *  scramble of the remaining length and swaps it in. The new state is
@@ -232,7 +226,7 @@
       // First, if a wrong move is pending undo, this is the move that
       // decides between undo and commit.
       if (pendingUndo) {
-        if (tickMove === inverseMove(pendingUndo.wrongMove)) {
+        if (tickMove === invertMove(pendingUndo.wrongMove)) {
           // Revert: restore the previous scramble and tracker, discard
           // the in-flight regen.
           currentScramble = pendingUndo.previousScramble;
@@ -296,7 +290,7 @@
   {/if}
   {#if pendingUndo}
     <p class="scramble-undo-hint" aria-live="polite">
-      wrong move — do <code>{inverseMove(pendingUndo.wrongMove)}</code> to undo, or any other move to commit to a new scramble
+      wrong move — do <code>{invertMove(pendingUndo.wrongMove)}</code> to undo, or any other move to commit to a new scramble
     </p>
   {:else}
     <div class="scramble-actions">

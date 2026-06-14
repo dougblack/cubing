@@ -1,22 +1,24 @@
 <script lang="ts">
   import {
     generateTrainerScramble,
+    invertMove,
     isComplete,
     isCaseTrainable,
     newTrackerState,
-    pickRandomCase,
     tickTracker,
     type TrackerState,
     type TrainerStage,
     trainerCases,
   } from "@cubing/core";
   import { untrack } from "svelte";
+  import { browser } from "$app/environment";
   import { base } from "$app/paths";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
   import { formatMs } from "$lib/format";
   import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
   import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
+  import { cubingState } from "$lib/store.svelte";
   import { trainerStore } from "$lib/trainer-store.svelte";
 
   /** Trainer phase machine.
@@ -36,7 +38,21 @@
     scramble: string;
   }
 
+  /** Which subset of marked cases to draw from. `both` includes any case
+   *  the cuber has flagged in the alg browser; `learning` and `learned`
+   *  narrow to a single bucket. Unlearned cases (not yet marked) are
+   *  never in the pool — the trainer assumes the cuber has at least
+   *  started learning a case before drilling it. */
+  type CaseFilter = "learning" | "learned" | "both";
+  const FILTER_KEY = "cubing_trainer_filter";
+  const CASE_FILTERS: ReadonlyArray<{ id: CaseFilter; label: string }> = [
+    { id: "learning", label: "learning" },
+    { id: "learned", label: "learned" },
+    { id: "both", label: "both" },
+  ];
+
   let stage = $state<TrainerStage>("pll");
+  let caseFilter = $state<CaseFilter>("both");
   let phase = $state<Phase>("presenting");
   let current = $state<CaseRec | null>(null);
   /** Pre-generated next case. Set when the current attempt completes
@@ -50,8 +66,12 @@
   /** Wrong moves made during scrambling, in the order the cuber made
    *  them. While this stack is non-empty the scramble tracker is
    *  frozen — the cuber must undo by playing the inverses (in reverse
-   *  order) before the tracker resumes. */
+   *  order) before the tracker resumes. Once the stack reaches
+   *  `MAX_WRONG_MOVES` we give up: further BT moves are ignored and
+   *  the cuber has to hit "next case" to start over. */
   let wrongMoves = $state<string[]>([]);
+  const MAX_WRONG_MOVES = 5;
+  const scrambleAbandoned = $derived(wrongMoves.length >= MAX_WRONG_MOVES);
 
   let recognitionStartedAt = 0;
   let executionStartedAt = 0;
@@ -62,12 +82,6 @@
    *  `done` phase. */
   let lastWasDnf = $state(false);
 
-  /** Inverse of a single quarter turn. BT only reports quarter turns
-   *  so we don't need to handle the half-turn case here. */
-  function inverseQuarterTurn(move: string): string {
-    return move.endsWith("'") ? move.slice(0, -1) : move + "'";
-  }
-
   /** Recovery move list shown to the cuber when they've made one or
    *  more wrong moves during scrambling. To undo "R F" the cuber must
    *  play "F' R'" (last wrong move undone first), so we reverse the
@@ -75,15 +89,30 @@
   const recoveryHint = $derived(
     wrongMoves.length === 0
       ? ""
-      : wrongMoves
-          .slice()
-          .reverse()
-          .map(inverseQuarterTurn)
-          .join(" "),
+      : wrongMoves.slice().reverse().map(invertMove).join(" "),
   );
 
-  function generateNextCase(): CaseRec {
-    const c = pickRandomCase(stage);
+  /** Cases the trainer can actually serve: trainable in the dataset AND
+   *  matching the current learning-state filter. The filter narrows by
+   *  cubingState (per-case 0=unlearned / 1=learning / 2=learned, set
+   *  from the alg-browser pages). Reactive — flips when the user
+   *  toggles a case's state in another tab or the filter changes. */
+  const eligibleCases = $derived(
+    trainerCases(stage).filter((c) => {
+      if (!isCaseTrainable(stage, c.id)) return false;
+      const s = cubingState.state[c.id]; // 1 = learning, 2 = learned, undefined = unlearned
+      if (s === undefined) return false;
+      if (caseFilter === "learning") return s === 1;
+      if (caseFilter === "learned") return s === 2;
+      return true;
+    }),
+  );
+
+  function generateNextCase(): CaseRec | null {
+    if (eligibleCases.length === 0) return null;
+    const c = eligibleCases[
+      Math.floor(Math.random() * eligibleCases.length)
+    ]!;
     return {
       caseId: c.id,
       caseName: c.name,
@@ -114,13 +143,14 @@
     stopLive();
     // Consume the pre-generated next case if we have one (the
     // cuber just hit "next case" or started applying its scramble);
-    // otherwise generate a fresh one from scratch (initial load,
-    // skip, stage change).
+    // otherwise generate a fresh one from the eligible pool. May be
+    // null if no cases match the current filter — the page renders
+    // an empty-state message instead.
     current = pendingNext ?? generateNextCase();
     pendingNext = null;
     phase = "presenting";
     trackerState =
-      bluetoothStore.status === "connected"
+      current && bluetoothStore.status === "connected"
         ? newTrackerState(current.scramble)
         : null;
     recognitionMs = null;
@@ -130,26 +160,35 @@
     wrongMoves = [];
   }
 
-  /** Finalize an attempt — record it and pre-generate the next case so
-   *  its scramble shows up in the done view. The cuber can then either
-   *  click "next case" or just start applying the new scramble; both
-   *  routes lead through loadCase, which swaps `pendingNext` into
-   *  `current`. */
-  function recordAndQueueNext(args: {
-    recognitionMs: number;
-    executionMs: number;
+  /** Shared "executing → done" close-out. Records the attempt, stops
+   *  the live timer, flips the phase to done with the right DNF flag,
+   *  and (by default) pre-generates the next case so its scramble shows
+   *  up in the done view. Callers that abandon the attempt without
+   *  going through `done` (stage toggle DNF) pass `queueNext: false`.
+   *  Returns true iff there was a usable in-flight attempt to record. */
+  function finalizeExecuting(opts: {
     dnf: boolean;
-  }) {
-    if (!current) return;
+    endAt?: number | null;
+    queueNext?: boolean;
+  }): boolean {
+    if (phase !== "executing" || !current || recognitionMs === null) {
+      return false;
+    }
+    const ms = (opts.endAt ?? performance.now()) - executionStartedAt;
+    executionMs = ms;
+    stopLive();
+    phase = "done";
+    lastWasDnf = opts.dnf;
     trainerStore.addAttempt({
       caseId: current.caseId,
       stage,
       scramble: current.scramble,
-      recognitionMs: args.recognitionMs,
-      executionMs: args.executionMs,
-      correct: !args.dnf,
+      recognitionMs,
+      executionMs: ms,
+      correct: !opts.dnf,
     });
-    pendingNext = generateNextCase();
+    if (opts.queueNext !== false) pendingNext = generateNextCase();
+    return true;
   }
 
   // Note: trainer scrambles are emitted in the simulator's Y-top G-front
@@ -172,18 +211,7 @@
   const canMarkSolved = $derived(phase === "executing" || phase === "done");
   function markSolved() {
     if (!canMarkSolved) return;
-    if (phase === "executing" && current && recognitionMs !== null) {
-      const finalExecMs = performance.now() - executionStartedAt;
-      executionMs = finalExecMs;
-      stopLive();
-      phase = "done";
-      lastWasDnf = false;
-      recordAndQueueNext({
-        recognitionMs,
-        executionMs: finalExecMs,
-        dnf: false,
-      });
-    }
+    finalizeExecuting({ dnf: false });
     if (bluetoothStore.status === "connected") {
       bluetoothStore.resetCubeState();
     }
@@ -193,19 +221,7 @@
    *  partial times so the attempt shows up in history. From earlier
    *  phases, no useful timing yet — just regenerate. */
   function markDnf() {
-    if (phase === "executing" && current && recognitionMs !== null) {
-      const finalExecMs = performance.now() - executionStartedAt;
-      executionMs = finalExecMs;
-      stopLive();
-      phase = "done";
-      lastWasDnf = true;
-      recordAndQueueNext({
-        recognitionMs,
-        executionMs: finalExecMs,
-        dnf: true,
-      });
-      return;
-    }
+    if (finalizeExecuting({ dnf: true })) return;
     if (phase === "presenting" || phase === "recognizing") {
       loadCase();
     }
@@ -230,19 +246,10 @@
   /** Record an in-flight executing attempt as DNF before abandoning it.
    *  Shared between stage-toggle and any future "abandon-and-skip" path
    *  — both should preserve the timing data rather than silently dropping
-   *  the attempt from stats. */
+   *  the attempt from stats. The caller is about to reload so we don't
+   *  queue a next case. */
   function recordPendingDnf() {
-    if (phase !== "executing" || !current || recognitionMs === null) return;
-    executionMs = performance.now() - executionStartedAt;
-    stopLive();
-    trainerStore.addAttempt({
-      caseId: current.caseId,
-      stage,
-      scramble: current.scramble,
-      recognitionMs,
-      executionMs,
-      correct: false,
-    });
+    finalizeExecuting({ dnf: true, queueNext: false });
   }
 
   function setStage(next: TrainerStage) {
@@ -255,10 +262,30 @@
     loadCase();
   }
 
+  function setCaseFilter(next: CaseFilter) {
+    if (next === caseFilter) return;
+    caseFilter = next;
+    if (browser) window.localStorage.setItem(FILTER_KEY, next);
+    // The pre-generated next case may not match the new filter; drop
+    // it. If the current case also became ineligible, regenerate so
+    // the cuber doesn't drill a case the filter says they shouldn't.
+    pendingNext = null;
+    if (current && !eligibleCases.some((c) => c.id === current?.caseId)) {
+      recordPendingDnf();
+      loadCase();
+    }
+  }
+
   // Initial case load. `untrack` keeps loadCase's `bluetoothStore.status`
   // read from registering as a dep of this effect — otherwise every BT
   // (dis)connect would regenerate a fresh case mid-attempt.
   $effect(() => {
+    if (browser) {
+      const stored = window.localStorage.getItem(FILTER_KEY);
+      if (stored === "learning" || stored === "learned" || stored === "both") {
+        caseFilter = stored;
+      }
+    }
     untrack(() => loadCase());
   });
 
@@ -282,10 +309,64 @@
     }
   });
 
+  /** Kociemba facelets slice offsets, keyed by the COLOR at that face's
+   *  center. The cube's center colors never move, so the cuber's TOP
+   *  face is always at the offset of whatever color they have on top.
+   *  W on U, Y on D, G on F, R on R, O on L, B on B. */
+  const FACE_OFFSET_BY_TOP_COLOR: Record<string, number> = {
+    W: 0,
+    R: 9,
+    G: 18,
+    Y: 27,
+    O: 36,
+    B: 45,
+  };
+
+  function isTopFaceMonochromatic(facelets: string): boolean {
+    const offset = FACE_OFFSET_BY_TOP_COLOR[orientationPref.top];
+    if (offset === undefined || facelets.length < offset + 9) return false;
+    const first = facelets[offset];
+    for (let i = offset + 1; i < offset + 9; i++) {
+      if (facelets[i] !== first) return false;
+    }
+    return true;
+  }
+
+  /** Scramble-phase tick: tracker advance, wrong-move freeze, recovery
+   *  via inverse-stack. Extracted from the BT onMove handler so the
+   *  done→presenting auto-advance can dispatch to it explicitly after
+   *  loading the next case, instead of relying on a fall-through that
+   *  reads loadCase's side effects on `phase` and `trackerState`. */
+  function tickPresenting(tickMove: string) {
+    if (!trackerState || scrambleAbandoned) return;
+    // Wrong-move recovery: the tracker is frozen until the cuber has
+    // played the inverse of every wrong move (LIFO). A move that
+    // matches the inverse of the most recent wrong move pops it; any
+    // other move stacks deeper, capped at MAX_WRONG_MOVES.
+    if (wrongMoves.length > 0) {
+      const top = wrongMoves[wrongMoves.length - 1]!;
+      if (tickMove === invertMove(top)) {
+        wrongMoves = wrongMoves.slice(0, -1);
+      } else {
+        wrongMoves = [...wrongMoves, tickMove];
+      }
+      return;
+    }
+    const r = tickTracker(trackerState, tickMove);
+    if (r.result === "wrong") {
+      // Freeze: don't advance the tracker, record the wrong move so
+      // the recovery hint shows the path back.
+      wrongMoves = [tickMove];
+      return;
+    }
+    trackerState = r.state;
+    if (isComplete(trackerState)) startRecognition();
+  }
+
   // BT wiring: done→presenting auto-advance, scramble tracker (with
   // wrong-move freeze + recovery) during presenting, recognition→
   // execution on the first post-scramble move, execution→done on the
-  // solved-state transition.
+  // top-oriented (OLL) or fully-solved (PLL) transition.
   $effect(() => {
     if (bluetoothStore.status !== "connected") return;
     const unsubMove = bluetoothStore.onMove((move) => {
@@ -299,35 +380,15 @@
       // In `done`, the cube is solved and pendingNext is shown. The
       // first BT move IS the cuber starting the next scramble — pull
       // the pre-generated case in (same path as the "next case"
-      // button) and then fall through to tick this move on the new
-      // tracker.
+      // button) and then dispatch the move into the new tracker.
       if (phase === "done" && pendingNext) {
         loadCase();
+        tickPresenting(tickMove);
+        return;
       }
 
-      if (phase === "presenting" && trackerState) {
-        // Wrong-move recovery: the tracker is frozen until the cuber
-        // has played the inverse of every wrong move (LIFO). A move
-        // that matches the inverse of the most recent wrong move
-        // pops it; any other move stacks deeper.
-        if (wrongMoves.length > 0) {
-          const top = wrongMoves[wrongMoves.length - 1]!;
-          if (tickMove === inverseQuarterTurn(top)) {
-            wrongMoves = wrongMoves.slice(0, -1);
-          } else {
-            wrongMoves = [...wrongMoves, tickMove];
-          }
-          return;
-        }
-        const r = tickTracker(trackerState, tickMove);
-        if (r.result === "wrong") {
-          // Freeze: don't advance the tracker, record the wrong move
-          // so the recovery hint shows the path back.
-          wrongMoves = [tickMove];
-          return;
-        }
-        trackerState = r.state;
-        if (isComplete(trackerState)) startRecognition();
+      if (phase === "presenting") {
+        tickPresenting(tickMove);
         return;
       }
       if (phase === "recognizing") {
@@ -338,36 +399,44 @@
       }
     });
     const unsubSolved = bluetoothStore.onSolved((lastMoveAt) => {
+      // Fully-solved transition closes a PLL attempt cleanly. For OLL
+      // the facelets handler below catches the moment the top face
+      // becomes monochromatic, which can be many moves earlier; this
+      // is a fallback in case the OLL handler somehow missed it (or
+      // the cuber kept going into a full solve).
       if (phase !== "executing") return;
-      const endAt = lastMoveAt ?? performance.now();
-      const finalExecMs = endAt - executionStartedAt;
-      executionMs = finalExecMs;
-      stopLive();
-      phase = "done";
-      if (current && recognitionMs !== null) {
-        recordAndQueueNext({
-          recognitionMs,
-          executionMs: finalExecMs,
-          dnf: false,
-        });
-      }
+      finalizeExecuting({ dnf: false, endAt: lastMoveAt });
+    });
+    const unsubFacelets = bluetoothStore.onFacelets((facelets, lastMoveAt) => {
+      // OLL completes the moment the cuber's top face is one color —
+      // permutation doesn't matter for orientation practice. PLL keeps
+      // using the fully-solved signal above.
+      if (phase !== "executing" || stage !== "oll") return;
+      if (!isTopFaceMonochromatic(facelets)) return;
+      finalizeExecuting({ dnf: false, endAt: lastMoveAt });
     });
     return () => {
       unsubMove();
       unsubSolved();
+      unsubFacelets();
     };
   });
 
-  // Show only cases the trainer can currently produce scrambles for.
-  // Untrainable cases (e.g. M-slice-only OLLs) would otherwise show
-  // permanent dashes that never change, since `pickRandomCase` never
-  // selects them.
-  const cases = $derived(
-    trainerCases(stage).filter((c) => isCaseTrainable(stage, c.id)),
-  );
-  const totalAttempts = $derived(
-    trainerStore.attempts.filter((a) => a.stage === stage).length,
-  );
+  // Stats table mirrors the drillable pool: only cases the trainer
+  // will actually serve under the current filter. The totals row reads
+  // off the same grouped CaseStats map that backs each row, so the
+  // header sum always matches the table contents (and we avoid a
+  // second full walk over `trainerStore.attempts`).
+  const stageTotals = $derived.by(() => {
+    let attempts = 0;
+    let dnfs = 0;
+    for (const c of eligibleCases) {
+      const s = trainerStore.statsFor(stage, c.id);
+      attempts += s.attempts;
+      dnfs += s.dnfs;
+    }
+    return { attempts, dnfs };
+  });
 
   // Esc: DNF the current attempt (or skip if no timing has started yet).
   // Mirrors the Timer component's keybinding so muscle memory carries.
@@ -434,19 +503,48 @@
     {/if}
   </div>
 
-  <div class="stage-toggle" role="tablist" aria-label="Trainer stage">
-    {#each ["oll", "pll"] as const as s (s)}
-      <button
-        role="tab"
-        aria-selected={stage === s}
-        class="stage-btn"
-        class:active={stage === s}
-        onclick={() => setStage(s)}>{s.toUpperCase()}</button
-      >
-    {/each}
+  <div class="toggles">
+    <div class="stage-toggle" role="tablist" aria-label="Trainer stage">
+      {#each ["oll", "pll"] as const as s (s)}
+        <button
+          role="tab"
+          aria-selected={stage === s}
+          class="stage-btn"
+          class:active={stage === s}
+          onclick={() => setStage(s)}>{s.toUpperCase()}</button
+        >
+      {/each}
+    </div>
+    <div
+      class="stage-toggle"
+      role="tablist"
+      aria-label="Filter cases by learning state"
+    >
+      {#each CASE_FILTERS as f (f.id)}
+        <button
+          role="tab"
+          aria-selected={caseFilter === f.id}
+          class="stage-btn"
+          class:active={caseFilter === f.id}
+          onclick={() => setCaseFilter(f.id)}>{f.label}</button
+        >
+      {/each}
+    </div>
   </div>
 
-  {#if current}
+  {#if !current}
+    <div class="empty-state">
+      <p>
+        No cases match the <strong>{caseFilter}</strong>
+        filter for {stage.toUpperCase()}.
+      </p>
+      <p>
+        Mark cases as <em>learning</em> or <em>learned</em> from the
+        <a href="{base}/cfop/{stage}">{stage.toUpperCase()} alg browser</a>
+        to start drilling them here.
+      </p>
+    </div>
+  {:else}
     <div class="scramble-block">
       {#if phase === "done" && pendingNext}
         <ScrambleDisplay scramble={pendingNext.scramble} tracker={null} />
@@ -454,8 +552,14 @@
           next scramble — start applying to advance
         </p>
       {:else}
-        <ScrambleDisplay scramble={current.scramble} tracker={trackerState} />
-        {#if wrongMoves.length > 0}
+        <div class:abandoned={scrambleAbandoned}>
+          <ScrambleDisplay scramble={current.scramble} tracker={trackerState} />
+        </div>
+        {#if scrambleAbandoned}
+          <p class="scramble-hint warn" aria-live="polite">
+            too many wrong moves — hit <strong>next case</strong> to start over
+          </p>
+        {:else if wrongMoves.length > 0}
           <p class="scramble-hint warn" aria-live="polite">
             wrong move — do <code>{recoveryHint}</code> to get back on track
           </p>
@@ -472,12 +576,17 @@
     <div class="timing">
       {#if phase === "presenting"}
         {#if bluetoothStore.status === "connected"}
-          <button class="big-btn secondary" onclick={skipCase}>skip</button>
+          <button
+            class="big-btn"
+            class:primary={scrambleAbandoned}
+            class:secondary={!scrambleAbandoned}
+            onclick={skipCase}>next case</button
+          >
         {:else}
           <button class="big-btn primary" onclick={startRecognition}
             >begin</button
           >
-          <button class="big-btn secondary" onclick={skipCase}>skip</button>
+          <button class="big-btn secondary" onclick={skipCase}>next case</button>
         {/if}
       {:else if phase === "recognizing"}
         <div class="phase-label">recognize</div>
@@ -528,8 +637,8 @@
     <div class="case-stats-head">
       <h2>case stats</h2>
       <span class="case-stats-meta">
-        {totalAttempts}
-        {stage.toUpperCase()} attempts recorded
+        {stageTotals.attempts}
+        {stage.toUpperCase()} attempts · {stageTotals.dnfs} DNF
       </span>
     </div>
     <table>
@@ -537,12 +646,13 @@
         <tr>
           <th>case</th>
           <th class="num">attempts</th>
+          <th class="num">DNF</th>
           <th class="num">median recognize</th>
           <th class="num">median execute</th>
         </tr>
       </thead>
       <tbody>
-        {#each cases as c (c.id)}
+        {#each eligibleCases as c (c.id)}
           {@const s = trainerStore.statsFor(stage, c.id)}
           <tr class:current={current?.caseId === c.id}>
             <td>
@@ -553,6 +663,9 @@
               >
             </td>
             <td class="num">{s.attempts || "—"}</td>
+            <td class="num" class:has-dnf={s.dnfs > 0}>
+              {s.dnfs || "—"}
+            </td>
             <td class="num">
               {s.medianRecognitionMs === null
                 ? "—"
@@ -652,12 +765,37 @@
     font-size: 12px;
   }
 
+  .toggles {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
   .stage-toggle {
     display: inline-flex;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     overflow: hidden;
     align-self: flex-start;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 32px 16px;
+    border: 1px dashed var(--color-border);
+    border-radius: var(--radius-card);
+    color: var(--color-text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .empty-state p {
+    margin: 0 0 6px;
+  }
+  .empty-state a {
+    color: var(--color-link);
+  }
+  .empty-state strong,
+  .empty-state em {
+    color: var(--color-text);
   }
   .stage-btn {
     font: inherit;
@@ -691,10 +829,6 @@
     color: var(--color-text-muted);
     font-size: 12px;
   }
-  .scramble-hint strong {
-    color: var(--color-text);
-    font-weight: 600;
-  }
   .scramble-hint.warn {
     color: var(--color-warn);
   }
@@ -704,6 +838,13 @@
     background: var(--color-learning-bg);
     padding: 1px 5px;
     border-radius: 3px;
+  }
+  .scramble-hint strong {
+    color: var(--color-text);
+    font-weight: 600;
+  }
+  .abandoned {
+    opacity: 0.4;
   }
 
   .timing {
@@ -843,6 +984,9 @@
     text-align: right;
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+  td.num.has-dnf {
+    color: var(--color-danger);
   }
   tbody tr.current {
     background: var(--color-surface-2);

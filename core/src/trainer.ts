@@ -21,7 +21,7 @@ import {
   normalizeToCrossOnD,
 } from "./phases.js";
 import { recognizeOLL, recognizePLL } from "./recognition.js";
-import { normalizeScramble } from "./scramble-tracker.js";
+import { normalizeScramble, simplifyMoves } from "./scramble-tracker.js";
 
 export type TrainerStage = "oll" | "pll";
 
@@ -88,11 +88,16 @@ function getPool(stage: TrainerStage): StagePool {
   const algsByCase = new Map<string, string[]>();
   const trainable: TrainerCase[] = [];
   for (const c of STAGE_DATA[stage]) {
-    // Pre-filter to face-turn-only algs; everything else loses meaning
-    // after `normalizeScramble` strips wide/slice/rotation tokens.
-    const candidates = c.algorithms
-      .filter((a) => isCleanAlg(a.moves))
-      .map((a) => a.moves);
+    // For each alg: tokenize once, peel any leading/trailing rotations
+    // (oll-51's `y2 F U R …` becomes `F U R …`), keep it only if the
+    // remaining body is face-turn-only, then re-validate that the body
+    // — what the trainer will actually emit — still produces the case.
+    const candidates: string[] = [];
+    for (const a of c.algorithms) {
+      const body = stripOuterRotationTokens(tokenizeAlg(a.moves));
+      if (!isCleanBody(body)) continue;
+      candidates.push(body.join(" "));
+    }
     const valid = candidates.filter((m) => validatesAsCase(m, stage, c.id));
     algsByCase.set(c.id, valid);
     if (valid.length > 0) trainable.push({ id: c.id, name: c.name });
@@ -133,13 +138,33 @@ function pickRandom<T>(items: readonly T[]): T {
   return items[Math.floor(Math.random() * items.length)]!;
 }
 
-/** True for algs containing only uppercase face turns — no wide moves,
- *  slices, or whole-cube rotations. Those would leave the cube in a
- *  non-standard orientation after the alg runs (centers permuted),
- *  which is bad for trainer scrambles: the cuber's executed alg would
- *  end at "solved but rotated", confusing them. */
-function isCleanAlg(moves: string): boolean {
-  const tokens = moves.replace(/[()]/g, " ").split(/\s+/).filter(Boolean);
+/** Split an alg string into tokens. Parentheses (used in some sources
+ *  to group sub-sequences) are treated as whitespace. */
+function tokenizeAlg(moves: string): string[] {
+  return moves.replace(/[()]/g, " ").split(/\s+/).filter(Boolean);
+}
+
+/** Peel x/y/z rotations (and their quantity-suffixed forms) off the
+ *  ends of a token list. A leading rotation is purely a setup
+ *  re-orientation the cuber does before the working moves begin; a
+ *  trailing rotation is purely the cuber re-orienting after. Both are
+ *  no-ops as far as the case pattern is concerned — the resulting cube
+ *  state is the same OLL/PLL case in a y-rotated orientation, which
+ *  the recognizer handles via its AUF × y-rotation enumeration. Mid-alg
+ *  rotations are NOT stripped: they would silently re-label every move
+ *  that follows. */
+function stripOuterRotationTokens(tokens: readonly string[]): string[] {
+  let start = 0;
+  let end = tokens.length;
+  while (start < end && /^[xyz]/.test(tokens[start]!)) start++;
+  while (end > start && /^[xyz]/.test(tokens[end - 1]!)) end--;
+  return tokens.slice(start, end);
+}
+
+/** True iff every token is an uppercase face turn — no wide moves,
+ *  slices, or rotations. Operates on the already-stripped body so
+ *  rotations at the very ends don't disqualify an otherwise-clean alg. */
+function isCleanBody(tokens: readonly string[]): boolean {
   for (const t of tokens) {
     if (/^[urflbd]/.test(t)) return false;
     if (/^[URFLBD]w/.test(t)) return false;
@@ -162,8 +187,9 @@ export function pickRandomCase(stage: TrainerStage): TrainerCase {
 
 /** Generate a Phase 1 trainer scramble for a specific case. Result is
  *  normalized through the WCA-notation parser so `invertAlg`'s `R2'`
- *  artifact lands as `R2` — both for cleaner display and so the
- *  scramble tracker accepts every token. */
+ *  artifact lands as `R2`, and same-face runs across the AUF/alg
+ *  boundary are merged — so a `U` AUF prepended to an alg starting
+ *  with `U` becomes `U2 …` instead of the giveaway `U U …`. */
 export function generateTrainerScramble(
   stage: TrainerStage,
   caseId: string,
@@ -174,5 +200,8 @@ export function generateTrainerScramble(
   }
   const alg = pickRandom(pool);
   const aufPre = pickRandom(AUF_OPTIONS);
-  return normalizeScramble([aufPre, invertAlg(alg)].filter(Boolean).join(" "));
+  const combined = normalizeScramble(
+    [aufPre, invertAlg(alg)].filter(Boolean).join(" "),
+  );
+  return simplifyMoves(combined.split(/\s+/).filter(Boolean)).join(" ");
 }

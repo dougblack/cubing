@@ -53,6 +53,8 @@ function newId(): TrainerAttemptId {
 
 export interface CaseStats {
   attempts: number;
+  /** Subset of `attempts` that were DNF'd (correct === false). */
+  dnfs: number;
   /** Median recognition time across non-DNF attempts. null if no data. */
   medianRecognitionMs: number | null;
   /** Median execution time across non-DNF attempts. null if no data. */
@@ -62,6 +64,7 @@ export interface CaseStats {
 
 const EMPTY_STATS: CaseStats = {
   attempts: 0,
+  dnfs: 0,
   medianRecognitionMs: null,
   medianExecutionMs: null,
   lastAttemptedAt: null,
@@ -89,6 +92,7 @@ class TrainerStore {
       string,
       {
         attempts: number;
+        dnfs: number;
         rec: number[];
         exec: number[];
         last: number;
@@ -98,13 +102,15 @@ class TrainerStore {
       const k = groupKey(a.stage, a.caseId);
       let b = buckets.get(k);
       if (!b) {
-        b = { attempts: 0, rec: [], exec: [], last: 0 };
+        b = { attempts: 0, dnfs: 0, rec: [], exec: [], last: 0 };
         buckets.set(k, b);
       }
       b.attempts++;
       if (a.correct) {
         b.rec.push(a.recognitionMs);
         b.exec.push(a.executionMs);
+      } else {
+        b.dnfs++;
       }
       // Attempts append in chronological order; the last one we see is
       // the most recent.
@@ -113,6 +119,7 @@ class TrainerStore {
     for (const [k, b] of buckets) {
       out.set(k, {
         attempts: b.attempts,
+        dnfs: b.dnfs,
         medianRecognitionMs: median(b.rec),
         medianExecutionMs: median(b.exec),
         lastAttemptedAt: b.last,

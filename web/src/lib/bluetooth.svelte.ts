@@ -209,6 +209,15 @@ export type MoveCallback = (move: string, tMs: number) => void;
  *  so timing off "now" overcounts. Null only if no MOVE event has fired
  *  this session (shouldn't happen in normal play). */
 export type SolvedCallback = (lastMoveAt: number | null) => void;
+/** Invoked on every FACELETS event with the 54-char Kociemba string and
+ *  the same `lastMoveAt` as `SolvedCallback`. Useful for stage-specific
+ *  completion detection (e.g. OLL: just the top face oriented, not the
+ *  whole cube). Fires on every cube state update, so callers must do
+ *  their own transition / debounce as needed. */
+export type FaceletsCallback = (
+  facelets: string,
+  lastMoveAt: number | null,
+) => void;
 
 class BluetoothStore {
   status = $state<ConnectionStatus>("disconnected");
@@ -225,6 +234,7 @@ class BluetoothStore {
   private subscription: Subscription | null = null;
   private moveListeners = new Set<MoveCallback>();
   private solvedListeners = new Set<SolvedCallback>();
+  private faceletsListeners = new Set<FaceletsCallback>();
   private lastFaceletsWasSolved = false;
   /** performance.now()-equivalent timestamp of the most recent MOVE event.
    *  Used as the authoritative timer endpoint when the cube fires SOLVED —
@@ -378,6 +388,16 @@ class BluetoothStore {
     };
   }
 
+  /** Subscribe to raw FACELETS events. Fires on every cube state update —
+   *  no transition / dedupe — so the caller can run custom completion
+   *  checks (e.g. "is the top face one color"). */
+  onFacelets(cb: FaceletsCallback): () => void {
+    this.faceletsListeners.add(cb);
+    return () => {
+      this.faceletsListeners.delete(cb);
+    };
+  }
+
   private handleEvent(evt: GanCubeEvent): void {
     switch (evt.type) {
       case "MOVE": {
@@ -406,6 +426,9 @@ class BluetoothStore {
               ? " (facelets-solved; state-not-solved)"
               : " (state-solved; facelets-not-solved)";
         this.log(`FACELETS serial=${evt.serial} ${evt.facelets}${tag}`);
+        for (const cb of this.faceletsListeners) {
+          cb(evt.facelets, this.lastMoveAt);
+        }
         if (nowSolved && !this.lastFaceletsWasSolved) {
           for (const cb of this.solvedListeners) cb(this.lastMoveAt);
         }

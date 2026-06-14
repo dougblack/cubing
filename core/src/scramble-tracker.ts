@@ -80,6 +80,16 @@ export function normalizeScramble(scramble: string): string {
     .join(" ");
 }
 
+/** Inverse of a single 90°/180° face turn. `R` ↔ `R'`, `R2` is its own
+ *  inverse. Cheaper than going through cubing.js's `Alg.invert()` for
+ *  consumers that just need to flip one token (BT scramble-tracker
+ *  recovery, undo logic, etc.). */
+export function invertMove(move: string): string {
+  if (move.endsWith("'")) return move.slice(0, -1);
+  if (move.endsWith("2")) return move;
+  return move + "'";
+}
+
 /** Fresh tracker for a scramble string. Caller passes this around as the
  *  authoritative state. */
 export function newTrackerState(scramble: string): TrackerState {
