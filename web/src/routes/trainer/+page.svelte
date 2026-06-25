@@ -5,6 +5,7 @@
     isComplete,
     isCaseTrainable,
     newTrackerState,
+    type SessionId,
     tickTracker,
     type TrackerState,
     type TrainerStage,
@@ -14,7 +15,7 @@
   import { browser } from "$app/environment";
   import { base } from "$app/paths";
   import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
-  import { formatMs } from "$lib/format";
+  import { formatMs, formatDateTime } from "$lib/format";
   import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
   import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
@@ -108,16 +109,90 @@
     }),
   );
 
+  /** Bag-scheduler tuning: each case appears `BAG_COPIES` times per
+   *  cycle, with at least `MIN_SPACING` other cases between any two
+   *  copies of the same case. The spacing constraint gets clamped down
+   *  for very small pools so a 2-case filter still works. */
+  const BAG_COPIES = 3;
+  const MIN_SPACING = 2;
+
+  /** Shuffled multi-copy bag of case IDs to drill next. Built so it
+   *  feels random without back-to-back clumps: each case has multiple
+   *  slots (so the cycle isn't a predictable march through every case
+   *  exactly once), and the constraint-aware construction below
+   *  forbids a case from re-appearing within MIN_SPACING picks. */
+  let caseBag = $state<string[]>([]);
+
+  function refillBag(avoidFirst: string | null): void {
+    const totalItems = eligibleCases.length * BAG_COPIES;
+    if (totalItems === 0) {
+      caseBag = [];
+      return;
+    }
+    // Effective spacing can't exceed pool-size - 1 (with only K
+    // distinct cases, K consecutive picks must include a repeat).
+    const spacing = Math.max(0, Math.min(MIN_SPACING, eligibleCases.length - 1));
+    const remaining = new Map<string, number>();
+    for (const c of eligibleCases) remaining.set(c.id, BAG_COPIES);
+    // Seed the "recently picked" sliding window with the just-shown
+    // case so the new bag doesn't accidentally repeat it back-to-back
+    // across the refill boundary.
+    const recent: string[] = avoidFirst && spacing > 0 ? [avoidFirst] : [];
+    const bag: string[] = [];
+    for (let step = 0; step < totalItems; step++) {
+      const recentSet = new Set(recent);
+      // Pick from cases with the highest remaining count, excluding
+      // anything in the spacing window. Highest-count-first keeps the
+      // distribution flat throughout the bag — without this, a few
+      // cases get exhausted early and the tail of the bag is forced
+      // to choose between recent-set cases (spacing violations) or
+      // skipping copies (uneven distribution).
+      let maxCount = 0;
+      for (const [id, count] of remaining) {
+        if (count > 0 && !recentSet.has(id) && count > maxCount) {
+          maxCount = count;
+        }
+      }
+      const candidates: string[] = [];
+      if (maxCount > 0) {
+        for (const [id, count] of remaining) {
+          if (count === maxCount && !recentSet.has(id)) candidates.push(id);
+        }
+      } else {
+        // Constraint unsatisfiable for this pick — relax. Shouldn't
+        // happen with the highest-count-first strategy unless the
+        // pool is tiny relative to the spacing constraint.
+        for (const [id, count] of remaining) {
+          if (count > 0) candidates.push(id);
+        }
+      }
+      const pick = candidates[Math.floor(Math.random() * candidates.length)]!;
+      bag.push(pick);
+      remaining.set(pick, remaining.get(pick)! - 1);
+      recent.push(pick);
+      if (recent.length > spacing) recent.shift();
+    }
+    caseBag = bag;
+  }
+
   function generateNextCase(): CaseRec | null {
     if (eligibleCases.length === 0) return null;
-    const c = eligibleCases[
-      Math.floor(Math.random() * eligibleCases.length)
-    ]!;
-    return {
-      caseId: c.id,
-      caseName: c.name,
-      scramble: generateTrainerScramble(stage, c.id),
-    };
+    // Pop the next id, skipping anything that's become ineligible
+    // since the bag was filled (filter changes mid-bag).
+    while (caseBag.length > 0) {
+      const id = caseBag[0]!;
+      caseBag = caseBag.slice(1);
+      const found = eligibleCases.find((c) => c.id === id);
+      if (found) {
+        return {
+          caseId: found.id,
+          caseName: found.name,
+          scramble: generateTrainerScramble(stage, found.id),
+        };
+      }
+    }
+    refillBag(current?.caseId ?? null);
+    return generateNextCase();
   }
 
   /** Live counter for the current running phase (recognize OR execute).
@@ -200,18 +275,25 @@
   // the wrong layer for a Y-top user.) The "scramble in this orientation"
   // toggle only affects timer-page scrambles.
 
-  /** "Cube is solved" — used when the BT cube's solved-state detection
-   *  misses a transition. Resyncs the BT cube's solved reference to
-   *  the current physical state. CRITICAL: we must NOT call this
-   *  during `presenting`/`recognizing` — the cube is mid-scramble or
-   *  in case state, not actually solved, and pointing BT's reference
-   *  at the wrong state corrupts `onSolved` detection for the whole
-   *  session. So the button is gated to phases where the cube can
-   *  reasonably be assumed solved. */
-  const canMarkSolved = $derived(phase === "executing" || phase === "done");
+  /** "Cube is solved" — the cuber asserting that the cube's current
+   *  physical state is solved, and resyncing BT's solved reference to
+   *  it (after a reassembly, a missed solved-transition, or BT drift).
+   *  Always available while connected, like the timer's button. What it
+   *  does depends on where we are:
+   *   - executing: there's live timing, so record it as a clean solve.
+   *   - presenting/recognizing: no valid attempt timing exists, so don't
+   *     record one — just re-present the case with a fresh scramble so
+   *     the cuber starts cleanly from the now-solved cube.
+   *   - done: the next scramble is already queued; just resync.
+   *  The resetCubeState at the end points BT's reference at the current
+   *  state, so this DOES corrupt detection if the cube isn't actually
+   *  solved — but the cuber is explicitly asserting that it is. */
   function markSolved() {
-    if (!canMarkSolved) return;
-    finalizeExecuting({ dnf: false });
+    if (phase === "executing") {
+      finalizeExecuting({ dnf: false });
+    } else if (phase === "presenting" || phase === "recognizing") {
+      newScramble();
+    }
     if (bluetoothStore.status === "connected") {
       bluetoothStore.resetCubeState();
     }
@@ -243,6 +325,26 @@
     loadCase();
   }
 
+  /** Re-roll the scramble for the SAME case (different setup, same
+   *  alg/target). Stays in the presenting phase; resets the tracker and
+   *  any wrong-move state. */
+  function newScramble() {
+    if (!current) return;
+    stopLive();
+    const scramble = generateTrainerScramble(stage, current.caseId);
+    current = { ...current, scramble };
+    phase = "presenting";
+    trackerState =
+      bluetoothStore.status === "connected"
+        ? newTrackerState(scramble)
+        : null;
+    recognitionMs = null;
+    executionMs = null;
+    liveMs = 0;
+    lastWasDnf = false;
+    wrongMoves = [];
+  }
+
   /** Record an in-flight executing attempt as DNF before abandoning it.
    *  Shared between stage-toggle and any future "abandon-and-skip" path
    *  — both should preserve the timing data rather than silently dropping
@@ -255,23 +357,68 @@
   function setStage(next: TrainerStage) {
     if (next === stage) return;
     recordPendingDnf();
-    // Any pre-generated next case was for the OLD stage — discard so
-    // loadCase below draws fresh from the new stage's pool.
+    // Any pre-generated next case or shuffled bag was for the OLD
+    // stage — discard so loadCase below draws fresh from the new
+    // stage's pool.
     pendingNext = null;
+    caseBag = [];
     stage = next;
     loadCase();
   }
+
+  // Session controls — same shape as the timer's session-switcher.
+  function onSessionSelect(e: Event) {
+    const id = (e.currentTarget as HTMLSelectElement).value as SessionId;
+    // Cleanest semantics: switching sessions abandons the in-flight
+    // attempt as DNF (so it stays attached to the OLD session) and
+    // loads a fresh case for the NEW session.
+    recordPendingDnf();
+    pendingNext = null;
+    caseBag = [];
+    trainerStore.setCurrentSession(id);
+    loadCase();
+  }
+  function onNewSession() {
+    recordPendingDnf();
+    pendingNext = null;
+    caseBag = [];
+    trainerStore.createSession();
+    loadCase();
+  }
+  function onDeleteSession() {
+    if (trainerStore.sessions.length <= 1) return;
+    const current = trainerStore.sessions.find(
+      (s) => s.id === trainerStore.currentSessionId,
+    );
+    if (!current) return;
+    const ok = window.confirm(
+      `Delete session ${current.name} and its attempts? This can't be undone.`,
+    );
+    if (!ok) return;
+    pendingNext = null;
+    caseBag = [];
+    trainerStore.deleteSession(current.id);
+    loadCase();
+  }
+  const currentSession = $derived(
+    trainerStore.sessions.find(
+      (s) => s.id === trainerStore.currentSessionId,
+    ) ?? null,
+  );
 
   function setCaseFilter(next: CaseFilter) {
     if (next === caseFilter) return;
     caseFilter = next;
     if (browser) window.localStorage.setItem(FILTER_KEY, next);
-    // The pre-generated next case may not match the new filter; drop
-    // it. If the current case also became ineligible, regenerate so
-    // the cuber doesn't drill a case the filter says they shouldn't.
+    // The pre-generated next case and the shuffled bag may not match
+    // the new filter; drop both. Reload whenever the current case no
+    // longer fits the new pool — including when there's no current case
+    // at all (the old filter was empty), so switching INTO a populated
+    // filter clears the empty-state instead of staying stuck on it.
     pendingNext = null;
-    if (current && !eligibleCases.some((c) => c.id === current?.caseId)) {
-      recordPendingDnf();
+    caseBag = [];
+    if (!current || !eligibleCases.some((c) => c.id === current?.caseId)) {
+      if (current) recordPendingDnf();
       loadCase();
     }
   }
@@ -423,20 +570,93 @@
   });
 
   // Stats table mirrors the drillable pool: only cases the trainer
-  // will actually serve under the current filter. The totals row reads
-  // off the same grouped CaseStats map that backs each row, so the
-  // header sum always matches the table contents (and we avoid a
+  // will actually serve under the current filter. The totals + extremes
+  // read off the same grouped CaseStats map that backs each row, so
+  // the header sum always matches the table contents (and we avoid a
   // second full walk over `trainerStore.attempts`).
-  const stageTotals = $derived.by(() => {
-    let attempts = 0;
-    let dnfs = 0;
+  interface StatsAgg {
+    attempts: number;
+    dnfs: number;
+    /** Best / worst over each timing column for highlighting. Worst is
+     *  only highlighted when there are 2+ samples AND best !== worst
+     *  (a single case shouldn't be both best and worst). */
+    recBest: number | null;
+    recWorst: number | null;
+    execBest: number | null;
+    execWorst: number | null;
+    totalBest: number | null;
+    totalWorst: number | null;
+    /** Count of cases with a non-null sample in each column — used to
+     *  gate the worst-cell red-highlight. */
+    recCount: number;
+    execCount: number;
+    totalCount: number;
+  }
+  const stageStats = $derived.by<StatsAgg>(() => {
+    const agg: StatsAgg = {
+      attempts: 0,
+      dnfs: 0,
+      recBest: null,
+      recWorst: null,
+      execBest: null,
+      execWorst: null,
+      totalBest: null,
+      totalWorst: null,
+      recCount: 0,
+      execCount: 0,
+      totalCount: 0,
+    };
+    const track = (
+      v: number,
+      bestKey: "recBest" | "execBest" | "totalBest",
+      worstKey: "recWorst" | "execWorst" | "totalWorst",
+      countKey: "recCount" | "execCount" | "totalCount",
+    ) => {
+      agg[countKey]++;
+      if (agg[bestKey] === null || v < agg[bestKey]!) agg[bestKey] = v;
+      if (agg[worstKey] === null || v > agg[worstKey]!) agg[worstKey] = v;
+    };
     for (const c of eligibleCases) {
       const s = trainerStore.statsFor(stage, c.id);
-      attempts += s.attempts;
-      dnfs += s.dnfs;
+      agg.attempts += s.attempts;
+      agg.dnfs += s.dnfs;
+      if (s.medianRecognitionMs !== null) {
+        track(s.medianRecognitionMs, "recBest", "recWorst", "recCount");
+      }
+      if (s.medianExecutionMs !== null) {
+        track(s.medianExecutionMs, "execBest", "execWorst", "execCount");
+      }
+      if (s.medianRecognitionMs !== null && s.medianExecutionMs !== null) {
+        track(
+          s.medianRecognitionMs + s.medianExecutionMs,
+          "totalBest",
+          "totalWorst",
+          "totalCount",
+        );
+      }
     }
-    return { attempts, dnfs };
+    return agg;
   });
+  /** Backwards-compat alias for the markup that just reads totals. */
+  const stageTotals = $derived(stageStats);
+
+  function isBest(v: number | null, best: number | null): boolean {
+    return v !== null && best !== null && v === best;
+  }
+  function isWorst(
+    v: number | null,
+    best: number | null,
+    worst: number | null,
+    count: number,
+  ): boolean {
+    return (
+      v !== null &&
+      worst !== null &&
+      v === worst &&
+      count >= 2 &&
+      best !== worst
+    );
+  }
 
   // Esc: DNF the current attempt (or skip if no timing has started yet).
   // Mirrors the Timer component's keybinding so muscle memory carries.
@@ -476,23 +696,22 @@
         {bluetoothStore.deviceName ?? "cube"}
       </span>
       <button
-        class="bt-btn"
-        title={canMarkSolved
-          ? "Sync the cube's BT state to physically-solved. Ends the execution timer if it's running."
-          : "Only available during execute or after a solve — clicking mid-scramble would corrupt the cube's solved reference."}
-        disabled={!canMarkSolved}
+        class="bt-btn bt-btn-blue"
+        title="Tell the cube its current physical state is solved. Records the solve if one's in progress, otherwise resyncs and re-presents a fresh scramble."
         onclick={markSolved}>cube is solved</button
       >
-      <button class="bt-btn" onclick={() => bluetoothStore.disconnect()}
-        >disconnect</button
+      <button
+        class="bt-btn bt-btn-red"
+        onclick={() => bluetoothStore.disconnect()}>disconnect</button
       >
     {:else if bluetoothStore.status === "connecting"}
       <span class="bt-status">
         <span class="bt-dot bt-dot-pending"></span>connecting…
       </span>
     {:else}
-      <button class="bt-btn" onclick={() => bluetoothStore.connect()}
-        >connect cube</button
+      <button
+        class="bt-btn bt-btn-green"
+        onclick={() => bluetoothStore.connect()}>connect cube</button
       >
       <button class="bt-btn-link" onclick={forgetCachedCubeMacs}
         >forget MAC</button
@@ -503,6 +722,36 @@
     {/if}
   </div>
 
+  <div class="session-bar">
+    <select
+      class="session-select"
+      onchange={onSessionSelect}
+      value={trainerStore.currentSessionId ?? ""}
+      aria-label="Trainer session"
+    >
+      {#each trainerStore.sessions as s (s.id)}
+        <option value={s.id}>session {s.name}</option>
+      {/each}
+    </select>
+    {#if currentSession}
+      <span class="session-started"
+        >started {formatDateTime(currentSession.createdAt)}</span
+      >
+    {/if}
+    <span class="spacer"></span>
+    <button class="icon-btn" title="New session" onclick={onNewSession}
+      >+ new</button
+    >
+    <button
+      class="icon-btn danger"
+      title={trainerStore.sessions.length > 1
+        ? "Delete this session"
+        : "Can't delete the last session"}
+      disabled={trainerStore.sessions.length <= 1}
+      onclick={onDeleteSession}>delete</button
+    >
+  </div>
+
   <div class="toggles">
     <div class="stage-toggle" role="tablist" aria-label="Trainer stage">
       {#each ["oll", "pll"] as const as s (s)}
@@ -511,6 +760,7 @@
           aria-selected={stage === s}
           class="stage-btn"
           class:active={stage === s}
+          style="--accent: var(--stage-{s}); --accent-tint: var(--stage-{s}-tint); --accent-text: var(--stage-{s}-text)"
           onclick={() => setStage(s)}>{s.toUpperCase()}</button
         >
       {/each}
@@ -519,6 +769,7 @@
       class="stage-toggle"
       role="tablist"
       aria-label="Filter cases by learning state"
+      style="--accent: var(--accent-trainer); --accent-tint: var(--accent-trainer-tint); --accent-text: var(--accent-trainer-text)"
     >
       {#each CASE_FILTERS as f (f.id)}
         <button
@@ -555,6 +806,31 @@
         <div class:abandoned={scrambleAbandoned}>
           <ScrambleDisplay scramble={current.scramble} tracker={trackerState} />
         </div>
+        {#if phase === "presenting"}
+          <!-- Lightweight scramble controls: small text-arrow actions
+               that read as "give me another of these" rather than a big
+               call-to-action. "begin" only matters without BT (BT
+               auto-starts recognition on the first move). -->
+          <div class="scramble-actions">
+            {#if bluetoothStore.status !== "connected"}
+              <button
+                class="scramble-action begin"
+                onclick={startRecognition}>▸ begin</button
+              >
+            {/if}
+            <button
+              class="scramble-action"
+              title="Different scramble for this same case"
+              onclick={newScramble}>↻ new scramble</button
+            >
+            <button
+              class="scramble-action next"
+              class:emphasized={scrambleAbandoned}
+              title="Skip to a different case"
+              onclick={skipCase}>next case →</button
+            >
+          </div>
+        {/if}
         {#if scrambleAbandoned}
           <p class="scramble-hint warn" aria-live="polite">
             too many wrong moves — hit <strong>next case</strong> to start over
@@ -568,27 +844,14 @@
             apply this scramble to the cube — recognition starts automatically
           </p>
         {:else}
-          <p class="scramble-hint">apply this scramble, then press begin</p>
+          <p class="scramble-hint">apply this scramble, then hit begin</p>
         {/if}
       {/if}
     </div>
 
-    <div class="timing">
-      {#if phase === "presenting"}
-        {#if bluetoothStore.status === "connected"}
-          <button
-            class="big-btn"
-            class:primary={scrambleAbandoned}
-            class:secondary={!scrambleAbandoned}
-            onclick={skipCase}>next case</button
-          >
-        {:else}
-          <button class="big-btn primary" onclick={startRecognition}
-            >begin</button
-          >
-          <button class="big-btn secondary" onclick={skipCase}>next case</button>
-        {/if}
-      {:else if phase === "recognizing"}
+    {#if phase !== "presenting"}
+      <div class="timing">
+        {#if phase === "recognizing"}
         <div class="phase-label">recognize</div>
         <div class="live-time">{formatMs(liveMs)}</div>
         <div class="phase-hint">turn the cube to start execution</div>
@@ -629,11 +892,15 @@
           </div>
         </div>
         <button class="big-btn primary" onclick={loadCase}>next case</button>
-      {/if}
-    </div>
+        {/if}
+      </div>
+    {/if}
   {/if}
 
-  <section class="case-stats">
+  <section
+    class="case-stats"
+    style="--accent: var(--stage-{stage}); --accent-tint: var(--stage-{stage}-tint); --accent-text: var(--stage-{stage}-text)"
+  >
     <div class="case-stats-head">
       <h2>case stats</h2>
       <span class="case-stats-meta">
@@ -649,32 +916,81 @@
           <th class="num">DNF</th>
           <th class="num">median recognize</th>
           <th class="num">median execute</th>
+          <th class="num">median total</th>
         </tr>
       </thead>
       <tbody>
         {#each eligibleCases as c (c.id)}
           {@const s = trainerStore.statsFor(stage, c.id)}
-          <tr class:current={current?.caseId === c.id}>
+          {@const total =
+            s.medianRecognitionMs !== null && s.medianExecutionMs !== null
+              ? s.medianRecognitionMs + s.medianExecutionMs
+              : null}
+          <!-- Deliberately NOT marking the current case's row: that would
+               reveal which case the active scramble is, spoiling the
+               recognition the trainer is meant to drill. -->
+          <tr>
             <td>
               <a
+                class="case-link"
                 href="{base}/cfop/{stage}/{c.id}"
                 target="_blank"
-                rel="noopener">{c.name}</a
+                rel="noopener"
               >
+                <img
+                  class="case-mini"
+                  src="{base}/diagrams/cfop/{stage}/{c.id}.svg"
+                  alt=""
+                  loading="lazy"
+                  width="28"
+                  height="28"
+                />
+                <span>{c.name}</span>
+              </a>
             </td>
             <td class="num">{s.attempts || "—"}</td>
             <td class="num" class:has-dnf={s.dnfs > 0}>
               {s.dnfs || "—"}
             </td>
-            <td class="num">
+            <td
+              class="num"
+              class:best={isBest(s.medianRecognitionMs, stageStats.recBest)}
+              class:worst={isWorst(
+                s.medianRecognitionMs,
+                stageStats.recBest,
+                stageStats.recWorst,
+                stageStats.recCount,
+              )}
+            >
               {s.medianRecognitionMs === null
                 ? "—"
                 : formatMs(s.medianRecognitionMs)}
             </td>
-            <td class="num">
+            <td
+              class="num"
+              class:best={isBest(s.medianExecutionMs, stageStats.execBest)}
+              class:worst={isWorst(
+                s.medianExecutionMs,
+                stageStats.execBest,
+                stageStats.execWorst,
+                stageStats.execCount,
+              )}
+            >
               {s.medianExecutionMs === null
                 ? "—"
                 : formatMs(s.medianExecutionMs)}
+            </td>
+            <td
+              class="num"
+              class:best={isBest(total, stageStats.totalBest)}
+              class:worst={isWorst(
+                total,
+                stageStats.totalBest,
+                stageStats.totalWorst,
+                stageStats.totalCount,
+              )}
+            >
+              {total === null ? "—" : formatMs(total)}
             </td>
           </tr>
         {/each}
@@ -726,7 +1042,7 @@
     background: var(--color-unlearned);
   }
   .bt-dot-on {
-    background: var(--color-learned);
+    background: var(--cube-green);
   }
   .bt-dot-pending {
     background: var(--color-learning);
@@ -740,10 +1056,42 @@
     background: var(--color-surface);
     color: var(--color-text-muted);
     cursor: pointer;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease,
+      border-color 0.12s ease;
   }
   .bt-btn:hover {
     background: var(--color-surface-2);
     color: var(--color-text);
+  }
+  .bt-btn:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  /* Function-colored bt buttons (match the timer page). */
+  .bt-btn-green {
+    color: var(--cube-green-text);
+    border-color: color-mix(in srgb, var(--cube-green) 45%, var(--color-border));
+  }
+  .bt-btn-green:hover {
+    color: var(--cube-green-text);
+    background: var(--cube-green-tint);
+    border-color: var(--cube-green);
+  }
+  .bt-btn-blue:not(:disabled) {
+    color: var(--cube-blue-text);
+    border-color: color-mix(in srgb, var(--cube-blue) 45%, var(--color-border));
+  }
+  .bt-btn-blue:hover:not(:disabled) {
+    color: var(--cube-blue-text);
+    background: var(--cube-blue-tint);
+    border-color: var(--cube-blue);
+  }
+  .bt-btn-red:hover:not(:disabled) {
+    color: var(--cube-red-text);
+    background: var(--cube-red-tint);
+    border-color: var(--cube-red);
   }
   .bt-btn-link {
     font: inherit;
@@ -765,6 +1113,58 @@
     font-size: 12px;
   }
 
+  .session-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 8px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    font-size: 13px;
+  }
+  .session-select {
+    font: inherit;
+    font-size: 13px;
+    padding: 4px 8px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-text);
+    cursor: pointer;
+  }
+  .session-started {
+    font-size: 12px;
+    color: var(--color-text-muted);
+  }
+  .spacer {
+    flex: 1 1 0;
+  }
+  .icon-btn {
+    font: inherit;
+    font-size: 12px;
+    padding: 4px 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition:
+      background 0.12s ease,
+      color 0.12s ease;
+  }
+  .icon-btn:hover:not(:disabled) {
+    background: var(--color-surface-2);
+    color: var(--color-text);
+  }
+  .icon-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .icon-btn.danger:hover:not(:disabled) {
+    color: var(--color-danger);
+  }
   .toggles {
     display: flex;
     gap: 12px;
@@ -813,8 +1213,10 @@
     color: var(--color-text);
   }
   .stage-btn.active {
-    background: var(--color-surface-2);
-    color: var(--color-text);
+    background: var(--accent-tint, var(--color-surface-2));
+    color: var(--accent-text, var(--color-text));
+    font-weight: 600;
+    box-shadow: inset 0 -2.5px 0 var(--accent, var(--color-text));
   }
 
   .scramble-block {
@@ -866,22 +1268,59 @@
     cursor: pointer;
     min-width: 180px;
   }
+  /* The trainer's "go" action — begin / next case — wears cube green. */
   .big-btn.primary {
-    background: var(--color-text);
-    color: var(--color-surface);
-    border-color: var(--color-text);
+    background: var(--cube-green);
+    color: #fff;
+    border-color: var(--cube-green);
+    transition:
+      filter 0.12s ease,
+      box-shadow 0.12s ease;
+  }
+  .big-btn.primary:hover:not(:disabled) {
+    filter: brightness(1.06);
+    box-shadow: 0 4px 16px -8px var(--cube-green);
   }
   .big-btn.primary:disabled {
     background: var(--color-text-muted);
     border-color: var(--color-text-muted);
     cursor: not-allowed;
   }
-  .big-btn.secondary {
-    background: var(--color-surface);
-    color: var(--color-text-muted);
+  /* Inline scramble controls — small text-arrow actions under the
+   * scramble. They read as "give me another of these", not a CTA. */
+  .scramble-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin-top: 12px;
   }
-  .big-btn.secondary:hover {
+  .scramble-action {
+    font: inherit;
+    font-size: 13px;
+    padding: 2px 4px;
+    border: none;
+    background: transparent;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: color 0.12s ease;
+  }
+  .scramble-action:hover {
     color: var(--color-text);
+  }
+  /* "begin" is the one real action without BT — give it the go color. */
+  .scramble-action.begin {
+    color: var(--cube-green-text);
+    font-weight: 600;
+  }
+  .scramble-action.begin:hover {
+    color: var(--cube-green);
+  }
+  /* When the scramble is abandoned, "next case" is the way forward. */
+  .scramble-action.emphasized {
+    color: var(--cube-green-text);
+    font-weight: 600;
   }
   .phase-label {
     text-transform: uppercase;
@@ -979,6 +1418,10 @@
     color: var(--color-text-muted);
     font-weight: 500;
   }
+  /* The whole table belongs to one stage — accent its header rule. */
+  thead th {
+    border-bottom: 2px solid var(--accent);
+  }
   th.num,
   td.num {
     text-align: right;
@@ -988,14 +1431,36 @@
   td.num.has-dnf {
     color: var(--color-danger);
   }
-  tbody tr.current {
-    background: var(--color-surface-2);
+  td.num.best {
+    background: var(--color-best-bg);
+    color: var(--color-best-text);
+  }
+  td.num.worst {
+    background: var(--color-worst-bg);
+    color: var(--color-worst-text);
   }
   td a {
     color: var(--color-text);
   }
   td a:hover {
-    color: var(--color-link);
+    color: var(--accent-text);
     text-decoration: underline;
+    text-decoration-color: var(--accent);
+  }
+  /* Case link carries a miniature of the alg-page diagram so the case
+   * is recognizable at a glance, not just by name. */
+  .case-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .case-mini {
+    width: 28px;
+    height: 28px;
+    flex: none;
+    border-radius: 4px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 1px;
   }
 </style>

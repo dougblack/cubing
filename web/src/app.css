@@ -14,16 +14,17 @@
   --color-link: #4b7795;
   --color-link-hover: #2d5773;
 
-  --color-learning: #b89146;
-  --color-learned: #6e9462;
+  /* `--color-learning` / `--color-learned` are var()-valued, so they live
+   * in the plain `:root` block below (Tailwind drops var()-valued @theme
+   * tokens). Only the literal washes + unlearned gray stay here. */
   --color-unlearned: #c8c4ba;
   --color-warn: #b78527;
   --color-danger: #a25151;
 
   --color-hold-bg: #f5e8e6;
   --color-ready-bg: #e9efe3;
-  --color-learning-bg: #f1e3b8;
-  --color-learned-bg: #d8e6cb;
+  --color-learning-bg: #f6dc8e;
+  --color-learned-bg: #b6dcc0;
   --color-preferred-tint: rgba(184, 145, 70, 0.07);
   --color-best-bg: #dfe8f1;
   --color-best-text: #2d5773;
@@ -41,6 +42,32 @@
   --color-flag-stm-bg: #ebebe9;
   --color-flag-stm-text: #5e5b56;
 
+  /* --------------------------------------------------------------------
+   * Cube color system. The six faces of a speedcube become the app's
+   * accent palette — each color carries MEANING (a stage or a function),
+   * so accents read as intentional, never decorative. Brand hues are
+   * tuned slightly off the raw Rubik's values so they sit on warm paper.
+   *   `*-tint` — faint wash for table cells / badges / card fills
+   *   `*-text` — legible text/icon color on paper or on its own tint
+   * ------------------------------------------------------------------ */
+  --cube-green: #0a8754;
+  --cube-blue: #2660a4;
+  --cube-red: #c33141;
+  --cube-orange: #dd6411;
+  --cube-yellow: #e8b500;
+
+  --cube-green-tint: rgba(10, 135, 84, 0.1);
+  --cube-blue-tint: rgba(38, 96, 164, 0.1);
+  --cube-red-tint: rgba(195, 49, 65, 0.09);
+  --cube-orange-tint: rgba(221, 100, 17, 0.1);
+  --cube-yellow-tint: rgba(232, 181, 0, 0.16);
+
+  --cube-green-text: #0d6e46;
+  --cube-blue-text: #265a87;
+  --cube-red-text: #9c2f3b;
+  --cube-orange-text: #a85410;
+  --cube-yellow-text: #8a6814;
+
   --radius-card: 6px;
   /* Inter for UI / body, Newsreader for headings + brand. Both are loaded
    * via Google Fonts in app.html. System stacks are the fallback while the
@@ -50,6 +77,40 @@
   --font-serif:
     "Newsreader", Iowan Old Style, Charter, Cambria, Georgia, serif;
   --font-mono: "SF Mono", Menlo, Consolas, monospace;
+}
+
+/* --------------------------------------------------------------------------
+ * Semantic accent aliases — sections and stages map onto the six cube
+ * colors. Kept OUT of `@theme` on purpose: Tailwind v4 tree-shakes theme
+ * variables whose values are `var()` references (and that are only used
+ * in inline styles, never as utilities), dropping them from `:root`. A
+ * plain `:root` block is always emitted. These point at the `--cube-*`
+ * tokens, which themselves flip between light/dark, so one definition
+ * covers both themes.
+ * -------------------------------------------------------------------------- */
+:root {
+  /* Learning state — yellow = learning, green = learned. Same reason as
+   * the stage aliases: var()-valued, so kept in plain :root, not @theme.
+   * The `--cube-*` they point at flip per theme, so one def covers both. */
+  --color-learning: var(--cube-yellow);
+  --color-learned: var(--cube-green);
+
+  --accent-timer: var(--cube-red);
+  --accent-timer-tint: var(--cube-red-tint);
+  --accent-timer-text: var(--cube-red-text);
+  --accent-trainer: var(--cube-green);
+  --accent-trainer-tint: var(--cube-green-tint);
+  --accent-trainer-text: var(--cube-green-text);
+
+  --stage-pll: var(--cube-blue);
+  --stage-pll-tint: var(--cube-blue-tint);
+  --stage-pll-text: var(--cube-blue-text);
+  --stage-oll: var(--cube-yellow);
+  --stage-oll-tint: var(--cube-yellow-tint);
+  --stage-oll-text: var(--cube-yellow-text);
+  --stage-2loll: var(--cube-orange);
+  --stage-2loll-tint: var(--cube-orange-tint);
+  --stage-2loll-text: var(--cube-orange-text);
 }
 
 /* --------------------------------------------------------------------------
@@ -67,16 +128,14 @@ html.dark {
   --color-link: #82a4bb;
   --color-link-hover: #b2cbdd;
 
-  --color-learning: #c8a05a;
-  --color-learned: #82a878;
   --color-unlearned: #4a4642;
   --color-warn: #cb9b4a;
   --color-danger: #c47272;
 
   --color-hold-bg: #3a2826;
   --color-ready-bg: #2c3a28;
-  --color-learning-bg: #3f3525;
-  --color-learned-bg: #2a3826;
+  --color-learning-bg: #4a3f1c;
+  --color-learned-bg: #25432f;
   --color-preferred-tint: rgba(200, 160, 90, 0.10);
   --color-best-bg: #283544;
   --color-best-text: #b2cbdd;
@@ -93,6 +152,25 @@ html.dark {
   --color-flag-scdb-text: #c9a585;
   --color-flag-stm-bg: #2e2c2a;
   --color-flag-stm-text: #b0aaa1;
+
+  /* Cube accents — brighter dots/text, deeper tints for the dark paper. */
+  --cube-green: #34b27d;
+  --cube-blue: #5b95d0;
+  --cube-red: #d9636f;
+  --cube-orange: #e8843f;
+  --cube-yellow: #f0cb4a;
+
+  --cube-green-tint: rgba(52, 178, 125, 0.16);
+  --cube-blue-tint: rgba(91, 149, 208, 0.16);
+  --cube-red-tint: rgba(217, 99, 111, 0.15);
+  --cube-orange-tint: rgba(232, 132, 63, 0.15);
+  --cube-yellow-tint: rgba(240, 203, 74, 0.16);
+
+  --cube-green-text: #5ec79a;
+  --cube-blue-text: #8fb9e2;
+  --cube-red-text: #e69aa3;
+  --cube-orange-text: #efa877;
+  --cube-yellow-text: #ecd483;
 }
 
 * {

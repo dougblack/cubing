@@ -92,3 +92,41 @@ export function probabilityText(
   const g = gcd(c.probability_weight, denom);
   return `${c.probability_weight / g}/${denom / g}`;
 }
+
+/** Probability-weighted coverage for a stage, split by learning state.
+ *  Both fields are shares of all solves (0–1), weighted by how often
+ *  each last-layer case occurs:
+ *   - `learned` — cases marked learned.
+ *   - `learning` — cases marked learning.
+ *  They never overlap, and `learned + learning ≤ 1`; the remainder is
+ *  cases not yet flagged plus the skip case (the missing 1/denom of
+ *  weight that needs no alg). So `learned` reads a clean 0 when nothing
+ *  is learned and tops out just shy of 1.0 at mastery (the leftover
+ *  sliver is the skip). Returns null for stages without a probability
+ *  denominator (e.g. 2-Look OLL). `stateOf` returns 1 = learning,
+ *  2 = learned, anything else (incl. undefined) = unflagged. */
+export interface StageCoverage {
+  learned: number;
+  learning: number;
+}
+
+export function probabilityCoverage(
+  slug: StageSlug,
+  stateOf: (caseId: string) => number | undefined,
+): StageCoverage | null {
+  const denom = PROBABILITY_DENOM[slug];
+  const file = RAW[slug];
+  if (denom === undefined || !file) return null;
+  let learnedWeight = 0;
+  let learningWeight = 0;
+  for (const c of file.cases) {
+    if (c.probability_weight === undefined) continue;
+    const s = stateOf(c.id);
+    if (s === 2) learnedWeight += c.probability_weight;
+    else if (s === 1) learningWeight += c.probability_weight;
+  }
+  return {
+    learned: learnedWeight / denom,
+    learning: learningWeight / denom,
+  };
+}

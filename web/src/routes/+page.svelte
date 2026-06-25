@@ -332,15 +332,16 @@
         </span>
       </span>
       <button
-        class="bt-btn"
+        class="bt-btn bt-btn-blue"
         title="Tell the cube its current physical state is solved AND generate a fresh scramble. Use after a manual reset/reassembly."
         onclick={() => {
           bluetoothStore.resetCubeState();
           advanceScramble();
         }}>cube is solved</button
       >
-      <button class="bt-btn" onclick={() => bluetoothStore.disconnect()}
-        >disconnect</button
+      <button
+        class="bt-btn bt-btn-red"
+        onclick={() => bluetoothStore.disconnect()}>disconnect</button
       >
     {:else if bluetoothStore.status === "connecting"}
       <span class="bt-status">
@@ -348,8 +349,9 @@
         connecting…
       </span>
     {:else}
-      <button class="bt-btn" onclick={() => bluetoothStore.connect()}
-        >connect cube</button
+      <button
+        class="bt-btn bt-btn-green"
+        onclick={() => bluetoothStore.connect()}>connect cube</button
       >
       <button
         class="bt-btn-link"
@@ -478,7 +480,7 @@
     background: var(--color-unlearned);
   }
   .bt-dot-on {
-    background: var(--color-learned);
+    background: var(--cube-green);
   }
   .bt-dot-pending {
     background: var(--color-learning);
@@ -498,11 +500,38 @@
     cursor: pointer;
     transition:
       background 0.12s ease,
-      color 0.12s ease;
+      color 0.12s ease,
+      border-color 0.12s ease;
   }
   .bt-btn:hover {
     background: var(--color-surface-2);
     color: var(--color-text);
+  }
+  /* Function-colored bt buttons: green = connect/go, blue = sync/info,
+   * red = disconnect/danger. Quiet by default (colored text + border),
+   * filling with their tint on hover. */
+  .bt-btn-green {
+    color: var(--cube-green-text);
+    border-color: color-mix(in srgb, var(--cube-green) 45%, var(--color-border));
+  }
+  .bt-btn-green:hover {
+    color: var(--cube-green-text);
+    background: var(--cube-green-tint);
+    border-color: var(--cube-green);
+  }
+  .bt-btn-blue {
+    color: var(--cube-blue-text);
+    border-color: color-mix(in srgb, var(--cube-blue) 45%, var(--color-border));
+  }
+  .bt-btn-blue:hover {
+    color: var(--cube-blue-text);
+    background: var(--cube-blue-tint);
+    border-color: var(--cube-blue);
+  }
+  .bt-btn-red:hover {
+    color: var(--cube-red-text);
+    background: var(--cube-red-tint);
+    border-color: var(--cube-red);
   }
   .bt-btn-link {
     font: inherit;

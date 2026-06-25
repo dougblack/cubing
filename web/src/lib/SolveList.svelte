@@ -431,7 +431,13 @@
           <th class="col-time">time</th>
           <th class="col-moves" title="Total number of moves (BT-tracked solves only)">moves</th>
           {#each STAGES as stage (stage)}
-            <th class="col-phase">{STAGE_LABELS[stage]}</th>
+            <th
+              class="col-phase"
+              class:stage-accent={stage === "oll" || stage === "pll"}
+              style={stage === "oll" || stage === "pll"
+                ? `--phase-accent: var(--stage-${stage}); --phase-accent-text: var(--stage-${stage}-text)`
+                : ""}>{STAGE_LABELS[stage]}</th
+            >
           {/each}
           <th class="col-actions">actions</th>
         </tr>
@@ -473,6 +479,9 @@
                 class="col-phase"
                 class:best={isBestPhase(analysis, stage, solve.penalty)}
                 class:worst={isWorstPhase(analysis, stage, solve.penalty)}
+                style={stage === "oll" || stage === "pll"
+                  ? `--phase-accent-text: var(--stage-${stage}-text)`
+                  : ""}
               >
                 <div>{phaseDurationText(analysis, stage)}</div>
                 {#if c}
@@ -649,6 +658,12 @@
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.06em;
+    border-bottom-width: 2px;
+  }
+  /* OLL / PLL phase headers wear their stage color. */
+  th.col-phase.stage-accent {
+    color: var(--phase-accent-text);
+    border-bottom-color: var(--phase-accent);
   }
   .solve-row {
     cursor: pointer;
@@ -717,7 +732,8 @@
     display: block;
     font-family: var(--font-sans);
     font-size: 10px;
-    color: var(--color-text);
+    color: var(--phase-accent-text, var(--color-text));
+    font-weight: 500;
     margin-top: 2px;
     white-space: nowrap;
     overflow: hidden;

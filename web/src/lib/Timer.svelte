@@ -416,11 +416,11 @@
     background: var(--color-ready-bg);
   }
   .timer-shell[data-phase="ready"] .timer-display {
-    color: var(--color-learned);
+    color: var(--cube-green);
   }
 
   /* Solving + stopped emphasis. */
   .timer-shell[data-phase="solving"] .timer-display {
-    color: var(--color-learned);
+    color: var(--cube-green);
   }
 </style>

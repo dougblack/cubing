@@ -67,6 +67,10 @@ export interface AlgPreference {
 
 export interface TrainerAttempt {
   id: TrainerAttemptId;
+  /** Trainer session this attempt belongs to. Same `Session` shape as
+   *  the timer uses — sessions are bucket-only, they don't constrain
+   *  which cases get drilled. */
+  sessionId: SessionId;
   caseId: CaseId;
   stage: StageSlug;
   /** Scramble that produced the case's state (typically inverse(alg) + AUF). */
