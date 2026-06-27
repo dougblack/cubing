@@ -14,7 +14,7 @@
   import { untrack } from "svelte";
   import { browser } from "$app/environment";
   import { base } from "$app/paths";
-  import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
+  import { bluetoothStore } from "$lib/bluetooth.svelte";
   import { formatMs, formatDateTime } from "$lib/format";
   import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
@@ -684,75 +684,11 @@
     <OrientationPicker />
   </div>
 
-  <div class="bt-bar">
-    {#if !bluetoothStore.isAvailable()}
-      <span class="bt-note">
-        Web Bluetooth isn't supported here — try Chrome, Edge, or Brave. The
-        trainer needs a connected cube to detect moves and solved state.
-      </span>
-    {:else if bluetoothStore.status === "connected"}
-      <span class="bt-status">
-        <span class="bt-dot bt-dot-on"></span>
-        {bluetoothStore.deviceName ?? "cube"}
-      </span>
-      <button
-        class="bt-btn bt-btn-blue"
-        title="Tell the cube its current physical state is solved. Records the solve if one's in progress, otherwise resyncs and re-presents a fresh scramble."
-        onclick={markSolved}>cube is solved</button
-      >
-      <button
-        class="bt-btn bt-btn-red"
-        onclick={() => bluetoothStore.disconnect()}>disconnect</button
-      >
-    {:else if bluetoothStore.status === "connecting"}
-      <span class="bt-status">
-        <span class="bt-dot bt-dot-pending"></span>connecting…
-      </span>
-    {:else}
-      <button
-        class="bt-btn bt-btn-green"
-        onclick={() => bluetoothStore.connect()}>connect cube</button
-      >
-      <button class="bt-btn-link" onclick={forgetCachedCubeMacs}
-        >forget MAC</button
-      >
-      {#if bluetoothStore.errorMessage}
-        <span class="bt-error">{bluetoothStore.errorMessage}</span>
-      {/if}
-    {/if}
-  </div>
-
-  <div class="session-bar">
-    <select
-      class="session-select"
-      onchange={onSessionSelect}
-      value={trainerStore.currentSessionId ?? ""}
-      aria-label="Trainer session"
-    >
-      {#each trainerStore.sessions as s (s.id)}
-        <option value={s.id}>session {s.name}</option>
-      {/each}
-    </select>
-    {#if currentSession}
-      <span class="session-started"
-        >started {formatDateTime(currentSession.createdAt)}</span
-      >
-    {/if}
-    <span class="spacer"></span>
-    <button class="icon-btn" title="New session" onclick={onNewSession}
-      >+ new</button
-    >
-    <button
-      class="icon-btn danger"
-      title={trainerStore.sessions.length > 1
-        ? "Delete this session"
-        : "Can't delete the last session"}
-      disabled={trainerStore.sessions.length <= 1}
-      onclick={onDeleteSession}>delete</button
-    >
-  </div>
-
-  <div class="toggles">
+  <!-- One toolbar for everything that configures a drill: what to test
+       (stage), which subset (filter), and where results land (session).
+       Cube connection lives in the global header; "cube is solved" sits
+       with the scramble below. -->
+  <div class="trainer-toolbar">
     <div class="stage-toggle" role="tablist" aria-label="Trainer stage">
       {#each ["oll", "pll"] as const as s (s)}
         <button
@@ -780,6 +716,35 @@
           onclick={() => setCaseFilter(f.id)}>{f.label}</button
         >
       {/each}
+    </div>
+
+    <span class="toolbar-spacer"></span>
+
+    <div class="session-controls">
+      <select
+        class="session-select"
+        onchange={onSessionSelect}
+        value={trainerStore.currentSessionId ?? ""}
+        aria-label="Trainer session"
+        title={currentSession
+          ? `Started ${formatDateTime(currentSession.createdAt)}`
+          : "Trainer session"}
+      >
+        {#each trainerStore.sessions as s (s.id)}
+          <option value={s.id}>session {s.name}</option>
+        {/each}
+      </select>
+      <button class="icon-btn" title="New session" onclick={onNewSession}
+        >+ new</button
+      >
+      <button
+        class="icon-btn danger"
+        title={trainerStore.sessions.length > 1
+          ? "Delete this session"
+          : "Can't delete the last session"}
+        disabled={trainerStore.sessions.length <= 1}
+        onclick={onDeleteSession}>delete</button
+      >
     </div>
   </div>
 
@@ -823,6 +788,13 @@
               title="Different scramble for this same case"
               onclick={newScramble}>↻ new scramble</button
             >
+            {#if bluetoothStore.status === "connected"}
+              <button
+                class="scramble-action"
+                title="Resync: tell the cube its current state is solved, then re-present a fresh scramble. Use after a manual reset or reassembly."
+                onclick={markSolved}>✓ cube is solved</button
+              >
+            {/if}
             <button
               class="scramble-action next"
               class:emphasized={scrambleAbandoned}
@@ -1018,111 +990,27 @@
     font-weight: 600;
   }
 
-  .bt-bar {
+  /* One control bar: drill config (stage + filter toggles) on the left,
+   * session controls on the right. Replaces the old stack of separate
+   * connection / session / toggle rows. */
+  .trainer-toolbar {
     display: flex;
     align-items: center;
     gap: 12px;
     flex-wrap: wrap;
-    padding: 8px 12px;
+    padding: 10px 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-card);
     background: var(--color-surface);
-    font-size: 13px;
   }
-  .bt-status {
+  .toolbar-spacer {
+    flex: 1 1 0;
+  }
+  .session-controls {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    color: var(--color-text);
-  }
-  .bt-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-unlearned);
-  }
-  .bt-dot-on {
-    background: var(--cube-green);
-  }
-  .bt-dot-pending {
-    background: var(--color-learning);
-  }
-  .bt-btn {
-    font: inherit;
-    font-size: 12px;
-    padding: 4px 10px;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition:
-      background 0.12s ease,
-      color 0.12s ease,
-      border-color 0.12s ease;
-  }
-  .bt-btn:hover {
-    background: var(--color-surface-2);
-    color: var(--color-text);
-  }
-  .bt-btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-  }
-  /* Function-colored bt buttons (match the timer page). */
-  .bt-btn-green {
-    color: var(--cube-green-text);
-    border-color: color-mix(in srgb, var(--cube-green) 45%, var(--color-border));
-  }
-  .bt-btn-green:hover {
-    color: var(--cube-green-text);
-    background: var(--cube-green-tint);
-    border-color: var(--cube-green);
-  }
-  .bt-btn-blue:not(:disabled) {
-    color: var(--cube-blue-text);
-    border-color: color-mix(in srgb, var(--cube-blue) 45%, var(--color-border));
-  }
-  .bt-btn-blue:hover:not(:disabled) {
-    color: var(--cube-blue-text);
-    background: var(--cube-blue-tint);
-    border-color: var(--cube-blue);
-  }
-  .bt-btn-red:hover:not(:disabled) {
-    color: var(--cube-red-text);
-    background: var(--cube-red-tint);
-    border-color: var(--cube-red);
-  }
-  .bt-btn-link {
-    font: inherit;
-    font-size: 11px;
-    padding: 0;
-    border: none;
-    background: transparent;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .bt-note {
-    color: var(--color-text-muted);
-    font-size: 12px;
-  }
-  .bt-error {
-    color: var(--color-danger);
-    font-size: 12px;
-  }
-
-  .session-bar {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     flex-wrap: wrap;
-    padding: 8px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-    font-size: 13px;
   }
   .session-select {
     font: inherit;
@@ -1133,13 +1021,6 @@
     background: var(--color-surface);
     color: var(--color-text);
     cursor: pointer;
-  }
-  .session-started {
-    font-size: 12px;
-    color: var(--color-text-muted);
-  }
-  .spacer {
-    flex: 1 1 0;
   }
   .icon-btn {
     font: inherit;
@@ -1164,12 +1045,6 @@
   }
   .icon-btn.danger:hover:not(:disabled) {
     color: var(--color-danger);
-  }
-  .toggles {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
   }
   .stage-toggle {
     display: inline-flex;
@@ -1391,10 +1266,17 @@
     gap: 12px;
     margin-bottom: 8px;
   }
+  /* Section caption as an instrument label, tinted to the stage — same
+   * mono/upper/tracked treatment as the timer's mode tag and the column
+   * headers, so all the "data" surfaces share one dialect. */
   .case-stats-head h2 {
     margin: 0;
-    font-size: 16px;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--accent-text);
   }
   .case-stats-meta {
     color: var(--color-text-muted);
@@ -1408,13 +1290,14 @@
   th,
   td {
     text-align: left;
-    padding: 6px 10px;
+    padding: 7px 10px;
     border-bottom: 1px solid var(--color-border);
   }
   th {
+    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     color: var(--color-text-muted);
     font-weight: 500;
   }
@@ -1427,6 +1310,14 @@
     text-align: right;
     font-family: var(--font-mono);
     font-variant-numeric: tabular-nums;
+  }
+  /* Stage-tinted row hover — a quiet pop of the section color on the
+   * otherwise neutral data grid. */
+  tbody tr {
+    transition: background 0.12s ease;
+  }
+  tbody tr:hover {
+    background: var(--accent-tint);
   }
   td.num.has-dnf {
     color: var(--color-danger);

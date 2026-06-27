@@ -1,12 +1,21 @@
 <script lang="ts">
   import { base } from "$app/paths";
   import StateFlag from "$lib/StateFlag.svelte";
+  import { diagramRotation } from "$lib/data";
   import { cubingState } from "$lib/store.svelte";
 
   let { data } = $props();
 
   const stage = $derived(data.stage);
   const c = $derived(data.case);
+
+  // The "chosen" alg drives the diagram: the preferred one if set, else the
+  // primary (index 0). Rotating the diagram to its orientation lets us drop a
+  // leading y from that alg's notation.
+  const chosenIdx = $derived(cubingState.pref[c.id] ?? 0);
+  const rotation = $derived(
+    diagramRotation(c.algorithms[chosenIdx]?.moves ?? ""),
+  );
 
   const stateName = $derived.by(() => {
     const s = cubingState.state[c.id] ?? 0;
@@ -32,6 +41,7 @@
       class="case-detail-diagram"
       src="{base}/diagrams/cfop/{stage.slug}/{c.id}.svg"
       alt="{c.name} diagram"
+      style="transform: rotate({rotation.degrees}deg)"
     />
     <div class="case-detail-info">
       <h1>{c.name}</h1>
@@ -55,6 +65,7 @@
   <ol class="alg-list">
     {#each c.algorithms as alg, i (i)}
       {@const preferred = cubingState.pref[c.id] === i}
+      {@const moves = i === chosenIdx ? rotation.moves : alg.moves}
       <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
       <li
         class="alg-item"
@@ -72,7 +83,7 @@
       >
         <div class="alg-row">
           <span class="alg-rank">#{i + 1}</span>
-          <code class="alg-moves">{alg.moves}</code>
+          <code class="alg-moves">{moves}</code>
           <div class="alg-flags">
             {#if alg.popularity === "primary"}
               <span class="flag flag-primary" title="algdb top pick">primary</span>
@@ -123,6 +134,7 @@
     border-radius: var(--radius-card);
     padding: 12px;
     background: var(--color-surface);
+    transition: transform 0.25s ease;
   }
   .case-detail-info h1 {
     font-size: 28px;

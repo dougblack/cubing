@@ -1,12 +1,28 @@
 <script lang="ts">
   import "../app.css";
   import { base } from "$app/paths";
+  import { browser } from "$app/environment";
   import { page } from "$app/state";
   import { STAGES } from "$lib/stages";
   import { getStageFile } from "$lib/data";
   import ThemeToggle from "$lib/ThemeToggle.svelte";
 
   let { children } = $props();
+
+  // The cube-connection chip pulls in the Web Bluetooth stack (gan-web-
+  // bluetooth → aes-js), which isn't SSR-safe. The layout itself is
+  // server-rendered (the /cfop reference pages prerender through it), so we
+  // load the chip dynamically in the browser only — keeping those modules
+  // out of the server bundle. It renders a moment after hydration; that's
+  // fine for chrome whose whole job depends on a browser API.
+  let CubeConnection = $state<typeof import("$lib/CubeConnection.svelte").default | null>(null);
+  $effect(() => {
+    if (browser && !CubeConnection) {
+      import("$lib/CubeConnection.svelte").then((m) => {
+        CubeConnection = m.default;
+      });
+    }
+  });
 
   // Footer totals across all stages.
   const totals = (() => {
@@ -135,6 +151,9 @@
     </div>
 
     <span class="nav-spacer"></span>
+    {#if CubeConnection}
+      <CubeConnection />
+    {/if}
     <ThemeToggle />
   </nav>
 </header>

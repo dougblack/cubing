@@ -93,6 +93,31 @@ export function probabilityText(
   return `${c.probability_weight / g}/${denom / g}`;
 }
 
+export interface DiagramRotation {
+  /** Clockwise CSS rotation in degrees applied to the diagram (0, 90, -90,
+   *  or 180). */
+  degrees: number;
+  /** The algorithm with a leading whole-cube y rotation removed. */
+  moves: string;
+  /** True when a leading y was found and stripped. */
+  rotated: boolean;
+}
+
+/** When an algorithm starts with a whole-cube y rotation (y / y' / y2), the
+ *  last-layer diagram can be physically rotated to match the orientation the
+ *  alg assumes, letting the leading y be dropped from the written moves — so
+ *  the case isn't shown one way only for the first move to spin it. Diagrams
+ *  are viewed from above (U up), so y turns the image clockwise, y'
+ *  counter-clockwise, and y2 a half turn. Returns degrees 0 with the moves
+ *  untouched when there's no leading y. Only a single leading y is handled,
+ *  which covers the whole dataset. */
+export function diagramRotation(moves: string): DiagramRotation {
+  const m = moves.match(/^\s*(y2|y'|y)\s+(\S.*)$/s);
+  if (!m) return { degrees: 0, moves, rotated: false };
+  const degrees = m[1] === "y" ? 90 : m[1] === "y'" ? -90 : 180;
+  return { degrees, moves: m[2], rotated: true };
+}
+
 /** Probability-weighted coverage for a stage, split by learning state.
  *  Both fields are shares of all solves (0–1), weighted by how often
  *  each last-layer case occurs:

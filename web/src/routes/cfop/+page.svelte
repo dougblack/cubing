@@ -20,6 +20,7 @@
 </svelte:head>
 
 <section class="hero">
+  <p class="eyebrow hero-eyebrow">CFOP · Last-layer reference</p>
   <h1>Cubing algorithm reference</h1>
   <p>
     A flat, browsable index of CFOP algorithms with pre-rendered cube state
@@ -84,8 +85,12 @@
     max-width: 640px;
     margin-bottom: 40px;
   }
+  .hero-eyebrow {
+    color: var(--stage-pll-text);
+    margin: 0 0 10px;
+  }
   .hero h1 {
-    font-size: 32px;
+    font-size: 40px;
     font-weight: 600;
     margin: 0 0 12px;
   }

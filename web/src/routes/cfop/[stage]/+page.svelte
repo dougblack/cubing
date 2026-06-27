@@ -1,6 +1,6 @@
 <script lang="ts">
   import { base } from "$app/paths";
-  import { probabilityCoverage } from "$lib/data";
+  import { diagramRotation, probabilityCoverage } from "$lib/data";
   import { cubingState } from "$lib/store.svelte";
 
   let { data } = $props();
@@ -89,6 +89,7 @@
     {#each items as card (card.id)}
       {@const state = caseState(card.id)}
       {@const display = displayAlg(card)}
+      {@const rotation = diagramRotation(display.moves)}
       <div
         class="case-card"
         class:state-learning={state === 1}
@@ -105,6 +106,7 @@
             src="{base}/diagrams/cfop/{stage.slug}/{card.id}.svg"
             alt="{card.name} diagram"
             loading="lazy"
+            style="transform: rotate({rotation.degrees}deg)"
           />
           <div class="case-meta">
             <a
@@ -121,7 +123,7 @@
             {/if}
           </div>
           <code class="case-primary-alg" class:is-preferred={display.preferred}>
-            {display.moves}
+            {rotation.moves}
           </code>
         </div>
       </div>
@@ -279,6 +281,7 @@
     height: auto;
     margin-bottom: 10px;
     background: transparent;
+    transition: transform 0.25s ease;
   }
   .case-meta {
     display: flex;

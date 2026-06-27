@@ -1,6 +1,5 @@
 <script lang="ts">
   import {
-    collapseDoubleTurns,
     invertMove,
     isComplete,
     type MoveEvent,
@@ -10,7 +9,7 @@
     tickTracker,
     type TrackerState,
   } from "@cubing/core";
-  import { bluetoothStore, forgetCachedCubeMacs } from "$lib/bluetooth.svelte";
+  import { bluetoothStore } from "$lib/bluetooth.svelte";
   import { orientationPref } from "$lib/orientation-pref.svelte";
   import OrientationPicker from "$lib/OrientationPicker.svelte";
   import ScrambleDisplay from "$lib/ScrambleDisplay.svelte";
@@ -300,6 +299,16 @@
         aria-label="Generate a new scramble"
         onclick={advanceScramble}>↻</button
       >
+      {#if bluetoothStore.status === "connected"}
+        <button
+          class="scramble-solved"
+          title="Tell the cube its current physical state is solved, then deal a fresh scramble. Use after a manual reset or reassembly."
+          onclick={() => {
+            bluetoothStore.resetCubeState();
+            advanceScramble();
+          }}>cube is solved</button
+        >
+      {/if}
     </div>
   {/if}
 
@@ -309,65 +318,6 @@
     onSolveStart={handleSolveStart}
     onSolve={handleSolve}
   />
-
-  <div class="bt-bar">
-    {#if !bluetoothStore.isAvailable()}
-      <span class="bt-note">
-        Web Bluetooth isn't supported here — try Chrome, Edge, or Brave.
-      </span>
-    {:else if bluetoothStore.status === "connected"}
-      <span class="bt-status">
-        <span class="bt-dot bt-dot-on"></span>
-        {bluetoothStore.deviceName ?? "cube"}
-        ·
-        <span
-          class="bt-batt"
-          title={bluetoothStore.batteryPct === null
-            ? "Cube hasn't reported battery yet — retrying"
-            : `Battery: ${bluetoothStore.batteryPct}%`}
-        >
-          {bluetoothStore.batteryPct === null
-            ? "?%"
-            : `${bluetoothStore.batteryPct}%`}
-        </span>
-      </span>
-      <button
-        class="bt-btn bt-btn-blue"
-        title="Tell the cube its current physical state is solved AND generate a fresh scramble. Use after a manual reset/reassembly."
-        onclick={() => {
-          bluetoothStore.resetCubeState();
-          advanceScramble();
-        }}>cube is solved</button
-      >
-      <button
-        class="bt-btn bt-btn-red"
-        onclick={() => bluetoothStore.disconnect()}>disconnect</button
-      >
-    {:else if bluetoothStore.status === "connecting"}
-      <span class="bt-status">
-        <span class="bt-dot bt-dot-pending"></span>
-        connecting…
-      </span>
-    {:else}
-      <button
-        class="bt-btn bt-btn-green"
-        onclick={() => bluetoothStore.connect()}>connect cube</button
-      >
-      <button
-        class="bt-btn-link"
-        title="Clear cached cube MAC addresses (use if a wrong MAC was entered)"
-        onclick={forgetCachedCubeMacs}>forget MAC</button
-      >
-      {#if bluetoothStore.errorMessage}
-        <span class="bt-error">{bluetoothStore.errorMessage}</span>
-      {/if}
-    {/if}
-    {#if bluetoothStore.status === "connected" && bluetoothStore.recentMoves.length > 0}
-      <code class="bt-ticker"
-        >{collapseDoubleTurns(bluetoothStore.recentMoves).join(" ")}</code
-      >
-    {/if}
-  </div>
 
   <div class="session-bar">
     <SessionSwitcher />
@@ -438,6 +388,8 @@
   .scramble-actions {
     display: flex;
     justify-content: center;
+    align-items: center;
+    gap: 10px;
     margin-top: -4px;
   }
   .scramble-refresh {
@@ -455,84 +407,27 @@
     color: var(--color-text);
     background: var(--color-surface-2);
   }
-
-  .bt-bar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 8px 12px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
-    background: var(--color-surface);
-    font-size: 13px;
-  }
-  .bt-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--color-text);
-  }
-  .bt-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--color-unlearned);
-  }
-  .bt-dot-on {
-    background: var(--cube-green);
-  }
-  .bt-dot-pending {
-    background: var(--color-learning);
-  }
-  .bt-batt {
-    color: var(--color-text-muted);
-    font-variant-numeric: tabular-nums;
-  }
-  .bt-btn {
+  /* Contextual solve-flow action — sits with the scramble, not the (now
+   * global) connection control. Only rendered while a cube is connected. */
+  .scramble-solved {
     font: inherit;
     font-size: 12px;
-    padding: 4px 10px;
-    border: 1px solid var(--color-border);
+    padding: 3px 10px;
+    border: 1px solid
+      color-mix(in srgb, var(--cube-blue) 40%, var(--color-border));
     border-radius: 4px;
-    background: var(--color-surface);
-    color: var(--color-text-muted);
+    background: transparent;
+    color: var(--cube-blue-text);
     cursor: pointer;
     transition:
       background 0.12s ease,
-      color 0.12s ease,
       border-color 0.12s ease;
   }
-  .bt-btn:hover {
-    background: var(--color-surface-2);
-    color: var(--color-text);
-  }
-  /* Function-colored bt buttons: green = connect/go, blue = sync/info,
-   * red = disconnect/danger. Quiet by default (colored text + border),
-   * filling with their tint on hover. */
-  .bt-btn-green {
-    color: var(--cube-green-text);
-    border-color: color-mix(in srgb, var(--cube-green) 45%, var(--color-border));
-  }
-  .bt-btn-green:hover {
-    color: var(--cube-green-text);
-    background: var(--cube-green-tint);
-    border-color: var(--cube-green);
-  }
-  .bt-btn-blue {
-    color: var(--cube-blue-text);
-    border-color: color-mix(in srgb, var(--cube-blue) 45%, var(--color-border));
-  }
-  .bt-btn-blue:hover {
-    color: var(--cube-blue-text);
+  .scramble-solved:hover {
     background: var(--cube-blue-tint);
     border-color: var(--cube-blue);
   }
-  .bt-btn-red:hover {
-    color: var(--cube-red-text);
-    background: var(--cube-red-tint);
-    border-color: var(--cube-red);
-  }
+
   .bt-btn-link {
     font: inherit;
     font-size: 11px;
@@ -546,22 +441,6 @@
   }
   .bt-btn-link:hover {
     color: var(--color-text);
-  }
-  .bt-note {
-    color: var(--color-text-muted);
-    font-size: 12px;
-  }
-  .bt-error {
-    color: var(--color-danger);
-    font-size: 12px;
-  }
-  .bt-ticker {
-    flex: 1 1 0;
-    min-width: 0;
-    text-align: right;
-    color: var(--color-text-muted);
-    font-size: 12px;
-    word-break: break-word;
   }
 
   .session-bar {

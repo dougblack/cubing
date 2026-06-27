@@ -653,11 +653,12 @@
     border-bottom: 1px solid var(--color-border);
   }
   th {
+    font-family: var(--font-mono);
     font-weight: 500;
     color: var(--color-text-muted);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.1em;
     border-bottom-width: 2px;
   }
   /* OLL / PLL phase headers wear their stage color. */

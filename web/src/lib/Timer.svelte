@@ -315,16 +315,19 @@
     return remaining.toString();
   }
 
+  // The giant readout. Always a time-like value (centisecond format) except
+  // during inspection, where it's the integer countdown — so the instrument
+  // rests at 0.00, counts the inspection down, then runs the solve live.
   const bigText = $derived.by(() => {
     switch (phase) {
       case "idle":
-        return scramble ? "ready" : "—";
+        return scramble ? formatMs(0) : "—";
       case "inspecting":
         return inspectionDisplay(inspectionElapsedMs);
       case "holding":
         return inspectionDisplay(inspectionElapsedMs);
       case "ready":
-        return "GO";
+        return formatMs(0);
       case "solving":
         return formatMs(displayMs);
       case "stopped": {
@@ -333,6 +336,25 @@
         const base = formatMs(lastResult.durationMs);
         return lastResult.penalty === "+2" ? `${base} (+2)` : base;
       }
+    }
+  });
+
+  // The instrument's mode tag — a short, authentic cuber's word for the
+  // current phase, shown small above the readout and tinted by phase.
+  const phaseTag = $derived.by(() => {
+    switch (phase) {
+      case "idle":
+        return scramble ? "ready" : "—";
+      case "inspecting":
+        return "inspect";
+      case "holding":
+        return "hold";
+      case "ready":
+        return "set";
+      case "solving":
+        return "solve";
+      case "stopped":
+        return lastResult?.penalty === "DNF" ? "dnf" : "done";
     }
   });
 
@@ -367,60 +389,118 @@
   data-phase={phase}
   data-warning={inspectionWarning}
 >
+  <div class="timer-tag eyebrow">{phaseTag}</div>
   <div class="timer-display">{bigText}</div>
   <div class="timer-hint">{hint}</div>
+  <div class="timer-rail" aria-hidden="true">
+    <span class="timer-rail-fill"></span>
+  </div>
 </div>
 
 <style>
+  /* The timer as a piece of bench equipment: a calm readout panel with a
+   * mode tag up top, the giant centisecond readout, a hint, and a live
+   * status rail along the bottom that colors itself to the current phase.
+   * `--rail` drives the rail; it shifts per phase/warning below. */
   .timer-shell {
+    --rail: var(--accent-timer);
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 56px 24px;
+    gap: 10px;
+    padding: 60px 24px 56px;
     border: 1px solid var(--color-border);
-    border-radius: var(--radius-card);
+    border-radius: 14px;
     background: var(--color-surface);
+    overflow: hidden;
     transition:
-      background 0.12s ease,
-      color 0.12s ease;
+      background 0.16s ease,
+      border-color 0.16s ease;
+  }
+  .timer-tag {
+    color: var(--rail);
+    transition: color 0.16s ease;
   }
   .timer-display {
     font-family: var(--font-mono);
-    font-size: 88px;
-    line-height: 1;
+    font-size: clamp(72px, 13vw, 132px);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
     font-variant-numeric: tabular-nums;
+    transition: color 0.12s ease;
   }
   .timer-hint {
-    font-size: 13px;
+    font-size: 12px;
     color: var(--color-text-muted);
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
   }
 
-  /* Inspection countdown color warnings. */
+  /* Status rail — a hairline track pinned to the bottom edge of the panel.
+   * Its fill grows to full width and takes the phase color, so the panel
+   * reads as a live instrument even at a glance. */
+  .timer-rail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--color-surface-2);
+  }
+  .timer-rail-fill {
+    display: block;
+    height: 100%;
+    width: 35%;
+    background: var(--rail);
+    transition:
+      width 0.16s ease,
+      background 0.16s ease;
+  }
+
+  /* Inspection countdown color warnings — drive both the readout and rail. */
+  .timer-shell[data-warning="warn"] {
+    --rail: var(--color-warn);
+  }
   .timer-shell[data-warning="warn"] .timer-display {
     color: var(--color-warn);
+  }
+  .timer-shell[data-warning="danger"],
+  .timer-shell[data-warning="dnf"] {
+    --rail: var(--color-danger);
   }
   .timer-shell[data-warning="danger"] .timer-display,
   .timer-shell[data-warning="dnf"] .timer-display {
     color: var(--color-danger);
   }
 
+  /* Inspection running — rail stretches across as time burns down. */
+  .timer-shell[data-phase="inspecting"] .timer-rail-fill,
+  .timer-shell[data-phase="holding"] .timer-rail-fill {
+    width: 100%;
+  }
+
   /* Hold-to-arm feedback. */
   .timer-shell[data-phase="holding"] {
     background: var(--color-hold-bg);
   }
+
+  /* Armed + solving — the cube-green "go" state, full rail. */
+  .timer-shell[data-phase="ready"],
+  .timer-shell[data-phase="solving"] {
+    --rail: var(--cube-green);
+  }
   .timer-shell[data-phase="ready"] {
     background: var(--color-ready-bg);
+    border-color: var(--cube-green);
   }
-  .timer-shell[data-phase="ready"] .timer-display {
-    color: var(--cube-green);
-  }
-
-  /* Solving + stopped emphasis. */
+  .timer-shell[data-phase="ready"] .timer-display,
   .timer-shell[data-phase="solving"] .timer-display {
     color: var(--cube-green);
+  }
+  .timer-shell[data-phase="ready"] .timer-rail-fill,
+  .timer-shell[data-phase="solving"] .timer-rail-fill {
+    width: 100%;
   }
 </style>
