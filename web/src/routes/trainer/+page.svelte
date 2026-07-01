@@ -309,13 +309,15 @@
     }
   }
 
-  /** Transition presenting → recognizing. Called by the tracker when
-   *  the cuber finishes applying the scramble, or by the manual
-   *  "begin" button when the cuber isn't using BT. */
-  function startRecognition() {
+  /** Transition presenting → recognizing. Called by the tracker when the
+   *  cuber finishes applying the scramble (passing the completing move's
+   *  cube-clock timestamp, so recognition starts at the actual last-scramble
+   *  move, not when we processed it), or by the manual "begin" button when
+   *  the cuber isn't using BT (no move to backdate to → now). */
+  function startRecognition(atMs?: number) {
     if (phase !== "presenting") return;
     phase = "recognizing";
-    recognitionStartedAt = performance.now();
+    recognitionStartedAt = atMs ?? performance.now();
     startLive(recognitionStartedAt);
   }
 
@@ -484,7 +486,7 @@
    *  done→presenting auto-advance can dispatch to it explicitly after
    *  loading the next case, instead of relying on a fall-through that
    *  reads loadCase's side effects on `phase` and `trackerState`. */
-  function tickPresenting(tickMove: string) {
+  function tickPresenting(tickMove: string, atMs: number) {
     if (!trackerState || scrambleAbandoned) return;
     // Wrong-move recovery: the tracker is frozen until the cuber has
     // played the inverse of every wrong move (LIFO). A move that
@@ -507,7 +509,7 @@
       return;
     }
     trackerState = r.state;
-    if (isComplete(trackerState)) startRecognition();
+    if (isComplete(trackerState)) startRecognition(atMs);
   }
 
   // BT wiring: done→presenting auto-advance, scramble tracker (with
@@ -516,7 +518,7 @@
   // top-oriented (OLL) or fully-solved (PLL) transition.
   $effect(() => {
     if (bluetoothStore.status !== "connected") return;
-    const unsubMove = bluetoothStore.onMove((move) => {
+    const unsubMove = bluetoothStore.onMove((move, tMs) => {
       // The trainer scramble is interpreted in the cuber's frame
       // ("U" means "turn the top face"), so BT's cube-frame move
       // needs the cube→user remap before any tracker comparison.
@@ -530,16 +532,20 @@
       // button) and then dispatch the move into the new tracker.
       if (phase === "done" && pendingNext) {
         loadCase();
-        tickPresenting(tickMove);
+        tickPresenting(tickMove, tMs);
         return;
       }
 
       if (phase === "presenting") {
-        tickPresenting(tickMove);
+        tickPresenting(tickMove, tMs);
         return;
       }
       if (phase === "recognizing") {
-        executionStartedAt = performance.now();
+        // Execution starts at this move's cube-clock timestamp, not when
+        // we processed it — same basis as the solved/facelets endpoint, so
+        // recognition, execution, and total all measure move-to-move rather
+        // than including BT + decode latency.
+        executionStartedAt = tMs;
         recognitionMs = executionStartedAt - recognitionStartedAt;
         phase = "executing";
         startLive(executionStartedAt);
@@ -780,7 +786,7 @@
             {#if bluetoothStore.status !== "connected"}
               <button
                 class="scramble-action begin"
-                onclick={startRecognition}>▸ begin</button
+                onclick={() => startRecognition()}>▸ begin</button
               >
             {/if}
             <button
