@@ -117,6 +117,9 @@
   --stage-2loll: var(--cube-orange);
   --stage-2loll-tint: var(--cube-orange-tint);
   --stage-2loll-text: var(--cube-orange-text);
+  --stage-f2l: var(--cube-green);
+  --stage-f2l-tint: var(--cube-green-tint);
+  --stage-f2l-text: var(--cube-green-text);
 }
 
 /* --------------------------------------------------------------------------

@@ -13,8 +13,12 @@
   // primary (index 0). Rotating the diagram to its orientation lets us drop a
   // leading y from that alg's notation.
   const chosenIdx = $derived(cubingState.pref[c.id] ?? 0);
+  // F2L diagrams are an oblique 3-face view, not a top-down last-layer view,
+  // so the leading-y rotation trick doesn't apply — never rotate them.
   const rotation = $derived(
-    diagramRotation(c.algorithms[chosenIdx]?.moves ?? ""),
+    stage.slug === "f2l"
+      ? { degrees: 0, moves: c.algorithms[chosenIdx]?.moves ?? "", rotated: false }
+      : diagramRotation(c.algorithms[chosenIdx]?.moves ?? ""),
   );
 
   const stateName = $derived.by(() => {

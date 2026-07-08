@@ -2,6 +2,13 @@ import type { StageMeta, StageSlug } from "./types";
 
 export const STAGES: ReadonlyArray<StageMeta> = [
   {
+    slug: "f2l",
+    shortName: "F2L",
+    fullName: "First Two Layers",
+    description:
+      "The second CFOP step. Pair each corner-edge and insert it into its slot to finish the first two layers in one flow. 41 standard cases, most solvable intuitively.",
+  },
+  {
     slug: "pll",
     shortName: "PLL",
     fullName: "Permutation of the Last Layer",

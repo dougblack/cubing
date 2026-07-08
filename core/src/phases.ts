@@ -170,7 +170,12 @@ function normalize(state: State, crossFace: CubeFace): State {
 function isCrossSolvedOn(state: State, crossFace: CubeFace): boolean {
   return isCrossSolved_D(normalize(state, crossFace));
 }
-function isF2LSolvedOn(state: State, crossFace: CubeFace): boolean {
+/** True iff the first two layers are solved relative to `crossFace` as the
+ *  bottom — cross + 4 D-corners + 4 middle-layer edges. Exported for the
+ *  trainer's F2L completion detection: the cube is only F2L-solved (last
+ *  layer still scrambled), so neither the fully-solved nor the top-oriented
+ *  signal applies. */
+export function isF2LSolvedOn(state: State, crossFace: CubeFace): boolean {
   return isF2LSolved_D(normalize(state, crossFace));
 }
 function isOLLSolvedOn(state: State, crossFace: CubeFace): boolean {

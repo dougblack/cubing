@@ -14,8 +14,9 @@
 
 import ollData from "../../data/methods/cfop/oll.json" with { type: "json" };
 import pllData from "../../data/methods/cfop/pll.json" with { type: "json" };
+import f2lData from "../../data/methods/cfop/f2l.json" with { type: "json" };
 
-import { applyAlg, invertAlg, solved } from "./cube.js";
+import { applyAlg, invertAlg, type State, solved } from "./cube.js";
 import {
   findCrossFaceForColor,
   normalizeToCrossOnD,
@@ -23,7 +24,7 @@ import {
 import { recognizeOLL, recognizePLL } from "./recognition.js";
 import { normalizeScramble, simplifyMoves } from "./scramble-tracker.js";
 
-export type TrainerStage = "oll" | "pll";
+export type TrainerStage = "oll" | "pll" | "f2l";
 
 interface TrainerCase {
   id: string;
@@ -39,6 +40,7 @@ interface RawCase {
 const STAGE_DATA: Record<TrainerStage, RawCase[]> = {
   oll: ollData.cases as RawCase[],
   pll: pllData.cases as RawCase[],
+  f2l: f2lData.cases as RawCase[],
 };
 
 /** True iff the SCRAMBLE we'd actually emit for this alg — `invert(alg)`
@@ -70,6 +72,67 @@ function validatesAsCase(
   }
 }
 
+// Sticker indices a genuine front-right-slot F2L case is allowed to disturb
+// (relative to a cross-on-D / yellow-top solved cube): the whole last layer
+// (U face + the top row of every side face) plus the front-right slot (the
+// F/R stickers of the FR edge and DFR corner, and that corner's D sticker).
+// If inverting an alg from solved changes anything outside this set, it moved
+// the cross or another slot — not a clean FR-slot alg. Mirrors the diagram
+// renderer's check; the sim's face/slot indexing is shared (U=0…D=5, DFR's
+// cross sticker at D2).
+const FR_CASE_ALLOWED = new Set<number>([
+  0, 1, 2, 3, 4, 5, 6, 7, 8, // U face
+  9, 10, 11, // L top row
+  18, 19, 20, // F top row
+  27, 28, 29, // R top row
+  36, 37, 38, // B top row
+  23, 26, // F5 (FR edge), F8 (DFR corner)
+  30, 33, // R3 (FR edge), R6 (DFR corner)
+  47, // D2 (DFR corner's cross sticker)
+]);
+
+/** True iff `state` differs from solved only within the front-right slot +
+ *  last layer — i.e. it's a clean FR-slot F2L case with the cross and the
+ *  other three slots intact. */
+function isCleanFRCase(state: State): boolean {
+  const ref = solved();
+  for (let i = 0; i < 54; i++) {
+    if (state[i] !== ref[i] && !FR_CASE_ALLOWED.has(i)) return false;
+  }
+  return true;
+}
+
+/** True iff the SCRAMBLE we'd emit for this F2L alg — `invert(alg)` run
+ *  through the face-turn-only parser, applied to a solved cube — produces a
+ *  clean front-right-slot case. F2L has no state recognizer, so instead of
+ *  matching a recognized case id (as OLL/PLL do) we validate structurally:
+ *  the setup must leave the cross and the other three slots solved and
+ *  displace only the FR pair. Combined with the URF-only-as-written filter
+ *  in `getPool` (algdb's F2L algs are all front-right-slot), this rejects
+ *  any alg that isn't a genuine FR-slot solution. */
+function validatesAsF2LCase(alg: string): boolean {
+  try {
+    const state = applyAlg(solved(), normalizeScramble(invertAlg(alg)));
+    // A real case displaces the pair — a scramble that leaves the cube
+    // FR-clean AND already solved would be a no-op alg, so also require
+    // that *something* in the FR region actually moved.
+    if (!isCleanFRCase(state)) return false;
+    const ref = solved();
+    return state.some((c, i) => c !== ref[i]);
+  } catch {
+    return false;
+  }
+}
+
+/** True iff every token is a U/R/F face turn (front-right-slot moves only).
+ *  Stricter than `isCleanBody`: L/B/D/slice/wide/rotation moves would disturb
+ *  the cross or another slot, so an F2L alg using them isn't a clean FR-slot
+ *  setup. Applied to the alg AS WRITTEN (rotations are not stripped) so a
+ *  y-prefixed alg for a different slot can't masquerade as an FR-slot alg. */
+function isURFOnly(tokens: readonly string[]): boolean {
+  return tokens.every((t) => /^[URF][2']?$/.test(t));
+}
+
 /** Per-stage cache of the validated alg pool + the trainable-case list.
  *  Built lazily on first access — the validation pass runs ~80 algs
  *  through the recognizer (applyAlg + recognize), which we don't want
@@ -94,11 +157,21 @@ function getPool(stage: TrainerStage): StagePool {
     // — what the trainer will actually emit — still produces the case.
     const candidates: string[] = [];
     for (const a of c.algorithms) {
-      const body = stripOuterRotationTokens(tokenizeAlg(a.moves));
-      if (!isCleanBody(body)) continue;
-      candidates.push(body.join(" "));
+      if (stage === "f2l") {
+        // F2L: keep only URF-only-as-written algs (front-right slot). No
+        // outer-rotation stripping — a leading y would re-target the slot.
+        const tokens = tokenizeAlg(a.moves);
+        if (!isURFOnly(tokens)) continue;
+        candidates.push(tokens.join(" "));
+      } else {
+        const body = stripOuterRotationTokens(tokenizeAlg(a.moves));
+        if (!isCleanBody(body)) continue;
+        candidates.push(body.join(" "));
+      }
     }
-    const valid = candidates.filter((m) => validatesAsCase(m, stage, c.id));
+    const valid = candidates.filter((m) =>
+      stage === "f2l" ? validatesAsF2LCase(m) : validatesAsCase(m, stage, c.id),
+    );
     algsByCase.set(c.id, valid);
     if (valid.length > 0) trainable.push({ id: c.id, name: c.name });
   }

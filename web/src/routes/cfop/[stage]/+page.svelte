@@ -89,7 +89,10 @@
     {#each items as card (card.id)}
       {@const state = caseState(card.id)}
       {@const display = displayAlg(card)}
-      {@const rotation = diagramRotation(display.moves)}
+      {@const rotation =
+        stage.slug === "f2l"
+          ? { degrees: 0, moves: display.moves, rotated: false }
+          : diagramRotation(display.moves)}
       <div
         class="case-card"
         class:state-learning={state === 1}

@@ -1,10 +1,13 @@
 <script lang="ts">
   import {
+    CUBE_FACES,
     generateTrainerScramble,
     invertMove,
     isComplete,
     isCaseTrainable,
+    isF2LSolvedOn,
     newTrackerState,
+    parseKociembaFacelets,
     type SessionId,
     tickTracker,
     type TrackerState,
@@ -481,6 +484,22 @@
     return true;
   }
 
+  /** F2L completes when the first two layers are solved (the last layer is
+   *  still scrambled, so neither the fully-solved nor the top-oriented signal
+   *  applies). Parse the BT facelets into a cube state and check whether the
+   *  bottom two layers are solved relative to ANY face as the cross — that's
+   *  orientation-agnostic, so it works regardless of how the cuber is holding
+   *  the cube. */
+  function isF2LComplete(facelets: string): boolean {
+    let state;
+    try {
+      state = parseKociembaFacelets(facelets);
+    } catch {
+      return false;
+    }
+    return CUBE_FACES.some((f) => isF2LSolvedOn(state, f));
+  }
+
   /** Scramble-phase tick: tracker advance, wrong-move freeze, recovery
    *  via inverse-stack. Extracted from the BT onMove handler so the
    *  done→presenting auto-advance can dispatch to it explicitly after
@@ -561,11 +580,19 @@
       finalizeExecuting({ dnf: false, endAt: lastMoveAt });
     });
     const unsubFacelets = bluetoothStore.onFacelets((facelets, lastMoveAt) => {
-      // OLL completes the moment the cuber's top face is one color —
-      // permutation doesn't matter for orientation practice. PLL keeps
-      // using the fully-solved signal above.
-      if (phase !== "executing" || stage !== "oll") return;
-      if (!isTopFaceMonochromatic(facelets)) return;
+      // Stage-specific completion off the facelets stream:
+      //  - OLL: the cuber's top face is one color (permutation doesn't matter).
+      //  - F2L: the first two layers are solved (last layer still scrambled),
+      //    so we can't wait for the fully-solved signal.
+      // PLL keeps using the fully-solved signal (onSolved) above.
+      if (phase !== "executing") return;
+      const done =
+        stage === "oll"
+          ? isTopFaceMonochromatic(facelets)
+          : stage === "f2l"
+            ? isF2LComplete(facelets)
+            : false;
+      if (!done) return;
       finalizeExecuting({ dnf: false, endAt: lastMoveAt });
     });
     return () => {
@@ -696,7 +723,7 @@
        with the scramble below. -->
   <div class="trainer-toolbar">
     <div class="stage-toggle" role="tablist" aria-label="Trainer stage">
-      {#each ["oll", "pll"] as const as s (s)}
+      {#each ["f2l", "oll", "pll"] as const as s (s)}
         <button
           role="tab"
           aria-selected={stage === s}

@@ -4,6 +4,7 @@
 import pllRaw from "../../../data/methods/cfop/pll.json";
 import ollRaw from "../../../data/methods/cfop/oll.json";
 import twoLollRaw from "../../../data/methods/cfop/2loll.json";
+import f2lRaw from "../../../data/methods/cfop/f2l.json";
 
 import type { Case, StageFile, StageSlug } from "./types";
 
@@ -11,8 +12,7 @@ const RAW: Record<StageSlug, StageFile | undefined> = {
   pll: pllRaw as unknown as StageFile,
   oll: ollRaw as unknown as StageFile,
   "2loll": twoLollRaw as unknown as StageFile,
-  // f2l intentionally omitted from the UI — no last-layer diagram view applies.
-  f2l: undefined,
+  f2l: f2lRaw as unknown as StageFile,
 };
 
 export function getStageFile(slug: StageSlug): StageFile | undefined {
